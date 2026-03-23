@@ -1,56 +1,85 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const NAV_SECTIONS = [
+type SectionId =
+  | "overview"
+  | "installation"
+  | "quickstart"
+  | "how-it-works"
+  | "evidence-and-claims"
+  | "retrieval"
+  | "tools-brief"
+  | "tools-stress-test"
+  | "tools-retrieve-evidence"
+  | "tools-sync-notion"
+  | "tools-health-check"
+  | "extraction-modes"
+  | "feature-toggles"
+  | "presets"
+  | "guides-notion"
+  | "guides-hygiene"
+  | "guides-troubleshooting";
+
+const NAV_SECTIONS: {
+  title: string;
+  links: { label: string; id: SectionId }[];
+}[] = [
   {
     title: "Getting Started",
     links: [
-      { label: "Overview", href: "/docs" },
-      { label: "Installation", href: "/docs/installation" },
-      { label: "Quick Start", href: "/docs/quickstart" },
+      { label: "Overview", id: "overview" },
+      { label: "Installation", id: "installation" },
+      { label: "Quick Start", id: "quickstart" },
     ],
   },
   {
     title: "Core Concepts",
     links: [
-      { label: "How It Works", href: "/docs/how-it-works" },
-      { label: "Evidence & Claims", href: "/docs/evidence-and-claims" },
-      { label: "Retrieval Pipeline", href: "/docs/retrieval" },
+      { label: "How It Works", id: "how-it-works" },
+      { label: "Evidence & Claims", id: "evidence-and-claims" },
+      { label: "Retrieval Pipeline", id: "retrieval" },
     ],
   },
   {
     title: "Tools Reference",
     links: [
-      { label: "brief", href: "/docs/tools/brief" },
-      { label: "stress_test", href: "/docs/tools/stress-test" },
-      { label: "retrieve_evidence", href: "/docs/tools/retrieve-evidence" },
-      { label: "sync_notion", href: "/docs/tools/sync-notion" },
-      { label: "health_check", href: "/docs/tools/health-check" },
+      { label: "brief", id: "tools-brief" },
+      { label: "stress_test", id: "tools-stress-test" },
+      { label: "retrieve_evidence", id: "tools-retrieve-evidence" },
+      { label: "sync_notion", id: "tools-sync-notion" },
+      { label: "health_check", id: "tools-health-check" },
     ],
   },
   {
     title: "Configuration",
     links: [
-      { label: "Extraction Modes", href: "/docs/extraction-modes" },
-      { label: "Feature Toggles", href: "/docs/feature-toggles" },
-      { label: "Presets", href: "/docs/presets" },
+      { label: "Extraction Modes", id: "extraction-modes" },
+      { label: "Feature Toggles", id: "feature-toggles" },
+      { label: "Presets", id: "presets" },
     ],
   },
   {
     title: "Guides",
     links: [
-      { label: "Notion Ingestion", href: "/docs/guides/notion" },
-      { label: "Background Hygiene", href: "/docs/guides/hygiene" },
-      { label: "Troubleshooting", href: "/docs/guides/troubleshooting" },
+      { label: "Notion Ingestion", id: "guides-notion" },
+      { label: "Background Hygiene", id: "guides-hygiene" },
+      { label: "Troubleshooting", id: "guides-troubleshooting" },
     ],
   },
 ];
 
-export function DocsSidebar() {
-  const pathname = usePathname();
+export type { SectionId };
+export { NAV_SECTIONS };
+
+export function DocsSidebar({
+  activeSection,
+  onSectionChange,
+}: {
+  activeSection: SectionId;
+  onSectionChange: (id: SectionId) => void;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -121,14 +150,16 @@ export function DocsSidebar() {
               </h4>
               <ul className="space-y-0.5">
                 {section.links.map((link) => {
-                  const active = pathname === link.href;
+                  const active = activeSection === link.id;
                   return (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        onClick={() => setOpen(false)}
+                    <li key={link.id}>
+                      <button
+                        onClick={() => {
+                          onSectionChange(link.id);
+                          setOpen(false);
+                        }}
                         className={`
-                          block px-2 py-1.5 rounded-md text-sm transition-colors
+                          block w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors
                           ${
                             active
                               ? "bg-[hsl(234,100%,71%)]/10 text-[hsl(234,100%,71%)] font-medium"
@@ -137,7 +168,7 @@ export function DocsSidebar() {
                         `}
                       >
                         {link.label}
-                      </Link>
+                      </button>
                     </li>
                   );
                 })}
