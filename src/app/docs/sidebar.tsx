@@ -26,7 +26,7 @@ const NAV_SECTIONS: {
       { label: "brief", id: "tools-brief" },
       { label: "stress_test", id: "tools-stress-test" },
       { label: "retrieve_evidence", id: "tools-retrieve-evidence" },
-      { label: "sync_notion", id: "tools-sync-notion" },
+      { label: "sync", id: "tools-sync" },
       { label: "health_check", id: "tools-health-check" },
     ],
   },

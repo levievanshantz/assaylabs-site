@@ -609,10 +609,7 @@ function ExtractionModesSection() {
                   Ollama
                 </th>
                 <th className="px-4 py-3 text-[hsl(220,10%,55%)] font-medium">
-                  Anthropic
-                </th>
-                <th className="px-4 py-3 text-[hsl(220,10%,55%)] font-medium">
-                  Subagent
+                  Claude Sonnet
                 </th>
               </tr>
             </thead>
@@ -625,10 +622,7 @@ function ExtractionModesSection() {
                   <code>ollama</code>
                 </td>
                 <td className="px-4 py-3">
-                  <code>anthropic</code>
-                </td>
-                <td className="px-4 py-3">
-                  <code>subagent</code>
+                  <code>anthropic</code> or <code>subagent</code>
                 </td>
               </tr>
               <tr className="border-b border-[hsl(220,15%,18%)]">
@@ -637,25 +631,22 @@ function ExtractionModesSection() {
                 </td>
                 <td className="px-4 py-3">No</td>
                 <td className="px-4 py-3">
-                  Yes (<code>ANTHROPIC_API_KEY</code>)
+                  API key or Claude Code subscription
                 </td>
-                <td className="px-4 py-3">No</td>
               </tr>
               <tr className="border-b border-[hsl(220,15%,18%)]">
                 <td className="px-4 py-3 font-medium text-[hsl(220,10%,55%)]">
                   Requires Claude Code
                 </td>
                 <td className="px-4 py-3">No</td>
-                <td className="px-4 py-3">No</td>
-                <td className="px-4 py-3">Yes</td>
+                <td className="px-4 py-3">Only for subagent mode</td>
               </tr>
               <tr className="border-b border-[hsl(220,15%,18%)]">
                 <td className="px-4 py-3 font-medium text-[hsl(220,10%,55%)]">
                   Runs locally
                 </td>
                 <td className="px-4 py-3 text-[hsl(152,60%,52%)]">Yes</td>
-                <td className="px-4 py-3">No (API call)</td>
-                <td className="px-4 py-3">Hybrid</td>
+                <td className="px-4 py-3">API call or Claude Code</td>
               </tr>
               <tr className="border-b border-[hsl(220,15%,18%)]">
                 <td className="px-4 py-3 font-medium text-[hsl(220,10%,55%)]">
@@ -663,30 +654,26 @@ function ExtractionModesSection() {
                 </td>
                 <td className="px-4 py-3">83.1%</td>
                 <td className="px-4 py-3 text-[hsl(152,60%,52%)]">93.8%</td>
-                <td className="px-4 py-3 text-[hsl(152,60%,52%)]">93.8%</td>
               </tr>
               <tr className="border-b border-[hsl(220,15%,18%)]">
                 <td className="px-4 py-3 font-medium text-[hsl(220,10%,55%)]">
                   Cost per 1K sections
                 </td>
                 <td className="px-4 py-3">$0 (electricity only)</td>
-                <td className="px-4 py-3">~$2.40</td>
-                <td className="px-4 py-3">Included in Claude Code plan</td>
+                <td className="px-4 py-3">~$2.40 or included in Claude Code plan</td>
               </tr>
               <tr className="border-b border-[hsl(220,15%,18%)]">
                 <td className="px-4 py-3 font-medium text-[hsl(220,10%,55%)]">
                   Speed (100 sections)
                 </td>
                 <td className="px-4 py-3">~8 min (M2 Max)</td>
-                <td className="px-4 py-3">~45 sec</td>
-                <td className="px-4 py-3">~90 sec</td>
+                <td className="px-4 py-3">~45-90 sec</td>
               </tr>
               <tr>
                 <td className="px-4 py-3 font-medium text-[hsl(220,10%,55%)]">
                   Parallelism
                 </td>
                 <td className="px-4 py-3">1 (sequential)</td>
-                <td className="px-4 py-3">Up to 10 concurrent</td>
                 <td className="px-4 py-3">Up to 10 concurrent</td>
               </tr>
             </tbody>
@@ -955,7 +942,7 @@ export default function DocsPage() {
       <HR />
       <ComingSoon id="tools-retrieve-evidence" title="retrieve_evidence" />
       <HR />
-      <ComingSoon id="tools-sync-notion" title="sync_notion" />
+      <ComingSoon id="tools-sync" title="sync" />
       <HR />
       <ComingSoon id="tools-health-check" title="health_check" />
       <HR />
