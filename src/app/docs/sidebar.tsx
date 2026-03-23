@@ -1,30 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
-
-type SectionId =
-  | "overview"
-  | "installation"
-  | "quickstart"
-  | "how-it-works"
-  | "evidence-and-claims"
-  | "retrieval"
-  | "tools-brief"
-  | "tools-stress-test"
-  | "tools-retrieve-evidence"
-  | "tools-sync-notion"
-  | "tools-health-check"
-  | "extraction-modes"
-  | "feature-toggles"
-  | "presets"
-  | "guides-notion"
-  | "guides-hygiene"
-  | "guides-troubleshooting";
 
 const NAV_SECTIONS: {
   title: string;
-  links: { label: string; id: SectionId }[];
+  links: { label: string; id: string }[];
 }[] = [
   {
     title: "Getting Started",
@@ -70,113 +48,54 @@ const NAV_SECTIONS: {
   },
 ];
 
-export type { SectionId };
 export { NAV_SECTIONS };
 
-export function DocsSidebar({
-  activeSection,
-  onSectionChange,
-}: {
-  activeSection: SectionId;
-  onSectionChange: (id: SectionId) => void;
-}) {
-  const [open, setOpen] = useState(false);
-
+/* ── Sidebar nav (server component) ── */
+export function DocsSidebar() {
   return (
-    <>
-      {/* Mobile toggle */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="fixed top-4 left-4 z-50 md:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-[hsl(220,15%,9%)] border border-[hsl(220,15%,18%)] text-[hsl(220,15%,93%)]"
-        aria-label="Toggle docs navigation"
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
+    <aside
+      className="
+        hidden md:block sticky top-0 h-screen w-60 overflow-y-auto shrink-0
+        bg-[hsl(220,15%,9%)] border-r border-[hsl(220,15%,18%)]
+      "
+    >
+      <div className="px-5 pt-6 pb-4">
+        <Link
+          href="/"
+          className="text-[hsl(220,15%,93%)] font-semibold text-sm tracking-wide"
         >
-          {open ? (
-            <>
-              <line x1="4" y1="4" x2="16" y2="16" />
-              <line x1="16" y1="4" x2="4" y2="16" />
-            </>
-          ) : (
-            <>
-              <line x1="3" y1="5" x2="17" y2="5" />
-              <line x1="3" y1="10" x2="17" y2="10" />
-              <line x1="3" y1="15" x2="17" y2="15" />
-            </>
-          )}
-        </svg>
-      </button>
+          Assaylabs
+        </Link>
+        <span className="ml-2 text-xs text-[hsl(220,10%,55%)]">Docs</span>
+      </div>
 
-      {/* Backdrop */}
-      {open && (
-        <div
-          className="fixed inset-0 z-30 bg-black/60 md:hidden"
-          onClick={() => setOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`
-          fixed top-0 left-0 z-40 h-screen w-60 overflow-y-auto
-          bg-[hsl(220,15%,9%)] border-r border-[hsl(220,15%,18%)]
-          transition-transform duration-200
-          md:sticky md:translate-x-0 md:shrink-0
-          ${open ? "translate-x-0" : "-translate-x-full"}
-        `}
-      >
-        <div className="px-5 pt-6 pb-4">
-          <Link
-            href="/"
-            className="text-[hsl(220,15%,93%)] font-semibold text-sm tracking-wide"
-          >
-            Assaylabs
-          </Link>
-          <span className="ml-2 text-xs text-[hsl(220,10%,55%)]">Docs</span>
-        </div>
-
-        <nav className="px-3 pb-8">
-          {NAV_SECTIONS.map((section) => (
-            <div key={section.title} className="mb-6">
-              <h4 className="px-2 mb-1.5 text-xs font-semibold uppercase tracking-wider text-[hsl(220,10%,55%)]">
-                {section.title}
-              </h4>
-              <ul className="space-y-0.5">
-                {section.links.map((link) => {
-                  const active = activeSection === link.id;
-                  return (
-                    <li key={link.id}>
-                      <button
-                        onClick={() => {
-                          onSectionChange(link.id);
-                          setOpen(false);
-                        }}
-                        className={`
-                          block w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors
-                          ${
-                            active
-                              ? "bg-[hsl(234,100%,71%)]/10 text-[hsl(234,100%,71%)] font-medium"
-                              : "text-[hsl(220,10%,55%)] hover:text-[hsl(220,15%,93%)] hover:bg-[hsl(220,15%,12%)]"
-                          }
-                        `}
-                      >
-                        {link.label}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </aside>
-    </>
+      <nav className="px-3 pb-8">
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.title} className="mb-6">
+            <h4 className="px-2 mb-1.5 text-xs font-semibold uppercase tracking-wider text-[hsl(220,10%,55%)]">
+              {section.title}
+            </h4>
+            <ul className="space-y-0.5">
+              {section.links.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href={`#${link.id}`}
+                    className="
+                      block w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors
+                      text-[hsl(220,10%,55%)] hover:text-[hsl(220,15%,93%)] hover:bg-[hsl(220,15%,12%)]
+                    "
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+    </aside>
   );
 }
+
+/* ── Mobile sidebar toggle (client component) ── */
+export { MobileSidebarToggle } from "./mobile-sidebar-toggle";

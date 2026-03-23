@@ -1,56 +1,25 @@
-"use client";
-
-import { useState, useEffect, useRef, useCallback } from "react";
-import { DocsSidebar, type SectionId } from "./sidebar";
-
 /* ────────────────────────────────────────────────────────
-   Helper: navigate to a section (update hash + scroll)
+   Docs — single continuous-scroll page (server component)
+   All sections render at once; sidebar links are anchor scrolls.
    ──────────────────────────────────────────────────────── */
 
-function resolveHash(): SectionId {
-  if (typeof window === "undefined") return "overview";
-  const raw = window.location.hash.replace("#", "");
-  const valid: SectionId[] = [
-    "overview",
-    "installation",
-    "quickstart",
-    "how-it-works",
-    "evidence-and-claims",
-    "retrieval",
-    "tools-brief",
-    "tools-stress-test",
-    "tools-retrieve-evidence",
-    "tools-sync-notion",
-    "tools-health-check",
-    "extraction-modes",
-    "feature-toggles",
-    "presets",
-    "guides-notion",
-    "guides-hygiene",
-    "guides-troubleshooting",
-  ];
-  return valid.includes(raw as SectionId) ? (raw as SectionId) : "overview";
-}
+const linkCls =
+  "text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110";
 
-/* ────────────────────────────────────────────────────────
+/* ════════════════════════════════════════════════════════
    Placeholder for sections without content yet
-   ──────────────────────────────────────────────────────── */
+   ════════════════════════════════════════════════════════ */
 
-function ComingSoon({ title }: { title: string }) {
+function ComingSoon({ id, title }: { id: string; title: string }) {
   return (
-    <article>
+    <section id={id} className="scroll-mt-8 py-16">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         {title}
       </h1>
-      <div className="mt-8 rounded-lg bg-[hsl(220,15%,9%)] border border-[hsl(220,15%,18%)] px-6 py-10 text-center">
-        <p className="text-[hsl(220,10%,55%)] text-lg">
-          Coming soon.
-        </p>
-        <p className="text-[hsl(220,10%,55%)] text-sm mt-2">
-          This section is under construction.
-        </p>
-      </div>
-    </article>
+      <p className="text-[hsl(220,10%,55%)]">
+        This section is under construction.
+      </p>
+    </section>
   );
 }
 
@@ -58,13 +27,9 @@ function ComingSoon({ title }: { title: string }) {
    SECTION: Overview
    ════════════════════════════════════════════════════════ */
 
-function OverviewSection({
-  goTo,
-}: {
-  goTo: (id: SectionId) => void;
-}) {
+function OverviewSection() {
   return (
-    <article>
+    <section id="overview" className="scroll-mt-8">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         What is Assay?
       </h1>
@@ -72,7 +37,7 @@ function OverviewSection({
         The intelligence ledger for product teams that ship.
       </p>
 
-      <section className="mb-10">
+      <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
           Assay turns your PRDs, strategy documents, research notes, and
           recorded decisions into a structured corpus of cited claims that your
@@ -89,9 +54,9 @@ function OverviewSection({
           matching, and full-text search. There is no cloud dependency beyond
           your embedding provider — your data stays on your Postgres instance.
         </p>
-      </section>
+      </div>
 
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Architecture
         </h2>
@@ -129,9 +94,9 @@ function OverviewSection({
                        brief    stress_test   retrieve
 `}</code>
         </pre>
-      </section>
+      </div>
 
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Prerequisites
         </h2>
@@ -171,23 +136,20 @@ function OverviewSection({
             </span>
           </li>
         </ul>
-      </section>
+      </div>
 
-      <section>
+      <div>
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Next Step
         </h2>
         <p className="text-[hsl(220,15%,93%)]">
           Ready to get started?{" "}
-          <button
-            onClick={() => goTo("installation")}
-            className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110"
-          >
+          <a href="#installation" className={linkCls}>
             Install Assay &rarr;
-          </button>
+          </a>
         </p>
-      </section>
-    </article>
+      </div>
+    </section>
   );
 }
 
@@ -195,13 +157,9 @@ function OverviewSection({
    SECTION: Installation
    ════════════════════════════════════════════════════════ */
 
-function InstallationSection({
-  goTo,
-}: {
-  goTo: (id: SectionId) => void;
-}) {
+function InstallationSection() {
   return (
-    <article>
+    <section id="installation" className="scroll-mt-8">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         Installation
       </h1>
@@ -210,7 +168,7 @@ function InstallationSection({
       </p>
 
       {/* Prerequisites */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Prerequisites
         </h2>
@@ -250,10 +208,10 @@ function InstallationSection({
             <code>CREATE EXTENSION IF NOT EXISTS vector;</code> in a SQL console.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Clone and install */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           1. Clone and Install
         </h2>
@@ -263,10 +221,10 @@ cd assay
 npm install
 cp .env.local.example .env.local`}</code>
         </pre>
-      </section>
+      </div>
 
       {/* Environment variables */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           2. Configure Environment Variables
         </h2>
@@ -353,10 +311,10 @@ cp .env.local.example .env.local`}</code>
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
 
       {/* Database setup */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           3. Set Up the Database
         </h2>
@@ -367,10 +325,10 @@ cp .env.local.example .env.local`}</code>
         <pre className="font-[family-name:var(--font-jetbrains)]">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`npm run setup-db`}</code>
         </pre>
-      </section>
+      </div>
 
       {/* Build */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           4. Build
         </h2>
@@ -380,10 +338,10 @@ cp .env.local.example .env.local`}</code>
         <pre className="font-[family-name:var(--font-jetbrains)]">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`npm run build`}</code>
         </pre>
-      </section>
+      </div>
 
       {/* Verify */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           5. Verify
         </h2>
@@ -398,24 +356,21 @@ cp .env.local.example .env.local`}</code>
           You should see green checks for database connectivity, pgvector
           extension, embedding generation, and table schema validation.
         </p>
-      </section>
+      </div>
 
       {/* Next step */}
-      <section>
+      <div>
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Next Step
         </h2>
         <p className="text-[hsl(220,15%,93%)]">
           Your Assay instance is ready.{" "}
-          <button
-            onClick={() => goTo("quickstart")}
-            className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110"
-          >
+          <a href="#quickstart" className={linkCls}>
             Continue to the Quick Start guide &rarr;
-          </button>
+          </a>
         </p>
-      </section>
-    </article>
+      </div>
+    </section>
   );
 }
 
@@ -423,13 +378,9 @@ cp .env.local.example .env.local`}</code>
    SECTION: Quick Start
    ════════════════════════════════════════════════════════ */
 
-function QuickStartSection({
-  goTo,
-}: {
-  goTo: (id: SectionId) => void;
-}) {
+function QuickStartSection() {
   return (
-    <article>
+    <section id="quickstart" className="scroll-mt-8">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         Quick Start
       </h1>
@@ -438,7 +389,7 @@ function QuickStartSection({
       </p>
 
       {/* Step 1: Seed */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           1. Seed the Demo Corpus
         </h2>
@@ -456,10 +407,10 @@ function QuickStartSection({
           your local database. It takes about 30 seconds while embeddings are
           generated.
         </p>
-      </section>
+      </div>
 
       {/* Step 2: Configure Claude Code */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           2. Configure Claude Code
         </h2>
@@ -471,9 +422,9 @@ function QuickStartSection({
         <pre className="font-[family-name:var(--font-jetbrains)]">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`{
   "mcpServers": {
-    "intelligence-ledger": {
+    "assay": {
       "command": "node",
-      "args": ["/absolute/path/to/assay/dist/mcp-server.js"],
+      "args": ["/absolute/path/to/assay/dist/index.js"],
       "env": {
         "DATABASE_URL": "postgresql://localhost:5432/assay",
         "OPENAI_API_KEY": "sk-..."
@@ -490,10 +441,10 @@ function QuickStartSection({
             does not resolve relative paths for MCP servers.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Step 3: Test it */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           3. Test It
         </h2>
@@ -521,10 +472,10 @@ function QuickStartSection({
             </pre>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Expected output */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           What to Expect
         </h2>
@@ -574,53 +525,41 @@ function QuickStartSection({
             </span>
           </li>
         </ul>
-      </section>
+      </div>
 
       {/* Next steps */}
-      <section>
+      <div>
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Next Steps
         </h2>
         <ul className="space-y-2 text-[hsl(220,15%,93%)]">
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&rarr;</span>
-            <button
-              onClick={() => goTo("how-it-works")}
-              className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110 text-left"
-            >
+            <a href="#how-it-works" className={linkCls + " text-left"}>
               Learn how the pipeline works end-to-end
-            </button>
+            </a>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&rarr;</span>
-            <button
-              onClick={() => goTo("guides-notion")}
-              className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110 text-left"
-            >
+            <a href="#guides-notion" className={linkCls + " text-left"}>
               Ingest your own Notion pages
-            </button>
+            </a>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&rarr;</span>
-            <button
-              onClick={() => goTo("tools-stress-test")}
-              className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110 text-left"
-            >
+            <a href="#tools-stress-test" className={linkCls + " text-left"}>
               Stress-test a proposal against your evidence
-            </button>
+            </a>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&rarr;</span>
-            <button
-              onClick={() => goTo("extraction-modes")}
-              className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110 text-left"
-            >
+            <a href="#extraction-modes" className={linkCls + " text-left"}>
               Choose an extraction mode
-            </button>
+            </a>
           </li>
         </ul>
-      </section>
-    </article>
+      </div>
+    </section>
   );
 }
 
@@ -628,13 +567,9 @@ function QuickStartSection({
    SECTION: Extraction Modes
    ════════════════════════════════════════════════════════ */
 
-function ExtractionModesSection({
-  goTo,
-}: {
-  goTo: (id: SectionId) => void;
-}) {
+function ExtractionModesSection() {
   return (
-    <article>
+    <section id="extraction-modes" className="scroll-mt-8">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         Extraction Modes
       </h1>
@@ -643,7 +578,7 @@ function ExtractionModesSection({
       </p>
 
       {/* Intro */}
-      <section className="mb-10">
+      <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
           After a document is chunked and embedded, Assay optionally runs a
           claim extraction pass that breaks each section into standalone,
@@ -656,10 +591,10 @@ function ExtractionModesSection({
           Three modes are available. Each trades off cost, speed, quality,
           and infrastructure requirements differently.
         </p>
-      </section>
+      </div>
 
       {/* Comparison table */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Comparison
         </h2>
@@ -757,10 +692,10 @@ function ExtractionModesSection({
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
 
       {/* Ollama */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Ollama (Local)
         </h2>
@@ -779,7 +714,7 @@ function ExtractionModesSection({
 brew install ollama
 
 # Pull the recommended model
-ollama pull llama3.1:8b
+ollama pull phi4:14b
 
 # Set the extraction mode
 # In .env.local:
@@ -823,10 +758,10 @@ EXTRACTION_MODE=ollama`}</code>
             mode.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Anthropic */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Anthropic (API)
         </h2>
@@ -856,10 +791,10 @@ ANTHROPIC_API_KEY=sk-ant-...`}</code>
           workspace generates around 150 sections, costing about $0.36 per
           full ingestion pass.
         </p>
-      </section>
+      </div>
 
       {/* Subagent */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Subagent (Claude Code)
         </h2>
@@ -928,10 +863,10 @@ EXTRACTION_MODE=subagent`}</code>
             that prevents context bleed and ensures reproducible extractions.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Choosing a mode */}
-      <section className="mb-10">
+      <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Choosing a Mode
         </h2>
@@ -954,123 +889,91 @@ EXTRACTION_MODE=subagent`}</code>
             for most teams.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Related */}
-      <section>
+      <div>
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Related
         </h2>
         <ul className="space-y-2 text-[hsl(220,15%,93%)]">
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&rarr;</span>
-            <button
-              onClick={() => goTo("evidence-and-claims")}
-              className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110 text-left"
-            >
+            <a href="#evidence-and-claims" className={linkCls + " text-left"}>
               Evidence and Claims — understand what gets extracted
-            </button>
+            </a>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&rarr;</span>
-            <button
-              onClick={() => goTo("feature-toggles")}
-              className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110 text-left"
-            >
+            <a href="#feature-toggles" className={linkCls + " text-left"}>
               Feature Toggles — fine-tune extraction behavior
-            </button>
+            </a>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&rarr;</span>
-            <button
-              onClick={() => goTo("guides-notion")}
-              className="text-[hsl(234,100%,71%)] underline underline-offset-4 hover:brightness-110 text-left"
-            >
+            <a href="#guides-notion" className={linkCls + " text-left"}>
               Notion Ingestion guide — put extraction to work
-            </button>
+            </a>
           </li>
         </ul>
-      </section>
-    </article>
+      </div>
+    </section>
   );
 }
 
 /* ════════════════════════════════════════════════════════
-   MAIN PAGE COMPONENT
+   MAIN PAGE — all sections rendered at once
    ════════════════════════════════════════════════════════ */
 
+const HR = () => (
+  <hr className="border-[hsl(220,15%,18%)] my-16" />
+);
+
 export default function DocsPage() {
-  const [activeSection, setActiveSection] = useState<SectionId>("overview");
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const goTo = useCallback((id: SectionId) => {
-    setActiveSection(id);
-    window.location.hash = id;
-    if (contentRef.current) {
-      contentRef.current.scrollTo({ top: 0 });
-    }
-  }, []);
-
-  /* Read hash on mount + listen for popstate (back/forward) */
-  useEffect(() => {
-    setActiveSection(resolveHash());
-
-    function onHashChange() {
-      setActiveSection(resolveHash());
-      if (contentRef.current) {
-        contentRef.current.scrollTo({ top: 0 });
-      }
-    }
-
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
-
-  /* Section title map for Coming Soon placeholders */
-  const placeholderTitles: Record<string, string> = {
-    "how-it-works": "How It Works",
-    "evidence-and-claims": "Evidence & Claims",
-    retrieval: "Retrieval Pipeline",
-    "tools-brief": "brief",
-    "tools-stress-test": "stress_test",
-    "tools-retrieve-evidence": "retrieve_evidence",
-    "tools-sync-notion": "sync_notion",
-    "tools-health-check": "health_check",
-    "feature-toggles": "Feature Toggles",
-    presets: "Presets",
-    "guides-notion": "Notion Ingestion",
-    "guides-hygiene": "Background Hygiene",
-    "guides-troubleshooting": "Troubleshooting",
-  };
-
-  function renderSection() {
-    switch (activeSection) {
-      case "overview":
-        return <OverviewSection goTo={goTo} />;
-      case "installation":
-        return <InstallationSection goTo={goTo} />;
-      case "quickstart":
-        return <QuickStartSection goTo={goTo} />;
-      case "extraction-modes":
-        return <ExtractionModesSection goTo={goTo} />;
-      default:
-        return (
-          <ComingSoon
-            title={placeholderTitles[activeSection] ?? activeSection}
-          />
-        );
-    }
-  }
-
   return (
-    <>
-      <DocsSidebar activeSection={activeSection} onSectionChange={goTo} />
-      <main
-        ref={contentRef}
-        className="flex-1 min-w-0 px-6 py-10 md:px-12 lg:px-16 max-w-4xl overflow-y-auto"
-      >
-        {renderSection()}
-      </main>
-    </>
+    <main className="flex-1 min-w-0 px-6 py-10 md:px-12 lg:px-16 max-w-4xl overflow-y-auto scroll-smooth">
+      {/* Getting Started */}
+      <OverviewSection />
+      <HR />
+      <InstallationSection />
+      <HR />
+      <QuickStartSection />
+      <HR />
+
+      {/* Core Concepts */}
+      <ComingSoon id="how-it-works" title="How It Works" />
+      <HR />
+      <ComingSoon id="evidence-and-claims" title="Evidence & Claims" />
+      <HR />
+      <ComingSoon id="retrieval" title="Retrieval Pipeline" />
+      <HR />
+
+      {/* Tools Reference */}
+      <ComingSoon id="tools-brief" title="brief" />
+      <HR />
+      <ComingSoon id="tools-stress-test" title="stress_test" />
+      <HR />
+      <ComingSoon id="tools-retrieve-evidence" title="retrieve_evidence" />
+      <HR />
+      <ComingSoon id="tools-sync-notion" title="sync_notion" />
+      <HR />
+      <ComingSoon id="tools-health-check" title="health_check" />
+      <HR />
+
+      {/* Configuration */}
+      <ExtractionModesSection />
+      <HR />
+      <ComingSoon id="feature-toggles" title="Feature Toggles" />
+      <HR />
+      <ComingSoon id="presets" title="Presets" />
+      <HR />
+
+      {/* Guides */}
+      <ComingSoon id="guides-notion" title="Notion Ingestion" />
+      <HR />
+      <ComingSoon id="guides-hygiene" title="Background Hygiene" />
+      <HR />
+      <ComingSoon id="guides-troubleshooting" title="Troubleshooting" />
+    </main>
   );
 }

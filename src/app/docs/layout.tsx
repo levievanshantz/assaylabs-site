@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DocsSidebar, MobileSidebarToggle } from "./sidebar";
 
 export const metadata: Metadata = {
   title: "Documentation — Assaylabs",
@@ -13,6 +14,8 @@ export default function DocsLayout({
 }) {
   return (
     <div className="min-h-screen bg-[hsl(220,15%,6%)] flex">
+      <DocsSidebar />
+      <MobileSidebarToggle />
       {children}
     </div>
   );
