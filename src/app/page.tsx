@@ -1,65 +1,293 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <>
+      {/* ──────────────────────────── NAV ──────────────────────────── */}
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+          <a href="/" className="text-lg font-semibold tracking-tight">
+            Assaylabs
+          </a>
+          <div className="flex items-center gap-6 text-sm">
+            <a
+              href="/docs"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Docs
+            </a>
+            <a
+              href="https://github.com/levievanshantz/assay"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://github.com/levievanshantz/assay"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            >
+              Get Started
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <main className="flex-1">
+        {/* ──────────────────────────── HERO ──────────────────────────── */}
+        <section className="mx-auto max-w-3xl px-6 pb-24 pt-28 text-center">
+          <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+            Give your product team a memory that doesn&rsquo;t forget.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            Assay turns PRDs, strategy docs, research, and decisions into cited
+            claims your AI tools can actually check against. Local-first,
+            inspectable, built for PMs who ship.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <div className="mt-10 flex items-center justify-center gap-4">
+            <a
+              href="https://github.com/levievanshantz/assay"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            >
+              Get the repo
+            </a>
+            <a
+              href="#how-it-works"
+              className="rounded-md border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-card"
+            >
+              See how it works
+            </a>
+          </div>
+        </section>
+
+        {/* ──────────────────────────── PROBLEM ──────────────────────────── */}
+        <section id="problem" className="border-t border-border py-24">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Your AI tools forget everything unless you restate it.
+            </h2>
+            <div className="mt-12 grid gap-4 sm:grid-cols-2">
+              {[
+                "Product context scattered across Notion, Confluence, Slack, Google Docs.",
+                "Vector search alone misses important evidence \u2014 we measured: claims retrieval surfaces 10.7 additional records per query.",
+                "Summarization tools compress meaning \u2014 and every compression risks losing what matters.",
+                "Agents crawling docs fresh every time is expensive, slow, and produces different answers to the same question.",
+              ].map((text, i) => (
+                <div
+                  key={i}
+                  className="rounded-lg border border-border bg-card p-6 text-sm leading-relaxed text-muted-foreground"
+                >
+                  {text}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──────────────────────────── HOW IT WORKS ──────────────────────────── */}
+        <section id="how-it-works" className="border-t border-border py-24">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              How Assay works
+            </h2>
+            <ol className="mt-12 grid gap-4 sm:grid-cols-5">
+              {[
+                {
+                  step: "1",
+                  title: "Ingest your docs",
+                  desc: "Notion connector today, Confluence and more coming.",
+                },
+                {
+                  step: "2",
+                  title: "Extract atomic claims with provenance",
+                  desc: "Constraints, commitments, deferrals, assumptions, findings, recommendations, metrics.",
+                },
+                {
+                  step: "3",
+                  title: "Retrieve through 4-layer hybrid search",
+                  desc: "Not just vector similarity.",
+                },
+                {
+                  step: "4",
+                  title: "Generate structured briefs or stress-test proposals",
+                  desc: "With cited evidence.",
+                },
+                {
+                  step: "5",
+                  title: "Each use deposits synthesis back",
+                  desc: "The system compounds.",
+                },
+              ].map(({ step, title, desc }) => (
+                <div key={step} className="rounded-lg border border-border bg-card p-5">
+                  <span className="font-mono text-xs text-accent">{step}</span>
+                  <h3 className="mt-2 text-sm font-semibold leading-snug">
+                    {title}
+                  </h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                    {desc}
+                  </p>
+                </div>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* ──────────────────────────── WHY BETTER ──────────────────────────── */}
+        <section id="why-better" className="border-t border-border py-24">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Why this approach works
+            </h2>
+            <div className="mt-12 grid gap-4 sm:grid-cols-3">
+              {[
+                {
+                  versus: "vs Standard RAG",
+                  body: "RAG embeds docs and returns chunks. Assay extracts structured claims, indexes them separately, retrieves through claims FTS + claims vector + evidence vector + BM25 via RRF.",
+                },
+                {
+                  versus: "vs Agents crawling data",
+                  body: "Agents crawl fresh every time. No memory. Different answers to same question. Assay pre-indexes once, retrieves instantly, compounds per use.",
+                },
+                {
+                  versus: "vs Summarization tools",
+                  body: "Summarization contracts information, risking hallucination and loss of meaning. Assay preserves atomic claims with stance, type, and provenance.",
+                },
+              ].map(({ versus, body }) => (
+                <div
+                  key={versus}
+                  className="rounded-lg border border-border bg-card p-6"
+                >
+                  <h3 className="text-sm font-semibold text-accent">{versus}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──────────────────────────── TOOLS ──────────────────────────── */}
+        <section id="tools" className="border-t border-border py-24">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              What you can do
+            </h2>
+            <div className="mt-12 grid gap-4 sm:grid-cols-2">
+              {[
+                {
+                  name: "brief",
+                  desc: "What does the org know about X?",
+                },
+                {
+                  name: "stress_test",
+                  desc: "Pressure-test this proposal against everything the org has decided.",
+                },
+                {
+                  name: "retrieve_evidence",
+                  desc: "Search the corpus directly.",
+                },
+                {
+                  name: "sync_notion",
+                  desc: "Keep your knowledge base current.",
+                },
+              ].map(({ name, desc }) => (
+                <div
+                  key={name}
+                  className="rounded-lg border border-border bg-card p-6"
+                >
+                  <code className="text-sm text-accent">{name}</code>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──────────────────────────── BENCHMARKS ──────────────────────────── */}
+        <section id="benchmarks" className="border-t border-border py-24">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Pick your extraction model
+            </h2>
+            <div className="mt-12 overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
+                    <th className="pb-3 pr-6 font-medium">Model</th>
+                    <th className="pb-3 pr-6 font-medium">Coverage</th>
+                    <th className="pb-3 pr-6 font-medium">Cost</th>
+                    <th className="pb-3 pr-6 font-medium">Speed</th>
+                    <th className="pb-3 font-medium">Hardware</th>
+                  </tr>
+                </thead>
+                <tbody className="text-muted-foreground">
+                  <tr className="border-b border-border/50">
+                    <td className="py-3.5 pr-6 font-medium text-foreground">
+                      Phi-4 14B{" "}
+                      <span className="text-xs text-muted-foreground">(Ollama)</span>
+                    </td>
+                    <td className="py-3.5 pr-6">83.1%</td>
+                    <td className="py-3.5 pr-6">Free</td>
+                    <td className="py-3.5 pr-6">~45-60 min / 100 sections</td>
+                    <td className="py-3.5">M1 Pro 16GB+</td>
+                  </tr>
+                  <tr className="border-b border-border/50">
+                    <td className="py-3.5 pr-6 font-medium text-foreground">
+                      Claude Sonnet{" "}
+                      <span className="text-xs text-muted-foreground">(API)</span>
+                    </td>
+                    <td className="py-3.5 pr-6">93.8%</td>
+                    <td className="py-3.5 pr-6">~$0.003 / section</td>
+                    <td className="py-3.5 pr-6">~5-10 min / 100 sections</td>
+                    <td className="py-3.5">Any</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3.5 pr-6 font-medium text-foreground">
+                      Claude Code subagent
+                    </td>
+                    <td className="py-3.5 pr-6">~93.8%</td>
+                    <td className="py-3.5 pr-6">Subscription</td>
+                    <td className="py-3.5 pr-6">~15-20 min / 100 sections</td>
+                    <td className="py-3.5">Claude Code required</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-xs text-muted-foreground">
+              Coverage measured via LLM-as-judge on 10 test sections.
+            </p>
+          </div>
+        </section>
       </main>
-    </div>
+
+      {/* ──────────────────────────── FOOTER ──────────────────────────── */}
+      <footer className="border-t border-border py-8">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-sm text-muted-foreground">
+          <span>Assaylabs &copy; 2026</span>
+          <div className="flex gap-6">
+            <a
+              href="https://github.com/levievanshantz/assay"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-foreground"
+            >
+              GitHub
+            </a>
+            <a
+              href="/docs"
+              className="transition-colors hover:text-foreground"
+            >
+              Docs
+            </a>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }
