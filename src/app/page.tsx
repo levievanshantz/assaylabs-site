@@ -191,7 +191,7 @@ export default function Home() {
                   desc: "Search the corpus directly.",
                 },
                 {
-                  name: "sync_notion",
+                  name: "sync",
                   desc: "Keep your knowledge base current.",
                 },
               ].map(({ name, desc }) => (
