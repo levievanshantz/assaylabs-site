@@ -237,24 +237,22 @@ export default function Home() {
                     <td className="py-3.5 pr-6">~45-60 min / 100 sections</td>
                     <td className="py-3.5">M1 Pro 16GB+</td>
                   </tr>
-                  <tr className="border-b border-border/50">
-                    <td className="py-3.5 pr-6 font-medium text-foreground">
-                      Claude Sonnet{" "}
-                      <span className="text-xs text-muted-foreground">(API)</span>
-                    </td>
-                    <td className="py-3.5 pr-6">93.8%</td>
-                    <td className="py-3.5 pr-6">~$0.003 / section</td>
-                    <td className="py-3.5 pr-6">~5-10 min / 100 sections</td>
-                    <td className="py-3.5">Any</td>
-                  </tr>
                   <tr>
                     <td className="py-3.5 pr-6 font-medium text-foreground">
-                      Claude Code subagent
+                      Claude Sonnet
+                      <span className="block text-xs text-muted-foreground mt-0.5">
+                        API key or Claude Code subagent
+                      </span>
                     </td>
-                    <td className="py-3.5 pr-6">~93.8%</td>
-                    <td className="py-3.5 pr-6">Subscription</td>
-                    <td className="py-3.5 pr-6">~15-20 min / 100 sections</td>
-                    <td className="py-3.5">Claude Code required</td>
+                    <td className="py-3.5 pr-6">93.8%</td>
+                    <td className="py-3.5 pr-6">
+                      ~$0.003 / section
+                      <span className="block text-xs text-muted-foreground">
+                        or included in Claude Code plan
+                      </span>
+                    </td>
+                    <td className="py-3.5 pr-6">~5-10 min / 100 sections</td>
+                    <td className="py-3.5">Any machine</td>
                   </tr>
                 </tbody>
               </table>
