@@ -59,7 +59,7 @@ export function DocsSidebar() {
         bg-[hsl(220,15%,9%)] border-r border-[hsl(220,15%,18%)]
       "
     >
-      <div className="px-5 pt-6 pb-4">
+      <div className="px-5 pt-6 pb-4 border-b border-[hsl(220,15%,15%)]">
         <Link
           href="/"
           className="text-[hsl(220,15%,93%)] font-semibold text-sm tracking-wide"
@@ -69,10 +69,10 @@ export function DocsSidebar() {
         <span className="ml-2 text-xs text-[hsl(220,10%,55%)]">Docs</span>
       </div>
 
-      <nav className="px-3 pb-8">
+      <nav className="px-3 pt-4 pb-8">
         {NAV_SECTIONS.map((section) => (
-          <div key={section.title} className="mb-6">
-            <h4 className="px-2 mb-1.5 text-xs font-semibold uppercase tracking-wider text-[hsl(220,10%,55%)]">
+          <div key={section.title} className="mb-8">
+            <h4 className="px-2 mb-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[hsl(220,10%,45%)] border-b border-[hsl(220,15%,15%)]">
               {section.title}
             </h4>
             <ul className="space-y-0.5">
