@@ -46,6 +46,12 @@ const NAV_SECTIONS: {
       { label: "Troubleshooting", id: "guides-troubleshooting" },
     ],
   },
+  {
+    title: "Reference",
+    links: [
+      { label: "Glossary", id: "glossary" },
+    ],
+  },
 ];
 
 export { NAV_SECTIONS };
