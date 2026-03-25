@@ -18,17 +18,9 @@ export default function Home() {
               href="https://github.com/levievanshantz/assay"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://github.com/levievanshantz/assay"
-              target="_blank"
-              rel="noopener noreferrer"
               className="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
-              Get Started
+              GitHub
             </a>
           </div>
         </div>
@@ -67,20 +59,34 @@ export default function Home() {
         <section id="problem" className="border-t border-border py-24">
           <div className="mx-auto max-w-5xl px-6">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              Your AI tools forget everything unless you restate it.
+              Every execution decision requires context your tools don&rsquo;t have.
             </h2>
             <div className="mt-12 grid gap-4 sm:grid-cols-2">
               {[
-                "Product context scattered across Notion, Confluence, Slack, Google Docs.",
-                "Vector search alone misses important evidence \u2014 we measured: claims retrieval surfaces 10.7 additional records per query.",
-                "Summarization tools compress meaning \u2014 and every compression risks losing what matters.",
-                "Agents crawling docs fresh every time is expensive, slow, and produces different answers to the same question.",
-              ].map((text, i) => (
+                {
+                  heading: "Scattered context",
+                  body: "Product context scattered across Notion, Confluence, Slack, Google Docs.",
+                },
+                {
+                  heading: "Retrieval gaps",
+                  body: "Vector search alone misses important evidence \u2014 we measured: claims retrieval surfaces 10.7 additional records per query.",
+                },
+                {
+                  heading: "Lossy compression",
+                  body: "Summarization tools compress meaning \u2014 and every compression risks losing what matters.",
+                },
+                {
+                  heading: "Stateless agents",
+                  body: "Agents crawling docs fresh every time is expensive, slow, and produces different answers to the same question.",
+                },
+              ].map(({ heading, body }, i) => (
                 <div
                   key={i}
                   className="rounded-lg border border-border bg-card p-6 text-sm leading-relaxed text-muted-foreground"
                 >
-                  {text}
+                  <span className="font-semibold text-foreground">{heading}</span>
+                  <span className="mx-1.5">&mdash;</span>
+                  {body}
                 </div>
               ))}
             </div>
@@ -112,8 +118,8 @@ export default function Home() {
                 },
                 {
                   step: "4",
-                  title: "Generate structured briefs or stress-test proposals",
-                  desc: "With cited evidence.",
+                  title: "Stress-test proposals or query comprehensive evidence",
+                  desc: "With cited sources and contradiction detection.",
                 },
                 {
                   step: "5",
@@ -122,8 +128,8 @@ export default function Home() {
                 },
               ].map(({ step, title, desc }) => (
                 <div key={step} className="rounded-lg border border-border bg-card p-5">
-                  <span className="font-mono text-xs text-accent">{step}</span>
-                  <h3 className="mt-2 text-sm font-semibold leading-snug">
+                  <h3 className="text-sm font-semibold leading-snug">
+                    <span className="text-lg text-accent mr-2">{step}.</span>
                     {title}
                   </h3>
                   <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
@@ -145,15 +151,15 @@ export default function Home() {
               {[
                 {
                   versus: "vs Standard RAG",
-                  body: "RAG embeds docs and returns chunks. Assay extracts structured claims, indexes them separately, retrieves through claims FTS + claims vector + evidence vector + BM25 via RRF.",
+                  body: "RAG embeds docs and returns chunks. Assay extracts structured claims, indexes them separately, retrieves through claims FTS + claims vector + evidence vector + full-text search via RRF.",
                 },
                 {
                   versus: "vs Agents crawling data",
-                  body: "Agents crawl fresh every time. No memory. Different answers to same question. Assay pre-indexes once, retrieves instantly, compounds per use.",
+                  body: "Agents crawl fresh every time. No memory. Different answers to same question. And in aggregating results, they lose the nuance that matters most \u2014 disparate observations that connect across documents, the unexpected relevance that inductive product reasoning depends on. Assay pre-indexes once, retrieves instantly, compounds per use.",
                 },
                 {
                   versus: "vs Summarization tools",
-                  body: "Summarization contracts information, risking hallucination and loss of meaning. Assay preserves atomic claims with stance, type, and provenance.",
+                  body: "Summarization contracts information \u2014 every compression risks hallucination and loss of meaning. Assay pulls source documentation that hasn\u2019t been aggregated, preserving atomic claims with stance, type, and provenance. The original meaning survives because it\u2019s never contracted.",
                 },
               ].map(({ versus, body }) => (
                 <div
@@ -258,7 +264,7 @@ export default function Home() {
               </table>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
-              Coverage measured via LLM-as-judge on 10 test sections.
+              Coverage measured via LLM-as-judge with human-in-the-loop validation on control group test sessions. A section is approximately 3,200 characters of source content.
             </p>
           </div>
         </section>
