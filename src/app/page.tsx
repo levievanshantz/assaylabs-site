@@ -114,12 +114,12 @@ export default function Home() {
                 {
                   step: "3",
                   title: "Retrieve through 4-layer hybrid search",
-                  desc: "Not just vector similarity.",
+                  desc: "Evidence vector, claims vector, evidence FTS (tsvector/ts_rank), and claims FTS — merged via reciprocal rank fusion.",
                 },
                 {
                   step: "4",
-                  title: "Stress-test proposals or query comprehensive evidence",
-                  desc: "With cited sources and contradiction detection.",
+                  title: "Query with comprehensive breadth",
+                  desc: "Briefs, stress tests, and raw retrieval — all with cited sources and contradiction detection.",
                 },
                 {
                   step: "5",
@@ -185,20 +185,20 @@ export default function Home() {
             <div className="mt-12 grid gap-4 sm:grid-cols-2">
               {[
                 {
-                  name: "brief",
-                  desc: "What does the org know about X?",
+                  name: "retrieve",
+                  desc: "Query the corpus across four modes: raw (direct results), guided (eval instructions for the calling LLM), evaluate (server-side synthesis), and brief (structured organizational briefing).",
+                },
+                {
+                  name: "scan",
+                  desc: "Sync source documents, detect drift, and check corpus health in one pass.",
                 },
                 {
                   name: "stress_test",
-                  desc: "Pressure-test this proposal against everything the org has decided.",
+                  desc: "Pressure-test a proposal against everything the org has decided. Verdict, contradictions, assumption weaknesses, evidence gaps.",
                 },
                 {
-                  name: "retrieve_evidence",
-                  desc: "Search the corpus directly.",
-                },
-                {
-                  name: "sync",
-                  desc: "Keep your knowledge base current.",
+                  name: "configure",
+                  desc: "View and update extraction mode, retrieval depth, feature toggles, and presets.",
                 },
               ].map(({ name, desc }) => (
                 <div

@@ -894,33 +894,75 @@ function RetrievalSection() {
 }
 
 /* ════════════════════════════════════════════════════════
-   SECTION: brief
+   SECTION: retrieve
    ════════════════════════════════════════════════════════ */
 
-function BriefSection() {
+function RetrieveSection2() {
   return (
-    <section id="tools-brief" className="scroll-mt-8">
+    <section id="tools-retrieve" className="scroll-mt-8">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
-        brief
+        retrieve
       </h1>
       <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        Get a briefing on what the organization already knows about a topic.
+        Query the corpus with four retrieval modes.
       </p>
 
       <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          The <code>brief</code> tool retrieves evidence records relevant to a
-          given topic and synthesizes them into a structured summary. It answers
-          the question: &ldquo;What does the organization already know about
-          this?&rdquo; Use it before evaluating any product decision to
-          accelerate by surfacing existing knowledge.
+          The <code>retrieve</code> tool is the primary interface to the corpus.
+          It runs 4-layer hybrid search and returns results in one of four modes,
+          each suited to a different workflow. Default retrieval depth is K=20
+          evidence records.
         </p>
       </div>
 
       <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          What It Returns
+          Four Modes
         </h2>
+        <ul className="space-y-4 text-[hsl(220,15%,93%)]">
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>raw</strong> — returns top-K evidence records with RRF
+              scores. No LLM call. Fastest and cheapest.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>guided</strong> — returns evidence plus an{" "}
+              <code>eval_instructions</code> field. The calling LLM processes
+              the results itself — zero extra API cost.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>evaluate</strong> — the server calls an LLM to synthesize
+              findings and returns a plain-language summary.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>brief</strong> — generates a structured organizational
+              briefing: context summary, prior work, active constraints,
+              unresolved debates, open questions, and dependencies. Each brief
+              deposits its synthesis back into the corpus, creating an
+              accumulation loop.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Brief Output
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          When using <code>mode=&quot;brief&quot;</code>, the tool returns:
+        </p>
         <ul className="space-y-2 text-[hsl(220,15%,93%)]">
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
@@ -951,33 +993,35 @@ function BriefSection() {
 
       <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Example
+          Examples
         </h2>
-        <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`brief "customer onboarding friction"`}</code>
-        </pre>
-      </div>
-
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Retrieval Depth
-        </h2>
-        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          Default K=20 evidence records. K values are configurable via
-          environment variables. Default: <code>brief</code> uses K=20,{" "}
-          <code>stress_test</code> uses K=100.
-        </p>
+        <div className="space-y-4">
+          <div>
+            <p className="text-[hsl(220,10%,55%)] text-sm mb-1">
+              Raw retrieval:
+            </p>
+            <pre className="font-[family-name:var(--font-jetbrains)]">
+              <code className="text-sm text-[hsl(220,15%,93%)]">{`retrieve "competitive landscape" mode="raw" top_k=30`}</code>
+            </pre>
+          </div>
+          <div>
+            <p className="text-[hsl(220,10%,55%)] text-sm mb-1">
+              Organizational briefing (default K=20):
+            </p>
+            <pre className="font-[family-name:var(--font-jetbrains)]">
+              <code className="text-sm text-[hsl(220,15%,93%)]">{`retrieve "customer onboarding friction" mode="brief"`}</code>
+            </pre>
+          </div>
+        </div>
       </div>
 
       <div>
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Accumulation Loop
+          Retrieval Depth
         </h2>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          Each brief deposits its synthesis back into the corpus as a new
-          evidence record. This creates an accumulation loop — the corpus gets
-          smarter over time as briefings add synthesized context that future
-          queries can draw from.
+          Default K=20 evidence records. Configurable per call via{" "}
+          <code>top_k</code> parameter or globally via environment variables.
         </p>
       </div>
     </section>
@@ -1069,70 +1113,7 @@ function StressTestSection() {
   );
 }
 
-/* ════════════════════════════════════════════════════════
-   SECTION: retrieve_evidence
-   ════════════════════════════════════════════════════════ */
-
-function RetrieveEvidenceSection() {
-  return (
-    <section id="tools-retrieve-evidence" className="scroll-mt-8">
-      <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
-        retrieve_evidence
-      </h1>
-      <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        Direct corpus search without the synthesis layer.
-      </p>
-
-      <div className="mb-10">
-        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          The <code>retrieve_evidence</code> tool searches the corpus and
-          returns ranked results directly — no brief, no verdict, just the
-          evidence. Use it when you want to inspect what the retrieval pipeline
-          finds for a given query without any LLM synthesis on top.
-        </p>
-      </div>
-
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Three Modes
-        </h2>
-        <ul className="space-y-3 text-[hsl(220,15%,93%)]">
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>raw</strong> — returns top-K evidence records with RRF
-              scores. No LLM call. Fastest and cheapest.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>guided</strong> — returns evidence plus an{" "}
-              <code>eval_instructions</code> field. The calling LLM processes
-              the results itself — zero extra API cost.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>evaluate</strong> — the server calls an LLM to synthesize
-              findings and returns a plain-language summary.
-            </span>
-          </li>
-        </ul>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Example
-        </h2>
-        <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`retrieve_evidence "competitive landscape" mode="raw" top_k=30`}</code>
-        </pre>
-      </div>
-    </section>
-  );
-}
+/* RetrieveEvidenceSection removed — folded into RetrieveSection2 above */
 
 /* ════════════════════════════════════════════════════════
    SECTION: sync
