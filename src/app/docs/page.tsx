@@ -2085,11 +2085,9 @@ export default function DocsPage() {
       <HR />
 
       {/* Tools Reference */}
-      <BriefSection />
+      <RetrieveSection2 />
       <HR />
       <StressTestSection />
-      <HR />
-      <RetrieveEvidenceSection />
       <HR />
       <SyncSection />
       <HR />
