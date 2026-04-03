@@ -55,6 +55,26 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ──────────────────────────── DEMO VIDEO ──────────────────────── */}
+        <section className="border-t border-border py-16">
+          <div className="mx-auto max-w-4xl px-6">
+            <p className="mb-6 text-center text-sm font-medium uppercase tracking-widest text-[hsl(220,10%,50%)]">
+              See it in action
+            </p>
+            <div className="overflow-hidden rounded-xl border border-border bg-black">
+              <video
+                controls
+                preload="metadata"
+                className="w-full"
+                poster=""
+              >
+                <source src="/assay-demo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </section>
+
         {/* ──────────────────────────── PROBLEM ──────────────────────────── */}
         <section id="problem" className="border-t border-border py-24">
           <div className="mx-auto max-w-5xl px-6">
