@@ -31,3 +31,14 @@ The intelligence-ledger-prototype repo has the actual product code.
 
 ## Latest Commit
 - `9574673` — Demo video + landing page 4-tool update + docs retrieve section
+
+## Daily Export Protocol
+<!-- ORCHESTRATOR-MANAGED — Do not remove this section. Injected by the global orchestrator instance. -->
+<!-- If this section is missing after a CLAUDE.md rewrite, the orchestrator will re-inject it. -->
+
+After completing any significant task (shipping a feature, updating MCP tools, running migrations,
+completing PRD work), APPEND to the file at:
+
+    .claude/daily-export.md
+
+(relative to your project root). Create the `.claude/` directory if it doesn't exist.
