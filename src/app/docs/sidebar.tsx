@@ -23,11 +23,10 @@ const NAV_SECTIONS: {
   {
     title: "Tools Reference",
     links: [
-      { label: "brief", id: "tools-brief" },
+      { label: "retrieve", id: "tools-retrieve" },
+      { label: "scan", id: "tools-scan" },
       { label: "stress_test", id: "tools-stress-test" },
-      { label: "retrieve_evidence", id: "tools-retrieve-evidence" },
-      { label: "sync", id: "tools-sync" },
-      { label: "health_check", id: "tools-health-check" },
+      { label: "configure", id: "tools-configure" },
     ],
   },
   {

@@ -88,9 +88,9 @@ function OverviewSection() {
                                 │  └────────────┘  │
                                 └──────────────────┘
                                         │
-                            ┌───────────┼───────────┐
-                            ▼           ▼           ▼
-                         brief    stress_test   retrieve
+                          ┌─────────┬───┴───┬─────────┐
+                          ▼         ▼       ▼         ▼
+                       retrieve   scan  stress_test  configure
 `}</code>
         </pre>
       </div>
@@ -458,10 +458,10 @@ function QuickStartSection() {
         <div className="space-y-4">
           <div>
             <p className="text-[hsl(220,10%,55%)] text-sm mb-1">
-              Verify the server is running:
+              Run a pre-flight check:
             </p>
             <pre className="font-[family-name:var(--font-jetbrains)]">
-              <code className="text-sm text-[hsl(220,15%,93%)]">{`Run health_check`}</code>
+              <code className="text-sm text-[hsl(220,15%,93%)]">{`Run scan`}</code>
             </pre>
           </div>
 
@@ -470,7 +470,7 @@ function QuickStartSection() {
               Get a briefing on a topic:
             </p>
             <pre className="font-[family-name:var(--font-jetbrains)]">
-              <code className="text-sm text-[hsl(220,15%,93%)]">{`Run brief "customer feedback"`}</code>
+              <code className="text-sm text-[hsl(220,15%,93%)]">{`retrieve "customer feedback" mode="brief"`}</code>
             </pre>
           </div>
         </div>
@@ -482,13 +482,14 @@ function QuickStartSection() {
           What to Expect
         </h2>
         <p className="text-[hsl(220,15%,93%)] mb-4">
-          The <code>health_check</code> tool returns a status object confirming
-          database connectivity, record counts, and embedding model
-          availability. If everything is green, the server is healthy.
+          The <code>scan</code> tool returns a pre-flight status: sync
+          freshness, record counts, drift warnings, and corpus health. If
+          everything looks good, you are ready to work.
         </p>
         <p className="text-[hsl(220,15%,93%)] mb-4">
-          The <code>brief</code> tool returns a structured summary of what your
-          organization already knows about the given topic. It includes:
+          The <code>retrieve</code> tool in <code>brief</code> mode returns a
+          structured summary of what your organization already knows about the
+          given topic. It includes:
         </p>
         <ul className="space-y-2 text-[hsl(220,15%,93%)]">
           <li className="flex items-start gap-2">
@@ -706,9 +707,9 @@ function EvidenceAndClaimsSection() {
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
           Evidence records are the primary unit of retrieval. They provide the
-          full context window that tools like <code>brief</code> and{" "}
-          <code>stress_test</code> synthesize from. Every claim links back to
-          exactly one evidence record.
+          full context window that tools like <code>retrieve</code> (in brief
+          mode) and <code>stress_test</code> synthesize from. Every claim links
+          back to exactly one evidence record.
         </p>
       </div>
 
@@ -885,8 +886,10 @@ function RetrievalSection() {
         </h2>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
           K values (the number of evidence records retrieved) are configurable
-          via environment variables. Default: <code>brief</code> uses K=20,{" "}
-          <code>stress_test</code> uses K=100.
+          via environment variables or the <code>configure</code> tool. Defaults:{" "}
+          <code>scan</code>=40, <code>stress_test</code>=80,{" "}
+          <code>retrieve</code>=20. Brief mode depth depends on setting: quick=5,
+          standard=15, deep=30.
         </p>
       </div>
     </section>
@@ -1105,8 +1108,8 @@ function StressTestSection() {
           Retrieval Depth
         </h2>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          Default K=100 evidence records (no artificial ceiling). K values are
-          configurable via environment variables.
+          Default K=80 evidence records. K values are configurable via the{" "}
+          <code>configure</code> tool or environment variables.
         </p>
       </div>
     </section>
@@ -1116,51 +1119,58 @@ function StressTestSection() {
 /* RetrieveEvidenceSection removed — folded into RetrieveSection2 above */
 
 /* ════════════════════════════════════════════════════════
-   SECTION: sync
+   SECTION: scan
    ════════════════════════════════════════════════════════ */
 
-function SyncSection() {
+function ScanSection() {
   return (
-    <section id="tools-sync" className="scroll-mt-8">
+    <section id="tools-scan" className="scroll-mt-8">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
-        sync
+        scan
       </h1>
       <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        Keep your corpus in sync with source documents.
+        Quick pre-flight check for corpus health and freshness.
       </p>
 
       <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          The <code>sync</code> tool checks all tracked source pages for
-          changes, updates modified sections, and removes deleted ones. It uses
-          content hash comparison and a 0.95 cosine similarity threshold to
-          distinguish meaningful changes from cosmetic edits.
+          The <code>scan</code> tool validates corpus health, checks last sync
+          time, and surfaces drift before you start working. Use it at the
+          beginning of any session to know your evidence is current.
         </p>
       </div>
 
       <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Three Outcomes Per Section
+          What It Returns
         </h2>
         <ul className="space-y-2 text-[hsl(220,15%,93%)]">
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Unchanged</strong> — content hash matches. No action taken.
+              <strong>Sync status</strong> — when the corpus was last synced
+              with source documents
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Cosmetic update</strong> — hash differs but cosine
-              similarity is &ge; 0.95. Re-embed but skip claim re-extraction.
+              <strong>Record counts</strong> — evidence records, claims,
+              products tracked
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Meaningful change</strong> — cosine similarity is &lt;
-              0.95. Re-embed and re-extract claims.
+              <strong>Freshness summary</strong> — how current the corpus is
+              relative to source documents
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>Drift warnings</strong> — pages that have changed in the
+              source but not yet been re-ingested
             </span>
           </li>
         </ul>
@@ -1168,25 +1178,23 @@ function SyncSection() {
 
       <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Tombstoning
+          Example
         </h2>
-        <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          Pages that no longer exist in the source are tombstoned — marked
-          inactive rather than hard-deleted. Their evidence records remain
-          available for historical queries but are excluded from active
-          retrieval.
+        <pre className="font-[family-name:var(--font-jetbrains)]">
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`scan`}</code>
+        </pre>
+        <p className="text-[hsl(220,10%,55%)] mt-3 text-sm">
+          No arguments needed. Returns a complete health report in one call.
         </p>
       </div>
 
       <div>
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Circuit Breaker
+          Retrieval Depth
         </h2>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          If more than 20% of tracked pages show changes in a single sync run,
-          the process halts automatically. This prevents runaway embedding and
-          extraction costs from bulk edits or API errors. Review the drift
-          report and re-run manually if the changes are intentional.
+          Default K=40 evidence records for the internal health check. Configurable
+          via the <code>configure</code> tool or environment variables.
         </p>
       </div>
     </section>
@@ -1194,69 +1202,86 @@ function SyncSection() {
 }
 
 /* ════════════════════════════════════════════════════════
-   SECTION: health_check
+   SECTION: configure
    ════════════════════════════════════════════════════════ */
 
-function HealthCheckSection() {
+function ConfigureSection() {
   return (
-    <section id="tools-health-check" className="scroll-mt-8">
+    <section id="tools-configure" className="scroll-mt-8">
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
-        health_check
+        configure
       </h1>
       <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        Verify your Assay installation is working correctly.
+        View and update Assay settings at runtime.
       </p>
 
       <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          The <code>health_check</code> tool performs a comprehensive diagnostic
-          of your Assay installation and reports exactly what is working and
-          what needs fixing.
+          The <code>configure</code> tool lets you view and update extraction
+          mode, retrieval depth, feature toggles, and presets. Use it to adjust
+          K values, switch extraction models, toggle dual embedding, or check
+          current settings — all without editing environment files.
         </p>
       </div>
 
       <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          What It Reports
+          What You Can Configure
         </h2>
         <ul className="space-y-2 text-[hsl(220,15%,93%)]">
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>Database status</strong> — connection, schema version, migration state</span>
+            <span><strong>Extraction mode</strong> — switch between <code>ollama</code>, <code>anthropic</code>, or <code>subagent</code></span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>Record counts</strong> — evidence records, claims, products</span>
+            <span><strong>K values</strong> — adjust retrieval depth per tool (scan=40, stress_test=80, retrieve=20)</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>pgvector status</strong> — extension installed, HNSW index operational</span>
+            <span><strong>Feature toggles</strong> — enable/disable sync, extraction, accumulation, hygiene</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>Embedding API</strong> — OpenAI connectivity and model availability</span>
+            <span><strong>Presets</strong> — apply a preset bundle (minimal, standard, full)</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>Extraction mode</strong> — current backend and its readiness</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>Notion connectivity</strong> — integration token validity (if configured)</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>Drift summary</strong> — how many tracked pages are stale</span>
+            <span><strong>Dual embedding</strong> — toggle local + OpenAI dual embedding mode</span>
           </li>
         </ul>
       </div>
 
-      <div>
-        <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          Run <code>health_check</code> after installation to verify setup, and
-          periodically to catch configuration drift. When something is broken,
-          the tool reports the specific issue and how to fix it.
-        </p>
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Examples
+        </h2>
+        <div className="space-y-4">
+          <div>
+            <p className="text-[hsl(220,10%,55%)] text-sm mb-1">
+              View current settings:
+            </p>
+            <pre className="font-[family-name:var(--font-jetbrains)]">
+              <code className="text-sm text-[hsl(220,15%,93%)]">{`configure`}</code>
+            </pre>
+          </div>
+          <div>
+            <p className="text-[hsl(220,10%,55%)] text-sm mb-1">
+              Switch extraction mode:
+            </p>
+            <pre className="font-[family-name:var(--font-jetbrains)]">
+              <code className="text-sm text-[hsl(220,15%,93%)]">{`configure extraction_mode="ollama"`}</code>
+            </pre>
+          </div>
+          <div>
+            <p className="text-[hsl(220,10%,55%)] text-sm mb-1">
+              Apply a preset:
+            </p>
+            <pre className="font-[family-name:var(--font-jetbrains)]">
+              <code className="text-sm text-[hsl(220,15%,93%)]">{`configure preset="full"`}</code>
+            </pre>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -2089,9 +2114,9 @@ export default function DocsPage() {
       <HR />
       <StressTestSection />
       <HR />
-      <SyncSection />
+      <ScanSection />
       <HR />
-      <HealthCheckSection />
+      <ConfigureSection />
       <HR />
 
       {/* Configuration */}

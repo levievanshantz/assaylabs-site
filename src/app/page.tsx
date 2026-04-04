@@ -68,8 +68,7 @@ export default function Home() {
                 className="w-full"
                 poster=""
               >
-                <source src="/assay-demo.mov" type="video/quicktime" />
-                <source src="/assay-demo.mov" type="video/mp4" />
+                <source src="/assay-demo.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -211,7 +210,7 @@ export default function Home() {
                 },
                 {
                   name: "scan",
-                  desc: "Sync source documents, detect drift, and check corpus health in one pass.",
+                  desc: "Quick pre-flight check — validates the corpus is healthy, checks sync freshness, and surfaces any drift before you start working.",
                 },
                 {
                   name: "stress_test",
