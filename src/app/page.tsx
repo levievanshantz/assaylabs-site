@@ -68,7 +68,8 @@ export default function Home() {
                 className="w-full"
                 poster=""
               >
-                <source src="/assay-demo.mp4" type="video/mp4" />
+                <source src="/assay-demo.mov" type="video/quicktime" />
+                <source src="/assay-demo.mov" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
