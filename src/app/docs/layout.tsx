@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DocsSidebar, MobileSidebarToggle } from "./sidebar";
 
 export const metadata: Metadata = {
-  title: "Documentation — Assaylabs",
+  title: "Documentation — AssayLabs",
   description:
     "Learn how to set up and use Assay, the intelligence ledger for product teams.",
 };

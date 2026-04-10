@@ -5,7 +5,7 @@ export default function Home() {
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
           <a href="/" className="text-lg font-semibold tracking-tight">
-            Assaylabs
+            AssayLabs
           </a>
           <div className="flex items-center gap-6 text-sm">
             <a
@@ -293,7 +293,7 @@ export default function Home() {
       {/* ──────────────────────────── FOOTER ──────────────────────────── */}
       <footer className="border-t border-border py-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-sm text-muted-foreground">
-          <span>Assaylabs &copy; 2026</span>
+          <span>AssayLabs &copy; 2026</span>
           <div className="flex gap-6">
             <a
               href="https://github.com/levievanshantz/assay"

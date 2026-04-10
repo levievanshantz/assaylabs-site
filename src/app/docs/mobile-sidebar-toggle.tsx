@@ -61,7 +61,7 @@ export function MobileSidebarToggle() {
             href="/"
             className="text-[hsl(220,15%,93%)] font-semibold text-sm tracking-wide"
           >
-            Assaylabs
+            AssayLabs
           </Link>
           <span className="ml-2 text-xs text-[hsl(220,10%,55%)]">Docs</span>
         </div>
