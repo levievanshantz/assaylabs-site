@@ -167,22 +167,32 @@ export default function Home() {
         <section id="knowledge-graph" className="border-t border-border py-24">
           <div className="mx-auto max-w-5xl px-6">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              Claims reveal hidden connections RAG can&rsquo;t see
+              Higher-dimensional retrieval
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              Each document gets decomposed into atomic claims &mdash; focused
-              vectors that create alternate search paths. When a claim diverges
-              from its source embedding, it connects documents that full-text
-              vector search would never link. Toggle the claims layer off to see
-              what RAG alone misses.
+              RAG embeds whole documents and finds neighbors in one vector
+              space. Assay decomposes each document into atomic claims &mdash;
+              each one a focused vector that creates a different search path
+              into the same source. The result: connections between documents
+              that cosine similarity alone would never surface, regardless of
+              how many results you retrieve.
+            </p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              The{" "}
+              <span className="text-[hsl(32,90%,65%)] font-medium">
+                orange edges
+              </span>{" "}
+              below are real connections from a production corpus &mdash;
+              documents linked through extracted claims that RAG missed even
+              at K=80. Toggle the claims layer off to see the gap.
             </p>
             <div className="mt-10">
               <KnowledgeGraphSection />
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
-              Real data from a production corpus. 36 documents, 40 RAG edges
-              (cosine similarity &gt; 0.42), 18 claims-only edges (lift +10%
-              to +29% over RAG). Hover to explore.
+              Production data &mdash; 36 documents, 40 RAG edges, 18
+              claims-only bridges. Hover nodes to see the specific claims
+              that create each connection.
             </p>
           </div>
         </section>

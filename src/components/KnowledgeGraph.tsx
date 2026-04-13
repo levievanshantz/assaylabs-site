@@ -18,9 +18,7 @@ interface GraphNode extends SimulationNodeDatum {
   label: string;
   type: string;
   claims: number;
-  /* computed at render time */
   hasClaimsEdge?: boolean;
-  claimsOnly?: boolean; // only reachable via claims edges
 }
 
 interface RagEdge extends SimulationLinkDatum<GraphNode> {
@@ -35,30 +33,39 @@ interface ClaimsEdge extends SimulationLinkDatum<GraphNode> {
 }
 
 /* ── colors ── */
-const RAG_EDGE = "rgba(100, 110, 140, 0.25)";
-const RAG_EDGE_HOVER = "rgba(140, 150, 180, 0.6)";
-const CLAIMS_EDGE = "hsl(32, 95%, 55%)";       // warm orange — high contrast against blue
-const CLAIMS_EDGE_GLOW = "rgba(245, 158, 50, 0.20)";
-const CLAIMS_EDGE_DIM = "rgba(245, 158, 50, 0.12)";
-const NODE_DEFAULT = "hsl(225, 40%, 50%)";
-const NODE_CLAIMS = "hsl(32, 90%, 58%)";        // nodes only reachable via claims
-const NODE_FADED = "rgba(60, 65, 85, 0.25)";
+const RAG_EDGE_COLOR = "rgba(100, 115, 155, 0.20)";
+const RAG_EDGE_ACTIVE = "rgba(150, 165, 200, 0.55)";
+const CLAIMS_EDGE_COLOR = "rgba(245, 158, 50, 0.60)";
+const CLAIMS_GLOW = "rgba(245, 158, 50, 0.18)";
+const CLAIMS_ACTIVE = "hsl(32, 95%, 58%)";
+const CLAIMS_ACTIVE_GLOW = "rgba(245, 158, 50, 0.30)";
+const NODE_COLOR = "hsl(225, 40%, 50%)";
+const NODE_CLAIMS_COLOR = "hsl(32, 85%, 55%)";
+const NODE_FADED = "rgba(55, 60, 80, 0.25)";
 
 export default function KnowledgeGraph() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
   const [showClaims, setShowClaims] = useState(true);
   const [dimensions, setDimensions] = useState({ width: 900, height: 520 });
+
+  // All mutable state lives in refs — no React re-renders on hover
   const nodesRef = useRef<GraphNode[]>([]);
   const ragEdgesRef = useRef<RagEdge[]>([]);
   const claimsEdgesRef = useRef<ClaimsEdge[]>([]);
-  const hoveredRef = useRef<GraphNode | null>(null);
+  const hoveredIdRef = useRef<string | null>(null);
   const showClaimsRef = useRef(true);
+  const needsDrawRef = useRef(false);
   const animRef = useRef<number>(0);
+  const simSettledRef = useRef(false);
 
-  useEffect(() => { hoveredRef.current = hoveredNode; }, [hoveredNode]);
-  useEffect(() => { showClaimsRef.current = showClaims; }, [showClaims]);
+  // Tooltip state — only React state needed for DOM rendering
+  const [tooltip, setTooltip] = useState<{
+    node: GraphNode;
+    edges: ClaimsEdge[];
+  } | null>(null);
+
+  useEffect(() => { showClaimsRef.current = showClaims; needsDrawRef.current = true; }, [showClaims]);
 
   // Responsive sizing
   useEffect(() => {
@@ -84,6 +91,8 @@ export default function KnowledgeGraph() {
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.scale(dpr, dpr);
+    simSettledRef.current = false;
+    needsDrawRef.current = true;
 
     // Build nodes
     const nodeMap = new Map<string, GraphNode>();
@@ -120,216 +129,189 @@ export default function KnowledgeGraph() {
       }))
       .filter((e) => e.source && e.target);
 
-    // Mark nodes that participate in claims edges
-    const ragConnected = new Set<string>();
-    for (const e of ragEdges) {
-      ragConnected.add((e.source as GraphNode).id);
-      ragConnected.add((e.target as GraphNode).id);
-    }
-    const claimsConnected = new Set<string>();
+    // Mark claims-participating nodes
+    const claimsSet = new Set<string>();
     for (const e of claimsEdges) {
-      claimsConnected.add((e.source as GraphNode).id);
-      claimsConnected.add((e.target as GraphNode).id);
+      claimsSet.add((e.source as GraphNode).id);
+      claimsSet.add((e.target as GraphNode).id);
     }
-    for (const n of nodes) {
-      n.hasClaimsEdge = claimsConnected.has(n.id);
-      // "claims-only" = connected via claims but has few/no RAG edges
-      n.claimsOnly = claimsConnected.has(n.id) && !ragConnected.has(n.id);
-    }
+    for (const n of nodes) n.hasClaimsEdge = claimsSet.has(n.id);
 
     nodesRef.current = nodes;
     ragEdgesRef.current = ragEdges;
     claimsEdgesRef.current = claimsEdges;
 
-    // Link force uses only RAG edges for layout positioning
-    // Claims edges are visual overlays — they shouldn't pull layout
     const sim = forceSimulation(nodes)
       .force(
         "link",
         forceLink([...ragEdges])
           .id((d: any) => d.id)
           .distance(90)
-          .strength((d: any) => (d.similarity || 0.5) * 0.25)
+          .strength((d: any) => (d.similarity || 0.5) * 0.2)
       )
       .force("charge", forceManyBody().strength(-200))
       .force("center", forceCenter(width / 2, height / 2))
-      .force("collide", forceCollide(24))
-      .alphaDecay(0.018);
+      .force("collide", forceCollide(26))
+      .alphaDecay(0.02);
+
+    sim.on("tick", () => { needsDrawRef.current = true; });
+    sim.on("end", () => { simSettledRef.current = true; });
 
     function draw() {
+      // Only redraw when something changed
+      if (!needsDrawRef.current) {
+        animRef.current = requestAnimationFrame(draw);
+        return;
+      }
+      needsDrawRef.current = false;
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
-      const hovered = hoveredRef.current;
+      const hovId = hoveredIdRef.current;
       const showC = showClaimsRef.current;
 
-      // Gather hovered connections
-      const ragHovered = new Set<string>();
-      const claimsHovered = new Set<string>();
-      if (hovered) {
+      // Compute connected sets for hovered node
+      const ragConn = new Set<string>();
+      const claimsConn = new Set<string>();
+      if (hovId) {
         for (const e of ragEdges) {
-          const s = e.source as GraphNode;
-          const t = e.target as GraphNode;
-          if (s.id === hovered.id || t.id === hovered.id) {
-            ragHovered.add(s.id);
-            ragHovered.add(t.id);
-          }
+          const s = (e.source as GraphNode).id;
+          const t = (e.target as GraphNode).id;
+          if (s === hovId || t === hovId) { ragConn.add(s); ragConn.add(t); }
         }
         if (showC) {
           for (const e of claimsEdges) {
-            const s = e.source as GraphNode;
-            const t = e.target as GraphNode;
-            if (s.id === hovered.id || t.id === hovered.id) {
-              claimsHovered.add(s.id);
-              claimsHovered.add(t.id);
-            }
+            const s = (e.source as GraphNode).id;
+            const t = (e.target as GraphNode).id;
+            if (s === hovId || t === hovId) { claimsConn.add(s); claimsConn.add(t); }
           }
         }
       }
-      const allHovered = new Set([...ragHovered, ...claimsHovered]);
+      const allConn = new Set([...ragConn, ...claimsConn]);
 
-      /* ── 1. RAG edges (always visible, muted) ── */
+      /* ── RAG edges ── */
       for (const e of ragEdges) {
         const s = e.source as GraphNode;
         const t = e.target as GraphNode;
         if (s.x == null || t.x == null) continue;
-        const active = hovered && (s.id === hovered.id || t.id === hovered.id);
+        const active = hovId && (s.id === hovId || t.id === hovId);
 
         ctx.beginPath();
         ctx.moveTo(s.x, s.y!);
         ctx.lineTo(t.x, t.y!);
-        ctx.strokeStyle = active
-          ? RAG_EDGE_HOVER
-          : hovered
-          ? "rgba(70, 75, 95, 0.06)"
-          : RAG_EDGE;
+        ctx.strokeStyle = active ? RAG_EDGE_ACTIVE : hovId ? "rgba(65, 70, 90, 0.06)" : RAG_EDGE_COLOR;
         ctx.lineWidth = active ? 1.5 : 0.6;
         ctx.stroke();
       }
 
-      /* ── 2. Claims edges (the expansion — bright orange) ── */
+      /* ── Claims edges ── */
       if (showC) {
         for (const e of claimsEdges) {
           const s = e.source as GraphNode;
           const t = e.target as GraphNode;
           if (s.x == null || t.x == null) continue;
-          const active = hovered && (s.id === hovered.id || t.id === hovered.id);
+          const active = hovId && (s.id === hovId || t.id === hovId);
 
-          // Wide glow underneath
+          // Glow
           ctx.beginPath();
           ctx.moveTo(s.x, s.y!);
           ctx.lineTo(t.x, t.y!);
-          ctx.strokeStyle = active
-            ? "rgba(245, 158, 50, 0.35)"
-            : hovered
-            ? CLAIMS_EDGE_DIM
-            : CLAIMS_EDGE_GLOW;
-          ctx.lineWidth = active ? 8 : 4;
+          ctx.strokeStyle = active ? CLAIMS_ACTIVE_GLOW : hovId ? "rgba(245,158,50,0.05)" : CLAIMS_GLOW;
+          ctx.lineWidth = active ? 10 : 5;
           ctx.stroke();
 
-          // Core line
+          // Core
           ctx.beginPath();
           ctx.moveTo(s.x, s.y!);
           ctx.lineTo(t.x, t.y!);
-          ctx.strokeStyle = active
-            ? CLAIMS_EDGE
-            : hovered
-            ? "rgba(245, 158, 50, 0.15)"
-            : "rgba(245, 158, 50, 0.55)";
+          ctx.strokeStyle = active ? CLAIMS_ACTIVE : hovId ? "rgba(245,158,50,0.10)" : CLAIMS_EDGE_COLOR;
           ctx.lineWidth = active ? 2.5 : 1.5;
-          ctx.stroke();
 
-          // Midpoint marker — small diamond
-          if (!hovered || active) {
-            const mx = (s.x + (t as GraphNode).x!) / 2;
-            const my = (s.y! + (t as GraphNode).y!) / 2;
+          // Dashed pattern for claims edges — visually distinct from solid RAG
+          ctx.setLineDash(active ? [] : [6, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Midpoint diamond on non-dimmed edges
+          if (!hovId || active) {
+            const mx = (s.x + t.x!) / 2;
+            const my = (s.y! + t.y!) / 2;
+            const sz = active ? 4 : 3;
             ctx.save();
             ctx.translate(mx, my);
             ctx.rotate(Math.PI / 4);
-            ctx.fillStyle = active ? CLAIMS_EDGE : "rgba(245, 158, 50, 0.45)";
-            ctx.fillRect(-3, -3, 6, 6);
+            ctx.fillStyle = active ? CLAIMS_ACTIVE : "rgba(245, 158, 50, 0.50)";
+            ctx.fillRect(-sz, -sz, sz * 2, sz * 2);
             ctx.restore();
           }
         }
       }
 
-      /* ── 3. Nodes ── */
+      /* ── Nodes ── */
       for (const n of nodes) {
         if (n.x == null) continue;
-        const isHovered = hovered?.id === n.id;
-        const isRagConn = ragHovered.has(n.id);
-        const isClaimsConn = claimsHovered.has(n.id);
-        const isConnected = allHovered.has(n.id);
-        const isFaded = hovered && !isHovered && !isConnected;
+        const isHov = n.id === hovId;
+        const isConn = allConn.has(n.id);
+        const isFaded = hovId && !isHov && !isConn;
+        const isClaimsConn = claimsConn.has(n.id);
 
         const baseR = 5 + Math.min(n.claims, 12) * 0.5;
-        const r = isHovered ? baseR + 3 : baseR;
+        const r = isHov ? baseR + 3 : baseR;
 
-        // Claims-only nodes glow orange when claims visible
-        const isClaimsNode = showC && n.hasClaimsEdge;
-
-        // Outer glow
-        if (isHovered) {
+        // Glow
+        if (isHov) {
           ctx.beginPath();
           ctx.arc(n.x, n.y!, r + 8, 0, Math.PI * 2);
-          ctx.fillStyle = isClaimsConn
-            ? "rgba(245, 158, 50, 0.12)"
-            : "rgba(100, 120, 200, 0.12)";
+          ctx.fillStyle = isClaimsConn && showC ? "rgba(245,158,50,0.10)" : "rgba(100,120,200,0.10)";
           ctx.fill();
         }
 
-        // Node fill
+        // Fill
         ctx.beginPath();
         ctx.arc(n.x, n.y!, r, 0, Math.PI * 2);
         if (isFaded) {
           ctx.fillStyle = NODE_FADED;
         } else if (isClaimsConn && showC) {
-          ctx.fillStyle = NODE_CLAIMS;
-        } else if (isClaimsNode && !hovered) {
-          // Subtle warm tint for claims-participating nodes
-          ctx.fillStyle = "hsl(220, 45%, 55%)";
+          ctx.fillStyle = NODE_CLAIMS_COLOR;
         } else {
-          ctx.fillStyle = NODE_DEFAULT;
+          ctx.fillStyle = NODE_COLOR;
         }
         ctx.fill();
 
-        // Ring
-        ctx.strokeStyle = isHovered
-          ? "white"
-          : isClaimsConn && showC
-          ? "rgba(245, 158, 50, 0.7)"
-          : isRagConn
-          ? "rgba(180, 190, 220, 0.5)"
-          : "rgba(150, 160, 190, 0.08)";
-        ctx.lineWidth = isHovered ? 2 : isConnected ? 1.5 : 0.5;
+        // Stroke
+        ctx.strokeStyle = isHov ? "white"
+          : isClaimsConn && showC ? "rgba(245,158,50,0.6)"
+          : isConn ? "rgba(180,190,220,0.4)"
+          : "rgba(130,140,170,0.08)";
+        ctx.lineWidth = isHov ? 2 : isConn ? 1.5 : 0.5;
         ctx.stroke();
 
         // Labels
-        if (isHovered || isConnected) {
-          const label = n.label.length > 32 ? n.label.slice(0, 29) + "..." : n.label;
-          ctx.font = isHovered
-            ? "bold 11px Inter, system-ui, sans-serif"
-            : "10px Inter, system-ui, sans-serif";
+        if (isHov || isConn) {
+          const label = n.label.length > 35 ? n.label.slice(0, 32) + "\u2026" : n.label;
+          ctx.font = isHov ? "bold 11px Inter, system-ui" : "10px Inter, system-ui";
           ctx.textAlign = "center";
-
-          // Text background for readability
           const tw = ctx.measureText(label).width;
-          ctx.fillStyle = "rgba(15, 17, 25, 0.85)";
-          ctx.fillRect(n.x - tw / 2 - 4, n.y! - r - 18, tw + 8, 14);
 
-          ctx.fillStyle = isHovered
-            ? "white"
-            : isClaimsConn && showC
-            ? "rgba(245, 190, 100, 0.9)"
-            : "rgba(200, 210, 230, 0.8)";
-          ctx.fillText(label, n.x, n.y! - r - 7);
+          // Background pill
+          ctx.fillStyle = "rgba(12, 14, 22, 0.88)";
+          const px = 5, py = 2;
+          const lx = n.x - tw / 2 - px;
+          const ly = n.y! - r - 20;
+          ctx.beginPath();
+          ctx.roundRect(lx, ly, tw + px * 2, 15, 3);
+          ctx.fill();
+
+          ctx.fillStyle = isHov ? "white"
+            : isClaimsConn && showC ? "rgba(245,190,100,0.9)"
+            : "rgba(190,200,220,0.8)";
+          ctx.fillText(label, n.x, n.y! - r - 9);
         }
       }
 
       animRef.current = requestAnimationFrame(draw);
     }
 
-    sim.on("tick", () => {});
     animRef.current = requestAnimationFrame(draw);
 
     return () => {
@@ -338,7 +320,9 @@ export default function KnowledgeGraph() {
     };
   }, [dimensions]);
 
-  // Mouse
+  // Mouse — update ref, flag redraw, only set React state for tooltip when node changes
+  const prevHovIdRef = useRef<string | null>(null);
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current;
@@ -359,40 +343,58 @@ export default function KnowledgeGraph() {
           closestDist = dist;
         }
       }
-      setHoveredNode(closest);
+
+      const newId = closest?.id ?? null;
+
+      // Always update ref + flag redraw (cheap)
+      hoveredIdRef.current = newId;
+      needsDrawRef.current = true;
+
+      // Only update React state when the hovered node actually changes
+      if (newId !== prevHovIdRef.current) {
+        prevHovIdRef.current = newId;
+
+        if (closest && showClaimsRef.current) {
+          const edges = claimsEdgesRef.current.filter((edge) => {
+            const s = (edge.source as GraphNode).id;
+            const t = (edge.target as GraphNode).id;
+            return s === newId || t === newId;
+          });
+          setTooltip(edges.length > 0 ? { node: closest, edges } : null);
+        } else {
+          setTooltip(null);
+        }
+      }
     },
     []
   );
 
-  // Hovered claims tooltip data
-  const hoveredClaimsEdges = hoveredNode
-    ? claimsEdgesRef.current.filter((e) => {
-        const s = e.source as GraphNode;
-        const t = e.target as GraphNode;
-        return s.id === hoveredNode.id || t.id === hoveredNode.id;
-      })
-    : [];
-
-  const ragCount = ragEdgesRef.current.length;
-  const claimsCount = claimsEdgesRef.current.length;
+  const handleMouseLeave = useCallback(() => {
+    hoveredIdRef.current = null;
+    prevHovIdRef.current = null;
+    needsDrawRef.current = true;
+    setTooltip(null);
+  }, []);
 
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* Stats bar */}
+      {/* Stats + toggle */}
       <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-6 text-xs text-muted-foreground">
-          <span>
-            <span className="font-mono text-foreground">{ragCount}</span> RAG connections
+        <div className="flex items-center gap-5 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-[2px] w-4 bg-[rgba(100,115,155,0.5)]" />
+            RAG similarity
           </span>
-          <span className={showClaims ? "text-[hsl(32,90%,65%)]" : "text-muted-foreground"}>
-            <span className="font-mono">{showClaims ? `+${claimsCount}` : claimsCount}</span> via claims
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-[3px] w-4 bg-[hsl(32,95%,55%)]" style={{ borderTop: "2px dashed hsl(32,95%,55%)" }} />
+            Claim bridge
           </span>
         </div>
         <button
           onClick={() => setShowClaims((v) => !v)}
           className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-all duration-300 ${
             showClaims
-              ? "border-[hsl(32,70%,45%)] bg-[hsl(32,90%,55%)]/10 text-[hsl(32,90%,70%)]"
+              ? "border-[hsl(32,70%,45%)] bg-[hsl(32,90%,55%)]/10 text-[hsl(32,90%,70%)] shadow-[0_0_12px_rgba(245,158,50,0.15)]"
               : "border-border bg-card text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -405,47 +407,29 @@ export default function KnowledgeGraph() {
         style={{ width: dimensions.width, height: dimensions.height }}
         className="w-full rounded-xl border border-border bg-[hsl(222,20%,7%)] cursor-crosshair"
         onMouseMove={handleMouseMove}
-        onMouseLeave={() => setHoveredNode(null)}
+        onMouseLeave={handleMouseLeave}
       />
 
-      {/* Legend */}
-      <div className="mt-3 flex flex-wrap items-center gap-5 text-[11px] text-muted-foreground">
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-[2px] w-5 rounded-sm bg-[rgba(100,110,140,0.5)]" />
-          RAG similarity
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-[3px] w-5 rounded-sm bg-[hsl(32,95%,55%)]" />
-          Claim-bridged connection
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[hsl(225,40%,50%)]" />
-          Document
-        </span>
-      </div>
-
-      {/* Tooltip */}
-      {hoveredNode && hoveredClaimsEdges.length > 0 && showClaims && (
-        <div className="mt-3 rounded-xl border border-[hsl(32,50%,25%)] bg-[hsl(222,20%,9%)] p-4 text-xs">
+      {/* Tooltip — only renders when hovered node has claims edges */}
+      {tooltip && showClaims && (
+        <div className="mt-3 rounded-xl border border-[hsl(32,40%,22%)] bg-[hsl(222,20%,9%)] p-4 text-xs">
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[hsl(32,80%,65%)]">
-            Claims-bridged from &ldquo;{hoveredNode.label}&rdquo;
+            Claims bridge: &ldquo;{tooltip.node.label}&rdquo;
           </p>
-          {hoveredClaimsEdges.slice(0, 3).map((e, i) => {
+          {tooltip.edges.slice(0, 3).map((e, i) => {
             const s = e.source as GraphNode;
             const t = e.target as GraphNode;
-            const other = s.id === hoveredNode.id ? t : s;
+            const other = s.id === tooltip.node.id ? t : s;
             return (
               <div key={i} className="mt-2 border-t border-border/30 pt-2">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-foreground font-medium">
-                    &rarr; {other.label}
-                  </span>
-                  <span className="ml-3 whitespace-nowrap rounded-full bg-[hsl(32,90%,55%)]/15 px-2 py-0.5 text-[10px] font-semibold text-[hsl(32,85%,60%)]">
-                    +{(e.lift * 100).toFixed(0)}% lift
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-foreground font-medium">&rarr; {other.label}</span>
+                  <span className="shrink-0 rounded-full bg-[hsl(32,90%,55%)]/15 px-2 py-0.5 text-[10px] font-semibold text-[hsl(32,85%,60%)]">
+                    +{(e.lift * 100).toFixed(0)}% lift over RAG
                   </span>
                 </div>
                 <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground/70 italic">
-                  &ldquo;{e.claim.slice(0, 75)}&hellip;&rdquo;
+                  via claim: &ldquo;{e.claim.slice(0, 80)}&hellip;&rdquo;
                 </p>
               </div>
             );
