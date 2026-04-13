@@ -1,3 +1,5 @@
+import { KnowledgeGraphSection } from "@/components/KnowledgeGraphSection";
+
 export default function Home() {
   return (
     <>
@@ -161,35 +163,73 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ──────────────────────────── WHY BETTER ──────────────────────────── */}
-        <section id="why-better" className="border-t border-border py-24">
+        {/* ──────────────────────────── KNOWLEDGE GRAPH ──────────────────────── */}
+        <section id="knowledge-graph" className="border-t border-border py-24">
           <div className="mx-auto max-w-5xl px-6">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              Why this approach works
+              Claims reveal hidden connections RAG can&rsquo;t see
             </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Each document gets decomposed into atomic claims &mdash; focused
+              vectors that create alternate search paths. When a claim diverges
+              from its source embedding, it connects documents that full-text
+              vector search would never link. Toggle the claims layer off to see
+              what RAG alone misses.
+            </p>
+            <div className="mt-10">
+              <KnowledgeGraphSection />
+            </div>
+            <p className="mt-4 text-xs text-muted-foreground">
+              Real data from a production corpus. 36 documents, 40 RAG edges
+              (cosine similarity &gt; 0.42), 18 claims-only edges (lift +10%
+              to +29% over RAG). Hover to explore.
+            </p>
+          </div>
+        </section>
+
+        {/* ──────────────────────────── WHY BETTER ──────────────────────────── */}
+        <section id="approach" className="border-t border-border py-24">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              The difference is in what survives
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Most tools compress meaning to make it portable. Assay preserves
+              it &mdash; atomic, cited, searchable from multiple angles.
+            </p>
             <div className="mt-12 grid gap-4 sm:grid-cols-3">
               {[
                 {
-                  versus: "vs Standard RAG",
-                  body: "RAG embeds docs and returns chunks. Assay extracts structured claims, indexes them separately, retrieves through claims FTS + claims vector + evidence vector + full-text search via RRF.",
+                  label: "Standard RAG",
+                  nature: "Embeds documents whole. Returns chunks by proximity. One angle of retrieval.",
+                  assay: "Four retrieval paths &mdash; evidence vector, claims vector, evidence full-text, claims full-text &mdash; merged by reciprocal rank fusion. The same document surfaces for different reasons.",
                 },
                 {
-                  versus: "vs Agents crawling data",
-                  body: "Agents crawl fresh every time. No memory. Different answers to same question. And in aggregating results, they lose the nuance that matters most \u2014 disparate observations that connect across documents, the unexpected relevance that inductive product reasoning depends on. Assay pre-indexes once, retrieves instantly, compounds per use.",
+                  label: "Agent crawling",
+                  nature: "Reads fresh each time. No memory between runs. Aggregation loses the details that connect across documents.",
+                  assay: "Indexes once. Retrieves instantly. Each use deposits synthesis back. The connections between disparate observations compound &mdash; they\u2019re never discarded.",
                 },
                 {
-                  versus: "vs Summarization tools",
-                  body: "Summarization contracts information \u2014 every compression risks hallucination and loss of meaning. Assay pulls source documentation that hasn\u2019t been aggregated, preserving atomic claims with stance, type, and provenance. The original meaning survives because it\u2019s never contracted.",
+                  label: "Summarization",
+                  nature: "Contracts information to make it fit. Every compression risks losing what mattered.",
+                  assay: "Preserves source text with stance, type, and provenance. The original meaning survives because it\u2019s never contracted.",
                 },
-              ].map(({ versus, body }) => (
+              ].map(({ label, nature, assay }) => (
                 <div
-                  key={versus}
+                  key={label}
                   className="rounded-lg border border-border bg-card p-6"
                 >
-                  <h3 className="text-sm font-semibold text-accent">{versus}</h3>
+                  <h3 className="text-sm font-semibold text-foreground/60">{label}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {body}
+                    {nature}
                   </p>
+                  <div className="mt-4 border-t border-border/50 pt-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-accent/80">Assay</h3>
+                    <p
+                      className="mt-2 text-sm leading-relaxed text-foreground/80"
+                      dangerouslySetInnerHTML={{ __html: assay }}
+                    />
+                  </div>
                 </div>
               ))}
             </div>

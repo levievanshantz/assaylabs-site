@@ -1,0 +1,604 @@
+{
+  "nodes": [
+    {
+      "id": "fbf30056-fcbf-4a98-938a-b4e67e8cd8bb",
+      "title": "\u2705\u00a0PRD 1 \u2014 Judgment Loop \u2014 Defensibility Assessment",
+      "type": "notion",
+      "claims": 6,
+      "label": "\u2705\u00a0PRD 1 \u2014 Judgment Loop \u2014 Defensibility As..."
+    },
+    {
+      "id": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "title": "Epic: Ingestion, Distribution & Data Hygiene 9, 10, 11, 12, 13, 14, 15 \u2014 PRD Structure",
+      "type": "notion",
+      "claims": 10,
+      "label": "Epic: Ingestion, Distribution & Data Hygie..."
+    },
+    {
+      "id": "ae43c5fc-6154-4586-a3ae-52bba9346339",
+      "title": "\u2705\u00a0PRD 6.5 \u2014 Corpus Restoration & Evidence-First Retrieval \u2014 Step 3: Re-embed evidence records",
+      "type": "notion",
+      "claims": 10,
+      "label": "\u2705\u00a0PRD 6.5 \u2014 Corpus Restoration & Evidence-..."
+    },
+    {
+      "id": "59f3b9c0-3f4a-4946-996a-b82710ecd3b9",
+      "title": "[ARCHIVED] Architecture \u2014 Retrieval Pipeline & Evaluation Flow \u2014 13. Infrastructure",
+      "type": "notion",
+      "claims": 10,
+      "label": "Architecture \u2014 Retrieval Pipeline & Evalua..."
+    },
+    {
+      "id": "e55dc71f-cad2-43f9-af30-09a3ab6e6990",
+      "title": "4-Frame UI Audit (Jobs + Ive) \u2014 Context",
+      "type": "notion",
+      "claims": 6,
+      "label": "4-Frame UI Audit (Jobs + Ive) \u2014 Context"
+    },
+    {
+      "id": "d09f0e33-b99c-4070-a9d8-03307d7c9fde",
+      "title": "\u2705\u00a0PRD 16 \u2014 Local-First Claims Extraction \u2014 Scope",
+      "type": "notion",
+      "claims": 6,
+      "label": "\u2705\u00a0PRD 16 \u2014 Local-First Claims Extraction \u2014..."
+    },
+    {
+      "id": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "title": "Architec - Ingestion & Preprocessing Pipeline \u2014 5. Stage 4 \u2014 Embedding",
+      "type": "notion",
+      "claims": 6,
+      "label": "Architec - Ingestion & Preprocessing Pipel..."
+    },
+    {
+      "id": "4a4edcce-1608-4bd0-b962-861b40905523",
+      "title": "PRD 5.2 \u2014 Knowledge Loop (Absorbed into PRD 6) \u2014 Defensibility Assessment",
+      "type": "notion",
+      "claims": 6,
+      "label": "PRD 5.2 \u2014 Knowledge Loop (Absorbed into PR..."
+    },
+    {
+      "id": "9ce57ce1-ebbf-436b-bdc5-d4e6629858f0",
+      "title": "\u2705\u00a0Spec 2 \u2014 Strip &amp; Accelerate (Lens Stack Priorities) \u2014 3.4 Evidence Auto-Accumulation",
+      "type": "notion",
+      "claims": 6,
+      "label": "\u2705\u00a0Spec 2 \u2014 Strip & Accelerate (Lens Stack ..."
+    },
+    {
+      "id": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "title": "[Achieved] Instance Task Log \u2014 March 28, 2026",
+      "type": "notion",
+      "claims": 10,
+      "label": "[Achieved] Instance Task Log \u2014 March 28, 2026"
+    },
+    {
+      "id": "a58ffb54-c7d6-4497-91bd-e4e038f566b5",
+      "title": "Archived page \u2014 4. Core Insight (Contrarian)",
+      "type": "notion",
+      "claims": 6,
+      "label": "Archived page \u2014 4. Core Insight (Contrarian)"
+    },
+    {
+      "id": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
+      "title": "MCP Prompt Redesign \u2014 Research & Conclusions (March 28, 2026) \u2014 Why This Exists",
+      "type": "notion",
+      "claims": 6,
+      "label": "MCP Prompt Redesign \u2014 Research & Conclusio..."
+    },
+    {
+      "id": "0fa57a3f-0541-4951-8688-40093364ab69",
+      "title": "MCP Prompt Redesign \u2014 Research & Conclusions (March 28, 2026) \u2014 Evidence Payload Enrichment (Prerequisite)",
+      "type": "notion",
+      "claims": 6,
+      "label": "MCP Prompt Redesign \u2014 Research & Conclusio..."
+    },
+    {
+      "id": "f0cc70cf-9e56-484d-b556-0c76bc4650ed",
+      "title": "4-Frame UI Audit (Jobs + Ive) \u2014 Jobs Lens Findings",
+      "type": "notion",
+      "claims": 6,
+      "label": "4-Frame UI Audit (Jobs + Ive) \u2014 Jobs Lens ..."
+    },
+    {
+      "id": "2acd53d6-a291-4daa-839f-3e6b7222a709",
+      "title": "Build Spec Claims Engine, Retrieval &amp; Trust Layer \u2014 Post-Spec \u2014 Connectors + Graph (Deferred)",
+      "type": "notion",
+      "claims": 9,
+      "label": "Build Spec Claims Engine, Retrieval & Trus..."
+    },
+    {
+      "id": "6cf1d910-dbb8-4016-9256-47df329798d5",
+      "title": "Architec - Production System Reference \u2014 1. System Overview",
+      "type": "notion",
+      "claims": 18,
+      "label": "Architec - Production System Reference \u2014 1..."
+    },
+    {
+      "id": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "title": "Improve Claim Extraction Prompt \u2014 Related",
+      "type": "notion",
+      "claims": 10,
+      "label": "Improve Claim Extraction Prompt \u2014 Related"
+    },
+    {
+      "id": "f7baf0e7-b784-4eb1-8ef7-f7ee93e0b0c4",
+      "title": "MCP Server & API Distribution \u2014 Technical Reference \u2014 1. What This Is",
+      "type": "notion",
+      "claims": 11,
+      "label": "MCP Server & API Distribution \u2014 Technical ..."
+    },
+    {
+      "id": "64733107-f23a-4fa2-be8f-3354a83ba10d",
+      "title": "Product Philosophy \u2014 5.4 Layer 3: Reasoning (Evaluation & Judgment)",
+      "type": "notion",
+      "claims": 7,
+      "label": "Product Philosophy \u2014 5.4 Layer 3: Reasonin..."
+    },
+    {
+      "id": "532ffea1-67b1-442a-a902-c7819be9c993",
+      "title": "Architec - Production System Reference \u2014 13. Persistence",
+      "type": "notion",
+      "claims": 12,
+      "label": "Architec - Production System Reference \u2014 1..."
+    },
+    {
+      "id": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
+      "title": "[ARCHIVED] Architecture \u2014 Retrieval Pipeline &amp; Evaluation Flow \u2014 5.1 Claim Search \u2014 hybridClaimSearch()",
+      "type": "notion",
+      "claims": 6,
+      "label": "Architecture \u2014 Retrieval Pipeline & Evalua..."
+    },
+    {
+      "id": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
+      "title": "Strategy Ledger.io (cont. 2)",
+      "type": "notion",
+      "claims": 9,
+      "label": "Strategy Ledger.io (cont. 2)"
+    },
+    {
+      "id": "4ebb6bd8-6de5-47dd-8554-232dcb060381",
+      "title": "Ledger.io Log \u2014 February 18th, 2026",
+      "type": "notion",
+      "claims": 6,
+      "label": "Ledger.io Log \u2014 February 18th, 2026"
+    },
+    {
+      "id": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
+      "title": "PRD 6.7 \u2014 Corpus Re-Extraction &amp; Preprocessing Overhaul [DRAFT] \u2014 Sequencing Note",
+      "type": "notion",
+      "claims": 6,
+      "label": "PRD 6.7 \u2014 Corpus Re-Extraction & Preproces..."
+    },
+    {
+      "id": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "title": "PRD 6.7 \u2014 Corpus Re-Extraction &amp; Preprocessing Overhaul [DRAFT] \u2014 Key References",
+      "type": "notion",
+      "claims": 6,
+      "label": "PRD 6.7 \u2014 Corpus Re-Extraction & Preproces..."
+    },
+    {
+      "id": "f30fb12d-ec85-4ea7-bcd2-b4a350741d5e",
+      "title": "Product Philosophy \u2014 5.1 Layer 0: Data (Storage & Retrieval)",
+      "type": "notion",
+      "claims": 6,
+      "label": "Product Philosophy \u2014 5.1 Layer 0: Data (St..."
+    },
+    {
+      "id": "378e9f31-9350-4b6f-8369-9905b1a1cd1f",
+      "title": "Interview Data \u2014 Collapse Point 2: Cross-functional fragmentation (service team is not the whole feature)",
+      "type": "notion",
+      "claims": 6,
+      "label": "Interview Data \u2014 Collapse Point 2: Cross-f..."
+    },
+    {
+      "id": "68e6e370-1b38-49ad-a830-3eb90e92444c",
+      "title": "Architec - Production System Reference \u2014 16. Postgres RPC Functions",
+      "type": "notion",
+      "claims": 9,
+      "label": "Architec - Production System Reference \u2014 1..."
+    },
+    {
+      "id": "496f4a08-0144-4186-af7e-f30380014af5",
+      "title": "Interview Data \u2014 9) Research Outcomes (discovery verdict) (3)",
+      "type": "notion",
+      "claims": 7,
+      "label": "Interview Data \u2014 9) Research Outcomes (dis..."
+    },
+    {
+      "id": "1a2bd54e-ef13-4d17-ad15-ac2a1bded90a",
+      "title": "V1 \u2014 Claim Extraction Prompt (Current Production) \u2014 Corpus Statistics (Current Production)",
+      "type": "notion",
+      "claims": 8,
+      "label": "V1 \u2014 Claim Extraction Prompt (Current Prod..."
+    },
+    {
+      "id": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
+      "title": "Architec - Production System Reference \u2014 5. Parallel Hybrid Retrieval",
+      "type": "notion",
+      "claims": 10,
+      "label": "Architec - Production System Reference \u2014 5..."
+    },
+    {
+      "id": "e54dcef6-15f9-4560-a358-51a81d4d925b",
+      "title": "V1 Claim Extraction Prompt (Production Baseline) \u2014 V1 Claim Extraction Prompt (Production Baseline)",
+      "type": "notion",
+      "claims": 10,
+      "label": "V1 Claim Extraction Prompt (Production Bas..."
+    },
+    {
+      "id": "c6b8e084-16e0-44a9-833a-b9e9a16fa6d1",
+      "title": "Gold Test Harness \u2014 Accuracy & Breadth Evaluation \u2014 Chain of Thought",
+      "type": "notion",
+      "claims": 6,
+      "label": "Gold Test Harness \u2014 Accuracy & Breadth Eva..."
+    },
+    {
+      "id": "2c653076-734e-44e7-b1d4-753633a4e0ee",
+      "title": "[ARCHIVED] Architecture \u2014 Retrieval Pipeline & Evaluation Flow \u2014 4. Embedding",
+      "type": "notion",
+      "claims": 6,
+      "label": "Architecture \u2014 Retrieval Pipeline & Evalua..."
+    },
+    {
+      "id": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
+      "title": "Architec - Ingestion & Preprocessing Pipeline \u2014 9. Pipeline Execution",
+      "type": "notion",
+      "claims": 13,
+      "label": "Architec - Ingestion & Preprocessing Pipel..."
+    },
+    {
+      "id": "e8480ec2-26ab-4b2e-a397-12ef6d2b8380",
+      "title": "Ledger.io Log \u2014 It\u2019s value creation if: (1)",
+      "type": "notion",
+      "claims": 6,
+      "label": "Ledger.io Log \u2014 It\u2019s value creation if: (1)"
+    }
+  ],
+  "ragEdges": [
+    {
+      "source": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
+      "target": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
+      "similarity": 0.8366
+    },
+    {
+      "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "target": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
+      "similarity": 0.7169
+    },
+    {
+      "source": "2c653076-734e-44e7-b1d4-753633a4e0ee",
+      "target": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "similarity": 0.7025
+    },
+    {
+      "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.6826
+    },
+    {
+      "source": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "target": "ae43c5fc-6154-4586-a3ae-52bba9346339",
+      "similarity": 0.6667
+    },
+    {
+      "source": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "target": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
+      "similarity": 0.6448
+    },
+    {
+      "source": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "target": "e54dcef6-15f9-4560-a358-51a81d4d925b",
+      "similarity": 0.6349
+    },
+    {
+      "source": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.6133
+    },
+    {
+      "source": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.6047
+    },
+    {
+      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.6013
+    },
+    {
+      "source": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
+      "target": "4ebb6bd8-6de5-47dd-8554-232dcb060381",
+      "similarity": 0.5963
+    },
+    {
+      "source": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.5778
+    },
+    {
+      "source": "1a2bd54e-ef13-4d17-ad15-ac2a1bded90a",
+      "target": "ae43c5fc-6154-4586-a3ae-52bba9346339",
+      "similarity": 0.576
+    },
+    {
+      "source": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "target": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
+      "similarity": 0.5721
+    },
+    {
+      "source": "1a2bd54e-ef13-4d17-ad15-ac2a1bded90a",
+      "target": "e54dcef6-15f9-4560-a358-51a81d4d925b",
+      "similarity": 0.5721
+    },
+    {
+      "source": "2acd53d6-a291-4daa-839f-3e6b7222a709",
+      "target": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "similarity": 0.5709
+    },
+    {
+      "source": "0fa57a3f-0541-4951-8688-40093364ab69",
+      "target": "ae43c5fc-6154-4586-a3ae-52bba9346339",
+      "similarity": 0.5694
+    },
+    {
+      "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "target": "f7baf0e7-b784-4eb1-8ef7-f7ee93e0b0c4",
+      "similarity": 0.5689
+    },
+    {
+      "source": "9ce57ce1-ebbf-436b-bdc5-d4e6629858f0",
+      "target": "fbf30056-fcbf-4a98-938a-b4e67e8cd8bb",
+      "similarity": 0.5671
+    },
+    {
+      "source": "496f4a08-0144-4186-af7e-f30380014af5",
+      "target": "4ebb6bd8-6de5-47dd-8554-232dcb060381",
+      "similarity": 0.5657
+    },
+    {
+      "source": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
+      "target": "ae43c5fc-6154-4586-a3ae-52bba9346339",
+      "similarity": 0.5652
+    },
+    {
+      "source": "4a4edcce-1608-4bd0-b962-861b40905523",
+      "target": "9ce57ce1-ebbf-436b-bdc5-d4e6629858f0",
+      "similarity": 0.5621
+    },
+    {
+      "source": "a58ffb54-c7d6-4497-91bd-e4e038f566b5",
+      "target": "e8480ec2-26ab-4b2e-a397-12ef6d2b8380",
+      "similarity": 0.5615
+    },
+    {
+      "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "target": "4ebb6bd8-6de5-47dd-8554-232dcb060381",
+      "similarity": 0.5586
+    },
+    {
+      "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "target": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
+      "similarity": 0.558
+    },
+    {
+      "source": "0fa57a3f-0541-4951-8688-40093364ab69",
+      "target": "1a2bd54e-ef13-4d17-ad15-ac2a1bded90a",
+      "similarity": 0.5579
+    },
+    {
+      "source": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.5575
+    },
+    {
+      "source": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "target": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
+      "similarity": 0.5486
+    },
+    {
+      "source": "4ebb6bd8-6de5-47dd-8554-232dcb060381",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.5437
+    },
+    {
+      "source": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
+      "target": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
+      "similarity": 0.5422
+    },
+    {
+      "source": "532ffea1-67b1-442a-a902-c7819be9c993",
+      "target": "6cf1d910-dbb8-4016-9256-47df329798d5",
+      "similarity": 0.5413
+    },
+    {
+      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "target": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
+      "similarity": 0.5395
+    },
+    {
+      "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "target": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "similarity": 0.5374
+    },
+    {
+      "source": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
+      "target": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "similarity": 0.5365
+    },
+    {
+      "source": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
+      "target": "c6b8e084-16e0-44a9-833a-b9e9a16fa6d1",
+      "similarity": 0.5348
+    },
+    {
+      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "target": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "similarity": 0.5346
+    },
+    {
+      "source": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
+      "target": "fbf30056-fcbf-4a98-938a-b4e67e8cd8bb",
+      "similarity": 0.5345
+    },
+    {
+      "source": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "target": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
+      "similarity": 0.532
+    },
+    {
+      "source": "e54dcef6-15f9-4560-a358-51a81d4d925b",
+      "target": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
+      "similarity": 0.5283
+    },
+    {
+      "source": "c6b8e084-16e0-44a9-833a-b9e9a16fa6d1",
+      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "similarity": 0.5258
+    }
+  ],
+  "claimsEdges": [
+    {
+      "source": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
+      "target": "9ce57ce1-ebbf-436b-bdc5-d4e6629858f0",
+      "claimSim": 0.599,
+      "ragSim": 0.309,
+      "lift": 0.29,
+      "claim": "The organization's evidence corpus expands as more contributions are made, empha"
+    },
+    {
+      "source": "68e6e370-1b38-49ad-a830-3eb90e92444c",
+      "target": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
+      "claimSim": 0.684,
+      "ragSim": 0.439,
+      "lift": 0.245,
+      "claim": "The function 'match_claims_by_fts' uses a GIN (tsvector) index on the 'claims' t"
+    },
+    {
+      "source": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
+      "target": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "claimSim": 0.612,
+      "ragSim": 0.369,
+      "lift": 0.243,
+      "claim": "Stage 5 involves embedding using the OpenAI API, which is called by a reseed scr"
+    },
+    {
+      "source": "59f3b9c0-3f4a-4946-996a-b82710ecd3b9",
+      "target": "f30fb12d-ec85-4ea7-bcd2-b4a350741d5e",
+      "claimSim": 0.652,
+      "ragSim": 0.409,
+      "lift": 0.243,
+      "claim": "The use of Supabase PostgreSQL as a database service provides a structured data "
+    },
+    {
+      "source": "5eb93d3c-787c-44d9-9620-012f6e89d710",
+      "target": "ae43c5fc-6154-4586-a3ae-52bba9346339",
+      "claimSim": 0.627,
+      "ragSim": 0.386,
+      "lift": 0.241,
+      "claim": "To ensure retrieval effectiveness, each evidence record should have an averaged "
+    },
+    {
+      "source": "2acd53d6-a291-4daa-839f-3e6b7222a709",
+      "target": "1a2bd54e-ef13-4d17-ad15-ac2a1bded90a",
+      "claimSim": 0.618,
+      "ragSim": 0.389,
+      "lift": 0.229,
+      "claim": "The evidence corpus grows with contributions, suggesting a reliance on user enga"
+    },
+    {
+      "source": "532ffea1-67b1-442a-a902-c7819be9c993",
+      "target": "64733107-f23a-4fa2-be8f-3354a83ba10d",
+      "claimSim": 0.612,
+      "ragSim": 0.385,
+      "lift": 0.227,
+      "claim": "The 'reason' field captures the LLM's rationale, providing transparency and cont"
+    },
+    {
+      "source": "ed55b344-982c-4592-8876-db5a3d597efd",
+      "target": "4a4edcce-1608-4bd0-b962-861b40905523",
+      "claimSim": 0.622,
+      "ragSim": 0.401,
+      "lift": 0.221,
+      "claim": "Evaluations are designed to enrich the corpus with each use, thereby enhancing i"
+    },
+    {
+      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "target": "e54dcef6-15f9-4560-a358-51a81d4d925b",
+      "claimSim": 0.688,
+      "ragSim": 0.487,
+      "lift": 0.201,
+      "claim": "The V1 extraction prompt is now superseded by the updated version, indicating a "
+    },
+    {
+      "source": "d09f0e33-b99c-4070-a9d8-03307d7c9fde",
+      "target": "2c653076-734e-44e7-b1d4-753633a4e0ee",
+      "claimSim": 0.605,
+      "ragSim": 0.421,
+      "lift": 0.184,
+      "claim": "text-embedding-3-small API call will remain in place rather than be replaced wit"
+    },
+    {
+      "source": "c6b8e084-16e0-44a9-833a-b9e9a16fa6d1",
+      "target": "e8480ec2-26ab-4b2e-a397-12ef6d2b8380",
+      "claimSim": 0.567,
+      "ragSim": 0.396,
+      "lift": 0.171,
+      "claim": "Preserving the decision-making process in a spec document allows for backtesting"
+    },
+    {
+      "source": "f7baf0e7-b784-4eb1-8ef7-f7ee93e0b0c4",
+      "target": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
+      "claimSim": 0.587,
+      "ragSim": 0.416,
+      "lift": 0.17,
+      "claim": "The stress_test tool allows for proposal evaluation against evidence without dir"
+    },
+    {
+      "source": "e55dc71f-cad2-43f9-af30-09a3ab6e6990",
+      "target": "f0cc70cf-9e56-484d-b556-0c76bc4650ed",
+      "claimSim": 0.597,
+      "ragSim": 0.455,
+      "lift": 0.142,
+      "claim": "The absence of clear design principles, as per Ive's lens, may result in a clutt"
+    },
+    {
+      "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
+      "target": "0fa57a3f-0541-4951-8688-40093364ab69",
+      "claimSim": 0.596,
+      "ragSim": 0.483,
+      "lift": 0.113,
+      "claim": "The naming analysis and evidence payload enrichment spec in the MCP tool redesig"
+    },
+    {
+      "source": "496f4a08-0144-4186-af7e-f30380014af5",
+      "target": "378e9f31-9350-4b6f-8369-9905b1a1cd1f",
+      "claimSim": 0.6,
+      "ragSim": 0.495,
+      "lift": 0.106,
+      "claim": "Cross-tool/cross-team fragmentation due to stateless AI services and dependency "
+    },
+    {
+      "source": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
+      "target": "a58ffb54-c7d6-4497-91bd-e4e038f566b5",
+      "claimSim": 0.555,
+      "ragSim": 0.452,
+      "lift": 0.103,
+      "claim": "The necessity of the product is underscored by its ability to manage and audit l"
+    },
+    {
+      "source": "6cf1d910-dbb8-4016-9256-47df329798d5",
+      "target": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
+      "claimSim": 0.592,
+      "ragSim": 0.49,
+      "lift": 0.103,
+      "claim": "Claim search and evidence search execute in parallel rather than sequentially."
+    },
+    {
+      "source": "4ebb6bd8-6de5-47dd-8554-232dcb060381",
+      "target": "fbf30056-fcbf-4a98-938a-b4e67e8cd8bb",
+      "claimSim": 0.57,
+      "ragSim": 0.468,
+      "lift": 0.102,
+      "claim": "The product's defensibility remains unclear due to many competitors exploring si"
+    }
+  ]
+}
