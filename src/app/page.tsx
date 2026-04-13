@@ -57,6 +57,73 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ──────────────────────────── KNOWLEDGE GRAPH ──────────────────────── */}
+        <section id="knowledge-graph" className="border-t border-border py-24">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Higher-dimensional retrieval
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              RAG embeds whole documents and finds neighbors in one vector
+              space. Assay decomposes each document into atomic claims &mdash;
+              each one a focused vector that creates a different search path
+              into the same source. The result: connections between documents
+              that cosine similarity alone would never surface, regardless of
+              how many results you retrieve.
+            </p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              The{" "}
+              <span className="text-[hsl(32,90%,65%)] font-medium">
+                orange edges
+              </span>{" "}
+              below are real connections from a production corpus &mdash;
+              documents linked through extracted claims that RAG missed even
+              at K=80. Toggle the claims layer off to see the gap.
+            </p>
+            <div className="mt-10">
+              <KnowledgeGraphSection />
+            </div>
+
+            {/* Concrete example */}
+            <div className="mt-8 rounded-xl border border-border bg-card p-6">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60 mb-3">
+                Example from production data
+              </p>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                <span className="text-foreground font-medium">Query:</span>{" "}
+                &ldquo;How do we detect version drift?&rdquo;
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-lg border border-border/50 bg-background p-4">
+                  <p className="text-xs font-semibold text-muted-foreground/60 mb-2">RAG alone</p>
+                  <p className="text-sm text-muted-foreground">
+                    Returns PRDs and specs that mention &ldquo;drift&rdquo; directly.
+                    The Daily Change Log &mdash; which documents hash-based
+                    re-chunking triggers &mdash; scores{" "}
+                    <span className="font-mono text-foreground">0.36</span> similarity.
+                    <span className="block mt-1 text-xs text-muted-foreground/50">Invisible at any practical K value.</span>
+                  </p>
+                </div>
+                <div className="rounded-lg border border-[hsl(32,50%,25%)] bg-[hsl(32,90%,55%)]/5 p-4">
+                  <p className="text-xs font-semibold text-[hsl(32,80%,65%)] mb-2">RAG + Claims</p>
+                  <p className="text-sm text-muted-foreground">
+                    A claim extracted from that log &mdash; &ldquo;hash mismatch
+                    triggers re-chunking&rdquo; &mdash; matches the query at{" "}
+                    <span className="font-mono text-[hsl(32,85%,60%)]">0.69</span> similarity.
+                    <span className="block mt-1 text-xs text-[hsl(32,70%,55%)]">+33% lift. The document surfaces because the claim created a different search path into it.</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-4 text-xs text-muted-foreground">
+              Production data &mdash; 36 documents, 40 RAG edges, 18
+              claims-only bridges. Hover nodes to see the specific claims
+              that create each connection.
+            </p>
+          </div>
+        </section>
+
         {/* ──────────────────────────── DEMO VIDEO ──────────────────────── */}
         <section className="border-t border-border py-16">
           <div className="mx-auto max-w-4xl px-6">
@@ -160,40 +227,6 @@ export default function Home() {
                 </div>
               ))}
             </ol>
-          </div>
-        </section>
-
-        {/* ──────────────────────────── KNOWLEDGE GRAPH ──────────────────────── */}
-        <section id="knowledge-graph" className="border-t border-border py-24">
-          <div className="mx-auto max-w-5xl px-6">
-            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              Higher-dimensional retrieval
-            </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              RAG embeds whole documents and finds neighbors in one vector
-              space. Assay decomposes each document into atomic claims &mdash;
-              each one a focused vector that creates a different search path
-              into the same source. The result: connections between documents
-              that cosine similarity alone would never surface, regardless of
-              how many results you retrieve.
-            </p>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              The{" "}
-              <span className="text-[hsl(32,90%,65%)] font-medium">
-                orange edges
-              </span>{" "}
-              below are real connections from a production corpus &mdash;
-              documents linked through extracted claims that RAG missed even
-              at K=80. Toggle the claims layer off to see the gap.
-            </p>
-            <div className="mt-10">
-              <KnowledgeGraphSection />
-            </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              Production data &mdash; 36 documents, 40 RAG edges, 18
-              claims-only bridges. Hover nodes to see the specific claims
-              that create each connection.
-            </p>
           </div>
         </section>
 
