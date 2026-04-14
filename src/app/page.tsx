@@ -117,7 +117,7 @@ export default function Home() {
             </div>
 
             <p className="mt-4 text-xs text-muted-foreground">
-              Production data &mdash; 36 documents, 40 RAG edges, 18
+              Production data &mdash; 29 documents, 36 RAG edges, 17
               claims-only bridges. Hover nodes to see the specific claims
               that create each connection.
             </p>

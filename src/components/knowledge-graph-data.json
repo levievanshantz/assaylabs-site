@@ -43,10 +43,10 @@
       "label": "\u2705\u00a0PRD 16 \u2014 Local-First Claims Extraction \u2014..."
     },
     {
-      "id": "32e1d3df-f407-410f-a9cf-1b6462291079",
-      "title": "Architec - Ingestion & Preprocessing Pipeline \u2014 5. Stage 4 \u2014 Embedding",
+      "id": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
+      "title": "Architec - Ingestion & Preprocessing Pipeline \u2014 9. Pipeline Execution",
       "type": "notion",
-      "claims": 6,
+      "claims": 13,
       "label": "Architec - Ingestion & Preprocessing Pipel..."
     },
     {
@@ -80,13 +80,6 @@
     {
       "id": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
       "title": "MCP Prompt Redesign \u2014 Research & Conclusions (March 28, 2026) \u2014 Why This Exists",
-      "type": "notion",
-      "claims": 6,
-      "label": "MCP Prompt Redesign \u2014 Research & Conclusio..."
-    },
-    {
-      "id": "0fa57a3f-0541-4951-8688-40093364ab69",
-      "title": "MCP Prompt Redesign \u2014 Research & Conclusions (March 28, 2026) \u2014 Evidence Payload Enrichment (Prerequisite)",
       "type": "notion",
       "claims": 6,
       "label": "MCP Prompt Redesign \u2014 Research & Conclusio..."
@@ -134,20 +127,6 @@
       "label": "Product Philosophy \u2014 5.4 Layer 3: Reasonin..."
     },
     {
-      "id": "532ffea1-67b1-442a-a902-c7819be9c993",
-      "title": "Architec - Production System Reference \u2014 13. Persistence",
-      "type": "notion",
-      "claims": 12,
-      "label": "Architec - Production System Reference \u2014 1..."
-    },
-    {
-      "id": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
-      "title": "[ARCHIVED] Architecture \u2014 Retrieval Pipeline &amp; Evaluation Flow \u2014 5.1 Claim Search \u2014 hybridClaimSearch()",
-      "type": "notion",
-      "claims": 6,
-      "label": "Architecture \u2014 Retrieval Pipeline & Evalua..."
-    },
-    {
       "id": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
       "title": "Strategy Ledger.io (cont. 2)",
       "type": "notion",
@@ -169,13 +148,6 @@
       "label": "PRD 6.7 \u2014 Corpus Re-Extraction & Preproces..."
     },
     {
-      "id": "3d9db609-75fc-497f-b081-ce61817efeb3",
-      "title": "PRD 6.7 \u2014 Corpus Re-Extraction &amp; Preprocessing Overhaul [DRAFT] \u2014 Key References",
-      "type": "notion",
-      "claims": 6,
-      "label": "PRD 6.7 \u2014 Corpus Re-Extraction & Preproces..."
-    },
-    {
       "id": "f30fb12d-ec85-4ea7-bcd2-b4a350741d5e",
       "title": "Product Philosophy \u2014 5.1 Layer 0: Data (Storage & Retrieval)",
       "type": "notion",
@@ -188,13 +160,6 @@
       "type": "notion",
       "claims": 6,
       "label": "Interview Data \u2014 Collapse Point 2: Cross-f..."
-    },
-    {
-      "id": "68e6e370-1b38-49ad-a830-3eb90e92444c",
-      "title": "Architec - Production System Reference \u2014 16. Postgres RPC Functions",
-      "type": "notion",
-      "claims": 9,
-      "label": "Architec - Production System Reference \u2014 1..."
     },
     {
       "id": "496f4a08-0144-4186-af7e-f30380014af5",
@@ -232,20 +197,6 @@
       "label": "Gold Test Harness \u2014 Accuracy & Breadth Eva..."
     },
     {
-      "id": "2c653076-734e-44e7-b1d4-753633a4e0ee",
-      "title": "[ARCHIVED] Architecture \u2014 Retrieval Pipeline & Evaluation Flow \u2014 4. Embedding",
-      "type": "notion",
-      "claims": 6,
-      "label": "Architecture \u2014 Retrieval Pipeline & Evalua..."
-    },
-    {
-      "id": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
-      "title": "Architec - Ingestion & Preprocessing Pipeline \u2014 9. Pipeline Execution",
-      "type": "notion",
-      "claims": 13,
-      "label": "Architec - Ingestion & Preprocessing Pipel..."
-    },
-    {
       "id": "e8480ec2-26ab-4b2e-a397-12ef6d2b8380",
       "title": "Ledger.io Log \u2014 It\u2019s value creation if: (1)",
       "type": "notion",
@@ -256,7 +207,7 @@
   "ragEdges": [
     {
       "source": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
-      "target": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
+      "target": "59f3b9c0-3f4a-4946-996a-b82710ecd3b9",
       "similarity": 0.8366
     },
     {
@@ -265,8 +216,8 @@
       "similarity": 0.7169
     },
     {
-      "source": "2c653076-734e-44e7-b1d4-753633a4e0ee",
-      "target": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "source": "59f3b9c0-3f4a-4946-996a-b82710ecd3b9",
+      "target": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
       "similarity": 0.7025
     },
     {
@@ -275,7 +226,7 @@
       "similarity": 0.6826
     },
     {
-      "source": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "source": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
       "target": "ae43c5fc-6154-4586-a3ae-52bba9346339",
       "similarity": 0.6667
     },
@@ -300,7 +251,7 @@
       "similarity": 0.6047
     },
     {
-      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "source": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
       "target": "ed55b344-982c-4592-8876-db5a3d597efd",
       "similarity": 0.6013
     },
@@ -320,7 +271,7 @@
       "similarity": 0.576
     },
     {
-      "source": "32e1d3df-f407-410f-a9cf-1b6462291079",
+      "source": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
       "target": "3f1f215d-9595-43e9-a5e0-b920cee19b52",
       "similarity": 0.5721
     },
@@ -331,11 +282,11 @@
     },
     {
       "source": "2acd53d6-a291-4daa-839f-3e6b7222a709",
-      "target": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "target": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
       "similarity": 0.5709
     },
     {
-      "source": "0fa57a3f-0541-4951-8688-40093364ab69",
+      "source": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
       "target": "ae43c5fc-6154-4586-a3ae-52bba9346339",
       "similarity": 0.5694
     },
@@ -380,19 +331,9 @@
       "similarity": 0.558
     },
     {
-      "source": "0fa57a3f-0541-4951-8688-40093364ab69",
+      "source": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
       "target": "1a2bd54e-ef13-4d17-ad15-ac2a1bded90a",
       "similarity": 0.5579
-    },
-    {
-      "source": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
-      "target": "ed55b344-982c-4592-8876-db5a3d597efd",
-      "similarity": 0.5575
-    },
-    {
-      "source": "32e1d3df-f407-410f-a9cf-1b6462291079",
-      "target": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
-      "similarity": 0.5486
     },
     {
       "source": "4ebb6bd8-6de5-47dd-8554-232dcb060381",
@@ -405,12 +346,7 @@
       "similarity": 0.5422
     },
     {
-      "source": "532ffea1-67b1-442a-a902-c7819be9c993",
-      "target": "6cf1d910-dbb8-4016-9256-47df329798d5",
-      "similarity": 0.5413
-    },
-    {
-      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "source": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
       "target": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
       "similarity": 0.5395
     },
@@ -428,11 +364,6 @@
       "source": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
       "target": "c6b8e084-16e0-44a9-833a-b9e9a16fa6d1",
       "similarity": 0.5348
-    },
-    {
-      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
-      "target": "5eb93d3c-787c-44d9-9620-012f6e89d710",
-      "similarity": 0.5346
     },
     {
       "source": "1fb7c8d3-66f8-4295-aebe-bca8eea49740",
@@ -465,20 +396,12 @@
       "claim": "The organization's evidence corpus expands as more contributions are made, empha"
     },
     {
-      "source": "68e6e370-1b38-49ad-a830-3eb90e92444c",
-      "target": "43c5fa1b-16a6-4e1a-83c1-b9c2af50bf36",
+      "source": "6cf1d910-dbb8-4016-9256-47df329798d5",
+      "target": "59f3b9c0-3f4a-4946-996a-b82710ecd3b9",
       "claimSim": 0.684,
       "ragSim": 0.439,
       "lift": 0.245,
       "claim": "The function 'match_claims_by_fts' uses a GIN (tsvector) index on the 'claims' t"
-    },
-    {
-      "source": "76d6c8a6-49bb-488d-8da9-f962695fb78b",
-      "target": "32e1d3df-f407-410f-a9cf-1b6462291079",
-      "claimSim": 0.612,
-      "ragSim": 0.369,
-      "lift": 0.243,
-      "claim": "Stage 5 involves embedding using the OpenAI API, which is called by a reseed scr"
     },
     {
       "source": "59f3b9c0-3f4a-4946-996a-b82710ecd3b9",
@@ -505,7 +428,7 @@
       "claim": "The evidence corpus grows with contributions, suggesting a reliance on user enga"
     },
     {
-      "source": "532ffea1-67b1-442a-a902-c7819be9c993",
+      "source": "6cf1d910-dbb8-4016-9256-47df329798d5",
       "target": "64733107-f23a-4fa2-be8f-3354a83ba10d",
       "claimSim": 0.612,
       "ragSim": 0.385,
@@ -521,7 +444,7 @@
       "claim": "Evaluations are designed to enrich the corpus with each use, thereby enhancing i"
     },
     {
-      "source": "3d9db609-75fc-497f-b081-ce61817efeb3",
+      "source": "e9d96d00-50c9-498e-9a0a-51dfe0a46983",
       "target": "e54dcef6-15f9-4560-a358-51a81d4d925b",
       "claimSim": 0.688,
       "ragSim": 0.487,
@@ -530,7 +453,7 @@
     },
     {
       "source": "d09f0e33-b99c-4070-a9d8-03307d7c9fde",
-      "target": "2c653076-734e-44e7-b1d4-753633a4e0ee",
+      "target": "59f3b9c0-3f4a-4946-996a-b82710ecd3b9",
       "claimSim": 0.605,
       "ragSim": 0.421,
       "lift": 0.184,
@@ -562,7 +485,7 @@
     },
     {
       "source": "06f63329-2d65-47ea-9cac-df1ac2989092",
-      "target": "0fa57a3f-0541-4951-8688-40093364ab69",
+      "target": "7a5b188f-a416-4b3c-890b-20ff89c99ef5",
       "claimSim": 0.596,
       "ragSim": 0.483,
       "lift": 0.113,
