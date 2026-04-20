@@ -151,7 +151,108 @@ function InstallationSection() {
         Installation
       </h1>
       <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        Get Assay running on your machine in under 10 minutes.
+        Two paths: local-first (Phase 1 closed beta) and production (PostgreSQL).
+        Local-first is the zero-config install; production is the full cloud path.
+      </p>
+
+      {/* ════ Phase 1 — local-first beta ════ */}
+      <div className="mb-10 rounded-lg bg-[hsl(220,15%,9%)] border border-[hsl(234,100%,71%)] p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-xs uppercase tracking-wider bg-[hsl(234,100%,71%)] text-[hsl(220,15%,5%)] px-2 py-1 rounded font-bold">
+            Phase 1 — closed beta
+          </span>
+          <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)]">
+            Local-first install (≤5 minutes)
+          </h2>
+        </div>
+        <p className="text-[hsl(220,15%,93%)] mb-4 leading-relaxed">
+          Closed-beta install runs entirely on your machine as a single SQLite
+          file at <code>~/.assay/assay.db</code>. No PostgreSQL. No Docker. No
+          account. Uses local embeddings (<code>bge-large-en-v1.5</code>, 1024d)
+          by default — or OpenAI embeddings (1536d) if <code>OPENAI_API_KEY</code>{" "}
+          is present.
+        </p>
+
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">Prerequisites</h3>
+        <ul className="space-y-1 text-[hsl(220,15%,93%)] mb-4 text-sm">
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span><strong>Node.js 18+</strong></span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span><strong>Claude Code</strong> installed (for the MCP integration)</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>macOS or Linux (Windows untested)</span>
+          </li>
+        </ul>
+
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">1. Clone + install</h3>
+        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`git clone https://github.com/levievanshantz/assaylabs.git
+cd assaylabs
+git checkout phase-1-sqlite-local-first
+npm install`}</code>
+        </pre>
+
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">2. Index a folder of markdown</h3>
+        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`./node_modules/.bin/tsx bin/assay.ts add ~/my-prds --name prds
+./node_modules/.bin/tsx bin/assay.ts index
+./node_modules/.bin/tsx bin/assay.ts status`}</code>
+        </pre>
+        <p className="text-sm text-[hsl(220,10%,55%)] mb-4">
+          First <code>index</code> downloads the local embedding model (~420MB,
+          one-time). A 50-PRD folder finishes in under 60 seconds.
+        </p>
+
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">3. Wire up Claude Code</h3>
+        <p className="text-sm text-[hsl(220,15%,93%)] mb-2">
+          Add this <code>assay</code> entry to the <code>mcpServers</code> block
+          in your <code>claude_desktop_config.json</code>:
+        </p>
+        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`"assay": {
+  "command": "node",
+  "args": ["/absolute/path/to/assaylabs/mcp-server/dist/index.js"],
+  "env": {
+    "ASSAY_DB": "sqlite",
+    "ASSAY_DB_PATH": "/Users/YOU/.assay/assay.db"
+  }
+}`}</code>
+        </pre>
+        <p className="text-sm text-[hsl(220,10%,55%)] mb-4">
+          Restart Claude Desktop. Test with <code>/assay-retrieve</code>.
+        </p>
+
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">4. Live-update (optional)</h3>
+        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`./node_modules/.bin/tsx bin/assay.ts watch`}</code>
+        </pre>
+
+        <div className="mt-6 rounded bg-[hsl(220,15%,5%)] border-l-4 border-[hsl(40,90%,60%)] px-4 py-3">
+          <p className="text-sm text-[hsl(220,15%,93%)]">
+            <strong className="text-[hsl(40,90%,60%)]">Known Phase 1 limitations:</strong>{" "}
+            Claim excerpt faithfulness is currently ~52% (paraphrase/shuffle on
+            older extractions — Phase 2 re-extraction will fix). FTS5 vs
+            Postgres retrieval rank differs on a small number of abstract-policy
+            queries (top-10 overlap still strong). Single-machine only; no team
+            sharing yet. Full list in{" "}
+            <code>docs/assay-future-features-20-04-26.md</code> on the beta
+            branch.
+          </p>
+        </div>
+      </div>
+
+      {/* ════ Phase 2 — production PostgreSQL ════ */}
+      <h2 className="text-2xl font-bold text-[hsl(220,15%,93%)] mb-3 mt-12">
+        Phase 2 / Production — PostgreSQL deployment
+      </h2>
+      <p className="text-[hsl(220,10%,55%)] mb-6">
+        The full cloud path. Use this once you need the accumulation loop,
+        claim extraction, reranker, or team sync (all coming in Phase 2).
       </p>
 
       {/* Prerequisites */}
