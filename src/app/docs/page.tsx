@@ -16,57 +16,37 @@ function OverviewSection() {
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         What is Assay?
       </h1>
-      <p className="text-[hsl(220,10%,55%)] mb-4 text-lg">
-        Institutional memory for product decisions. Install in one command.
+      <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
+        Institutional memory for product decisions. Local version — runs on your
+        machine, no account, no cloud database, no API key required.
       </p>
-
-      <div className="mb-8 rounded-lg bg-[hsl(220,15%,9%)] border-l-4 border-[hsl(234,100%,71%)] px-5 py-4">
-        <p className="text-sm text-[hsl(220,15%,93%)]">
-          <strong className="text-[hsl(234,100%,71%)]">Current state (Phase 1 closed beta):</strong>{" "}
-          Assay runs <strong>local-first</strong>. Single SQLite file at{" "}
-          <code>~/.assay/assay.db</code>. Local embeddings by default
-          (<code>bge-large-en-v1.5</code>, 1024-dim) with no API key required.
-          OpenAI (<code>text-embedding-3-small</code>, 1536-dim) is an
-          opt-in upgrade. No Postgres, no Docker, no cloud DB, no account.{" "}
-          <a href="/compare" className={linkCls}>
-            See the feature-map comparison
-          </a>.
-        </p>
-      </div>
 
       <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
           Assay turns your PRDs, strategy documents, research notes, and
-          recorded decisions into a structured corpus of <strong>cited evidence</strong>{" "}
-          and <strong>typed claims</strong> that your AI tools can query. Instead of relying on
-          stale memory or keyword search, every proposal and decision gets
-          checked against what your organization actually knows — with source
-          links, citation tokens, and explicit refusal when the evidence is
-          insufficient.
+          recorded decisions into a structured corpus of cited evidence that
+          your AI tools can query. Instead of relying on stale memory or
+          keyword search, every question and proposal gets checked against what
+          your organization actually knows — with source links, citation
+          tokens, and explicit refusal when the evidence is insufficient.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          It runs locally alongside <strong>Claude Code</strong> as an{" "}
-          <strong>MCP server</strong>. Documents are ingested from local markdown
-          folders (and optionally Notion), chunked with heading context,
-          embedded by a local model (<strong>bge-large-en-v1.5</strong>, 1024-dim)
-          or OpenAI (<strong>text-embedding-3-small</strong>, 1536-dim) when an
-          API key is configured, and stored in <strong>SQLite + sqlite-vec + FTS5</strong>.
-          Retrieval uses <strong>reciprocal rank fusion</strong> across vector
-          similarity, claim matching, and full-text search, then runs through an
-          optional <strong>cross-encoder reranker</strong>. Your data stays on your
-          machine in a single file you can <code>cp</code> between devices.
+          This page describes the <strong>local version</strong> of Assay.
+          Everything — the corpus, the embeddings, the full-text index, the
+          retrieval engine — lives on your machine in a single SQLite file at{" "}
+          <code>~/.assay/assay.db</code>. It plugs into Claude Code as an MCP
+          server and exposes four slash commands plus a CLI.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          Standard RAG retrieves document chunks by vector similarity — but a
-          single embedding averages the semantics of hundreds of tokens, losing
-          the signal of individual sentences that point in a different
-          direction. Assay&#39;s claims layer decomposes each section into atomic
-          assertions — <em>findings</em>, <em>recommendations</em>,{" "}
-          <em>constraints</em>, <em>assumptions</em>, <em>commitments</em>,{" "}
-          <em>deferrals</em> — each with its own stance, confidence, and
-          embedding. Progressive disclosure (L1-L4) returns a headline first,
-          supporting evidence on demand, and contested alternates only when
-          explicitly requested.
+          Why local: your PRDs, research, and decisions are sensitive. Keeping
+          them on-device means no tenant setup, no cloud bills, no network
+          dependency at query time, and your data never leaves your laptop.
+          Backup is <code>cp</code>. Moving machines is <code>cp</code>.
+        </p>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mt-4">
+          An alternative deployment with cloud-hosted Postgres and hosted
+          embeddings exists for teams that need multi-machine sharing — see
+          the <a href="/production" className={linkCls}>production deployment page</a>.
         </p>
       </div>
 
@@ -74,61 +54,30 @@ function OverviewSection() {
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
           Architecture
         </h2>
-        <pre className="font-[family-name:var(--font-jetbrains)]">
+        <pre className="font-[family-name:var(--font-jetbrains)] overflow-x-auto">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`
-  Markdown folder / Notion         Claude Code (MCP Client)
-       │                                │
-       ▼                                ▼
-  ┌──────────────┐     ingest     ┌──────────────────┐
-  │   Source     │ ────────────►  │   Assay MCP      │
-  │   Docs       │                │   Server         │
-  └──────────────┘                │                  │
-                                  │  ┌────────────┐  │
-                                  │  │  Chunker   │  │  break-point
-                                  │  │  512-tok   │  │  aware (QMD pattern)
-                                  │  └─────┬──────┘  │
-                                  │        ▼         │
-                                  │  ┌────────────┐  │  LOCAL default:
-                                  │  │  Embedder  │  │  bge-large-en-v1.5
-                                  │  │            │  │  1024d (no API key)
-                                  │  └─────┬──────┘  │  opt-in: OpenAI 1536d
-                                  │        ▼         │
-                                  │  ┌────────────┐  │  Extraction (pg path):
-                                  │  │  Claim     │  │  Phi-4 via Ollama or
-                                  │  │  Extractor │  │  Anthropic (Haiku).
-                                  │  └─────┬──────┘  │  SQLite path: deferred
-                                  │        ▼         │  to Extraction V4.
-                                  │  ┌────────────┐  │
-                                  │  │  SQLite +  │  │  ~/.assay/assay.db
-                                  │  │ sqlite-vec │  │  + FTS5 virtual tables
-                                  │  │   + FTS5   │  │  single file, no daemon
-                                  │  └─────┬──────┘  │
-                                  │        ▼         │
-                                  │  ┌────────────┐  │  optional uplift,
-                                  │  │  Reranker  │  │  qwen3-0.6B, local
-                                  │  │ (cross-enc)│  │  via node-llama-cpp
-                                  │  └─────┬──────┘  │  feature-flagged
-                                  │        ▼         │
-                                  │  ┌────────────┐  │  L1 = headline
-                                  │  │ Progressive│  │  L2 = supporting (5)
-                                  │  │ Disclosure │  │  L3 = excerpts (10)
-                                  │  └─────┬──────┘  │  L4 = contested tail
-                                  └────────┼─────────┘
-                                           │
-               ┌─────────┬─────────┬───────┼───────┬──────────┬──────────┐
-               ▼         ▼         ▼       ▼       ▼          ▼          ▼
-            retrieve  scan  stress_test  configure  promote_  demote_
-                                                    claim     claim
+      ┌────────────────────────────────────────────────────────┐
+      │                    Claude Code                          │
+      │   /assay-retrieve   /assay-scan   /assay-stress-test    │
+      └──────────────────────────┬─────────────────────────────┘
+                                 │  MCP (stdio)
+                                 ▼
+      ┌────────────────────────────────────────────────────────┐
+      │                   Assay MCP server                      │
+      │                                                         │
+      │    Ingest ──► Chunk ──► Embed ──► Store ──► Retrieve    │
+      │      │           │         │         │          │       │
+      │      ▼           ▼         ▼         ▼          ▼       │
+      │   Markdown     512-tok   bge-large  SQLite   hybrid     │
+      │   (Notion      heading-  1024d      + FTS5   vector     │
+      │   optional)    aware     local      single   + text     │
+      │                                     file     fusion     │
+      └────────────────────────────┬───────────────────────────┘
+                                   │
+                                   ▼
+                        ~/.assay/assay.db  (single file)
 `}</code>
         </pre>
-        <p className="text-xs text-[hsl(220,10%,55%)] mt-3">
-          Ambient memory (Tier 1) via ECC-style lifecycle hooks → cheap local
-          semantic recall (Tier 2) at{" "}
-          <code>~/.assay/session-memory.db</code>{" "}
-          → citation-grade retrieval (Tier 3, the MCP tools above) → deliberate
-          stress-test (Tier 4). Escalation between tiers is automatic on low
-          confidence.
-        </p>
       </div>
 
       <div className="mb-10">
@@ -139,31 +88,45 @@ function OverviewSection() {
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Node.js 18+</strong> (LTS recommended)
+              <strong>Node.js 18+</strong> (LTS recommended). Required — the
+              MCP server and CLI are Node processes.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Claude Code</strong> — the MCP client that surfaces the
-              slash commands
+              <strong>git</strong> — to clone the repo.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              macOS or Linux (Windows untested)
+              <strong>Claude Code</strong> (desktop app) — the MCP client that
+              surfaces the slash commands. Any MCP-capable client works; Claude
+              Code is the one we test against.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>~600 MB free disk</strong> — the embedding model
+              (one-time ~420 MB download) plus your corpus.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>macOS or Linux.</strong> Windows is untested.
             </span>
           </li>
         </ul>
 
-        <p className="text-sm text-[hsl(220,10%,60%)] mt-4">
-          Optional but not required: <code>OPENAI_API_KEY</code> (upgrades
-          embedder quality), <code>ANTHROPIC_API_KEY</code> (needed only for
-          claim extraction on the Postgres path), Ollama + Phi-4 (alternative
-          claim extractor for privacy-sensitive setups), Postgres + pgvector
-          (only needed if you prefer the cloud-ready stack over the local-first
-          SQLite path).
+        <p className="text-sm text-[hsl(220,10%,60%)] mt-5">
+          <strong className="text-[hsl(220,15%,93%)]">Not required:</strong> a
+          Postgres instance, Docker, a database server of any kind, an OpenAI
+          API key, an Anthropic API key, or any cloud account. The local
+          version is designed to install in one command and run entirely
+          offline after the first embedding-model download.
         </p>
       </div>
     </section>
@@ -276,7 +239,19 @@ npm install`}</code>
         </div>
       </div>
 
-      {/* ════ Phase 2 — production PostgreSQL ════ */}
+      <div className="mt-12 rounded-lg border border-[hsl(220,15%,18%)] bg-[hsl(220,15%,9%)] p-6">
+        <p className="text-sm text-[hsl(220,15%,93%)]">
+          <strong>Looking for the cloud-hosted Postgres flow?</strong>{" "}
+          The production deployment — Postgres + pgvector + OpenAI embeddings
+          + claim extraction — lives on its own page.{" "}
+          <a href="/production" className={linkCls}>
+            See the production deployment docs →
+          </a>
+        </p>
+      </div>
+
+      {/* ════ Phase 2 content moved to /production (2026-04-21) ════ */}
+      <div className="hidden">
       <h2 className="text-2xl font-bold text-[hsl(220,15%,93%)] mb-3 mt-12">
         Phase 2 / Production — PostgreSQL deployment
       </h2>
@@ -503,6 +478,7 @@ npm install`}</code>
           extension, embedding generation, and table schema validation.
         </p>
       </div>
+      </div>{/* end hidden Phase 2 block — content moved to /production */}
     </section>
   );
 }
