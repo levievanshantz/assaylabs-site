@@ -36,7 +36,7 @@ export default function ProductionPage() {
               Docs
             </Link>
             <a
-              href="https://github.com/levievanshantz/assay"
+              href="https://github.com/levievanshantz/assaylabs"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-md bg-[hsl(234,100%,71%)] px-3.5 py-1.5 text-sm font-medium text-[hsl(220,15%,6%)] transition-opacity hover:opacity-90"

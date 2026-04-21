@@ -23,7 +23,7 @@ export default function Home() {
               Docs
             </a>
             <a
-              href="https://github.com/levievanshantz/assay"
+              href="https://github.com/levievanshantz/assaylabs"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
@@ -47,7 +47,7 @@ export default function Home() {
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <a
-              href="https://github.com/levievanshantz/assay"
+              href="https://github.com/levievanshantz/assaylabs"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
@@ -209,7 +209,7 @@ export default function Home() {
                 {
                   step: "3",
                   title: "Retrieve through 4-layer hybrid search",
-                  desc: "Evidence vector, claims vector, evidence FTS (tsvector/ts_rank), and claims FTS — merged via reciprocal rank fusion.",
+                  desc: "Evidence vector, claims vector, evidence FTS, and claims FTS — merged via reciprocal rank fusion.",
                 },
                 {
                   step: "4",
@@ -385,7 +385,7 @@ export default function Home() {
           <span>AssayLabs &copy; 2026</span>
           <div className="flex gap-6">
             <a
-              href="https://github.com/levievanshantz/assay"
+              href="https://github.com/levievanshantz/assaylabs"
               target="_blank"
               rel="noopener noreferrer"
               className="transition-colors hover:text-foreground"

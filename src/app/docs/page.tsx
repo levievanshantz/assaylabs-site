@@ -44,9 +44,9 @@ function OverviewSection() {
           Backup is <code>cp</code>. Moving machines is <code>cp</code>.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mt-4">
-          An alternative deployment with cloud-hosted Postgres and hosted
-          embeddings exists for teams that need multi-machine sharing — see
-          the <a href="/production" className={linkCls}>production deployment page</a>.
+          A networked, multi-machine deployment is available as a separate
+          build — see the{" "}
+          <a href="/production" className={linkCls}>expanded deployment page</a>.
         </p>
       </div>
 
@@ -122,11 +122,12 @@ function OverviewSection() {
         </ul>
 
         <p className="text-sm text-[hsl(220,10%,60%)] mt-5">
-          <strong className="text-[hsl(220,15%,93%)]">Not required:</strong> a
-          Postgres instance, Docker, a database server of any kind, an OpenAI
-          API key, an Anthropic API key, or any cloud account. The local
-          version is designed to install in one command and run entirely
-          offline after the first embedding-model download.
+          <strong className="text-[hsl(220,15%,93%)]">Optional upgrade:</strong>{" "}
+          an <code>OPENAI_API_KEY</code> in the MCP env switches embeddings
+          to <code>text-embedding-3-small</code> (1536-dim) for a modest
+          retrieval-quality bump. Not required — the local{" "}
+          <code>bge-large-en-v1.5</code> embedder (1024-dim) is the default
+          and needs no network at query time.
         </p>
       </div>
     </section>
@@ -144,26 +145,24 @@ function InstallationSection() {
         Installation
       </h1>
       <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        Two paths: local-first (Phase 1 closed beta) and production (PostgreSQL).
-        Local-first is the zero-config install; production is the full cloud path.
+        Five minutes from clone to first cited answer.
       </p>
 
-      {/* ════ Phase 1 — local-first beta ════ */}
       <div className="mb-10 rounded-lg bg-[hsl(220,15%,9%)] border border-[hsl(234,100%,71%)] p-6">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-xs uppercase tracking-wider bg-[hsl(234,100%,71%)] text-[hsl(220,15%,5%)] px-2 py-1 rounded font-bold">
-            Phase 1 — closed beta
+            5-minute install
           </span>
           <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)]">
-            Local-first install (≤5 minutes)
+            Local install
           </h2>
         </div>
         <p className="text-[hsl(220,15%,93%)] mb-4 leading-relaxed">
-          Closed-beta install runs entirely on your machine as a single SQLite
-          file at <code>~/.assay/assay.db</code>. No PostgreSQL. No Docker. No
-          account. Uses local embeddings (<code>bge-large-en-v1.5</code>, 1024d)
-          by default — or OpenAI embeddings (1536d) if <code>OPENAI_API_KEY</code>{" "}
-          is present.
+          Runs entirely on your machine as a single SQLite file at{" "}
+          <code>~/.assay/assay.db</code>. No Docker, no account. Uses local
+          embeddings (<code>bge-large-en-v1.5</code>, 1024-dim) by default —
+          or OpenAI embeddings (<code>text-embedding-3-small</code>, 1536-dim)
+          if <code>OPENAI_API_KEY</code> is present in the MCP env.
         </p>
 
         <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">Prerequisites</h3>
@@ -186,7 +185,6 @@ function InstallationSection() {
         <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`git clone https://github.com/levievanshantz/assaylabs.git
 cd assaylabs
-git checkout phase-1-sqlite-local-first
 npm install`}</code>
         </pre>
 
@@ -227,258 +225,24 @@ npm install`}</code>
 
         <div className="mt-6 rounded bg-[hsl(220,15%,5%)] border-l-4 border-[hsl(40,90%,60%)] px-4 py-3">
           <p className="text-sm text-[hsl(220,15%,93%)]">
-            <strong className="text-[hsl(40,90%,60%)]">Known Phase 1 limitations:</strong>{" "}
-            Claim excerpt faithfulness is currently ~52% (paraphrase/shuffle on
-            older extractions — Phase 2 re-extraction will fix). FTS5 vs
-            Postgres retrieval rank differs on a small number of abstract-policy
-            queries (top-10 overlap still strong). Single-machine only; no team
-            sharing yet. Full list in{" "}
-            <code>docs/assay-future-features-20-04-26.md</code> on the beta
-            branch.
+            <strong className="text-[hsl(40,90%,60%)]">Known limitations:</strong>{" "}
+            Single-machine only; no team sharing. If a query gives an
+            obviously wrong top result, file it with the GitHub issue
+            template — ranking tuning is an open work item.
           </p>
         </div>
       </div>
 
       <div className="mt-12 rounded-lg border border-[hsl(220,15%,18%)] bg-[hsl(220,15%,9%)] p-6">
         <p className="text-sm text-[hsl(220,15%,93%)]">
-          <strong>Looking for the cloud-hosted Postgres flow?</strong>{" "}
-          The production deployment — Postgres + pgvector + OpenAI embeddings
-          + claim extraction — lives on its own page.{" "}
+          <strong>Need multi-machine or team-shared setup?</strong>{" "}
+          The networked build lives on its own page.{" "}
           <a href="/production" className={linkCls}>
-            See the production deployment docs →
+            See the expanded deployment docs →
           </a>
         </p>
       </div>
 
-      {/* ════ Phase 2 content moved to /production (2026-04-21) ════ */}
-      <div className="hidden">
-      <h2 className="text-2xl font-bold text-[hsl(220,15%,93%)] mb-3 mt-12">
-        Phase 2 / Production — PostgreSQL deployment
-      </h2>
-      <p className="text-[hsl(220,10%,55%)] mb-6">
-        The full cloud path. Use this once you need the accumulation loop,
-        claim extraction, reranker, or team sync (all coming in Phase 2).
-      </p>
-
-      {/* Prerequisites */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          Prerequisites
-        </h2>
-        <ul className="space-y-2 text-[hsl(220,15%,93%)]">
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>PostgreSQL 15+</strong> with the <code>pgvector</code>{" "}
-              extension installed and enabled
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>Node.js 20+</strong> — we recommend the current LTS
-              release
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>OpenAI API key</strong> — required for embedding
-              generation (
-              <code>text-embedding-3-small</code>)
-            </span>
-          </li>
-        </ul>
-
-        {/* Admin note callout */}
-        <div className="mt-6 rounded-lg bg-[hsl(220,15%,9%)] border-l-4 border-[hsl(234,100%,71%)] px-5 py-4">
-          <p className="text-sm text-[hsl(220,15%,93%)]">
-            <strong className="text-[hsl(234,100%,71%)]">Note:</strong> You will
-            need admin or superuser access to your PostgreSQL instance to enable
-            the <code>pgvector</code> extension. If you are using a managed
-            provider (Supabase, Neon, etc.), pgvector is typically pre-installed
-            — just run{" "}
-            <code>CREATE EXTENSION IF NOT EXISTS vector;</code> in a SQL console.
-          </p>
-        </div>
-
-        {/* Embedding cost note */}
-        <div className="mt-4 rounded-lg bg-[hsl(220,15%,9%)] border-l-4 border-[hsl(234,100%,71%)] px-5 py-4">
-          <p className="text-sm text-[hsl(220,15%,93%)]">
-            <strong className="text-[hsl(234,100%,71%)]">Embedding cost:</strong>{" "}
-            Embedding cost is approximately $0.02 per million tokens — negligible
-            for most corpora. A 130-page Notion workspace costs roughly $0.08 to
-            fully embed.
-          </p>
-        </div>
-
-        {/* Local embeddings note */}
-        <div className="mt-4 rounded-lg bg-[hsl(220,15%,9%)] border-l-4 border-[hsl(234,100%,71%)] px-5 py-4">
-          <p className="text-sm text-[hsl(220,15%,93%)]">
-            <strong className="text-[hsl(234,100%,71%)]">Local embeddings:</strong>{" "}
-            A local embedding option (BAAI/bge-large-en-v1.5 via ONNX) is
-            available for fully offline operation. Set{" "}
-            <code>EMBEDDING_PROVIDER=local</code> in your environment. See the{" "}
-            <a href="#feature-toggles" className={linkCls}>Configuration</a>{" "}
-            section for details.
-          </p>
-        </div>
-      </div>
-
-      {/* Clone and install */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          1. Clone and Install
-        </h2>
-        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`git clone https://github.com/levievanshantz/assay.git`}</code>
-        </pre>
-        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`cd assay`}</code>
-        </pre>
-        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`npm install`}</code>
-        </pre>
-        <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`cp .env.local.example .env.local`}</code>
-        </pre>
-      </div>
-
-      {/* Environment variables */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          2. Configure Environment Variables
-        </h2>
-        <p className="text-[hsl(220,15%,93%)] mb-4">
-          Open <code>.env.local</code> and fill in the values below.
-        </p>
-        <div className="overflow-x-auto rounded-lg border border-[hsl(220,15%,18%)]">
-          <table className="w-full text-sm text-left">
-            <thead>
-              <tr className="bg-[hsl(220,15%,9%)] border-b border-[hsl(220,15%,18%)]">
-                <th className="px-4 py-3 text-[hsl(220,10%,55%)] font-medium">
-                  Variable
-                </th>
-                <th className="px-4 py-3 text-[hsl(220,10%,55%)] font-medium">
-                  Required
-                </th>
-                <th className="px-4 py-3 text-[hsl(220,10%,55%)] font-medium">
-                  Description
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-[hsl(220,15%,93%)]">
-              <tr className="border-b border-[hsl(220,15%,18%)]">
-                <td className="px-4 py-3">
-                  <code>DATABASE_URL</code>
-                </td>
-                <td className="px-4 py-3 text-[hsl(152,60%,52%)]">Yes</td>
-                <td className="px-4 py-3">
-                  PostgreSQL connection string. Example:{" "}
-                  <code>postgresql://localhost:5432/assay</code>
-                </td>
-              </tr>
-              <tr className="border-b border-[hsl(220,15%,18%)]">
-                <td className="px-4 py-3">
-                  <code>OPENAI_API_KEY</code>
-                </td>
-                <td className="px-4 py-3 text-[hsl(152,60%,52%)]">Yes</td>
-                <td className="px-4 py-3">
-                  Used by the embedding pipeline (
-                  <code>text-embedding-3-small</code>, 1536 dimensions)
-                </td>
-              </tr>
-              <tr className="border-b border-[hsl(220,15%,18%)]">
-                <td className="px-4 py-3">
-                  <code>ANTHROPIC_API_KEY</code>
-                </td>
-                <td className="px-4 py-3 text-[hsl(220,10%,55%)]">Optional</td>
-                <td className="px-4 py-3">
-                  Required only when <code>EXTRACTION_MODE=anthropic</code>.
-                  Not needed for Ollama or subagent extraction.
-                </td>
-              </tr>
-              <tr className="border-b border-[hsl(220,15%,18%)]">
-                <td className="px-4 py-3">
-                  <code>NOTION_API_KEY</code>
-                </td>
-                <td className="px-4 py-3 text-[hsl(220,10%,55%)]">Optional</td>
-                <td className="px-4 py-3">
-                  Notion integration token. Required only if you plan to ingest
-                  pages from Notion.
-                </td>
-              </tr>
-              <tr className="border-b border-[hsl(220,15%,18%)]">
-                <td className="px-4 py-3">
-                  <code>EXTRACTION_MODE</code>
-                </td>
-                <td className="px-4 py-3 text-[hsl(220,10%,55%)]">Optional</td>
-                <td className="px-4 py-3">
-                  Claim extraction backend:{" "}
-                  <code>ollama</code>, <code>anthropic</code>, or{" "}
-                  <code>subagent</code>. Defaults to <code>subagent</code>.
-                </td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3">
-                  <code>PRODUCT_ID</code>
-                </td>
-                <td className="px-4 py-3 text-[hsl(220,10%,55%)]">Optional</td>
-                <td className="px-4 py-3">
-                  UUID that scopes all evidence to a single product. Auto-generated
-                  on first run if not set.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Database setup */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          3. Set Up the Database
-        </h2>
-        <p className="text-[hsl(220,15%,93%)] mb-4">
-          This command creates the required tables, enables pgvector, sets up
-          indexes, and runs any pending migrations.
-        </p>
-        <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`npm run setup-db`}</code>
-        </pre>
-      </div>
-
-      {/* Build */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          4. Build
-        </h2>
-        <p className="text-[hsl(220,15%,93%)] mb-4">
-          Compile the MCP server and all supporting scripts.
-        </p>
-        <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`npm run build`}</code>
-        </pre>
-      </div>
-
-      {/* Verify */}
-      <div className="mb-10">
-        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          5. Verify
-        </h2>
-        <p className="text-[hsl(220,15%,93%)] mb-4">
-          Run the built-in verification suite to confirm everything is wired
-          correctly.
-        </p>
-        <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`npm run verify`}</code>
-        </pre>
-        <p className="text-[hsl(220,15%,93%)] mt-4">
-          You should see green checks for database connectivity, pgvector
-          extension, embedding generation, and table schema validation.
-        </p>
-      </div>
-      </div>{/* end hidden Phase 2 block — content moved to /production */}
     </section>
   );
 }
@@ -535,8 +299,8 @@ function QuickStartSection() {
       "command": "node",
       "args": ["/absolute/path/to/assay/dist/index.js"],
       "env": {
-        "DATABASE_URL": "postgresql://localhost:5432/assay",
-        "OPENAI_API_KEY": "sk-..."
+        "ASSAY_DB": "sqlite",
+        "ASSAY_DB_PATH": "/Users/YOU/.assay/assay.db"
       }
     }
   }
@@ -711,28 +475,22 @@ function HowItWorksSection() {
           <div>
             <h3 className="text-lg font-medium mb-2">3. Embed</h3>
             <p>
-              Each evidence section is embedded into a dense vector. In the
-              default Phase-1 local-first mode that&#39;s{" "}
+              Each evidence section is embedded into a dense vector using{" "}
               <code>bge-large-en-v1.5</code> (<strong>1024-dim</strong>, runs
               in-process via <code>@xenova/transformers</code>, no API key).
-              When <code>OPENAI_API_KEY</code> is configured, Assay uses{" "}
+              If <code>OPENAI_API_KEY</code> is configured, Assay uses{" "}
               <code>text-embedding-3-small</code> (<strong>1536-dim</strong>)
-              for higher quality. Vectors are stored as <code>BLOB</code>{" "}
-              columns in SQLite with <code>sqlite-vec</code> providing cosine
-              distance functions. The legacy Postgres path uses{" "}
-              <code>pgvector</code> with an HNSW index.
+              instead for a retrieval-quality uplift. Vectors are stored as{" "}
+              <code>BLOB</code> columns in SQLite with <code>sqlite-vec</code>{" "}
+              providing cosine-distance functions.
             </p>
           </div>
           <div>
-            <h3 className="text-lg font-medium mb-2">4. Extract Claims</h3>
+            <h3 className="text-lg font-medium mb-2">4. Index for full-text</h3>
             <p>
-              Optionally, each section is decomposed into atomic claims — individual
-              assertions with their own type, stance, confidence, and
-              independently computed embedding. The Phase-1 local SQLite path
-              currently performs retrieval on evidence records only; typed
-              claim extraction for SQLite is the Extraction V4 work item. The
-              Postgres path runs extraction via Phi-4 (Ollama) or Claude
-              Haiku (Anthropic API), selectable per ingestion run.
+              Each section is also indexed by SQLite <code>FTS5</code>{" "}
+              (porter + unicode61 tokenizer) so retrieval can combine
+              semantic vector similarity with exact lexical matching.
             </p>
           </div>
           <div>
@@ -774,18 +532,15 @@ function HowItWorksSection() {
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0 font-medium">3.</span>
             <span>
               <strong>Evidence full-text search</strong> — SQLite{" "}
-              <code>FTS5</code> (porter + unicode61 tokenizer) in Phase-1
-              local mode, or Postgres <code>ts_rank</code> on the production
-              path. Catches exact terminology and proper nouns that vector
-              search may miss.
+              <code>FTS5</code> with a porter + unicode61 tokenizer. Catches
+              exact terminology and proper nouns that vector search may miss.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0 font-medium">4.</span>
             <span>
-              <strong>Claims full-text search</strong> — FTS5 (SQLite) or
-              tsvector (Postgres) against claim text. Catches specific terms
-              used in individual assertions.
+              <strong>Claims full-text search</strong> — FTS5 against claim
+              text. Catches specific terms used in individual assertions.
             </span>
           </li>
         </ol>
@@ -974,9 +729,8 @@ function RetrievalSection() {
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0 font-medium">3.</span>
             <span>
-              <strong>Evidence full-text search</strong> — PostgreSQL{" "}
-              <code>tsvector</code> ranking for exact keyword matches in
-              evidence records.
+              <strong>Evidence full-text search</strong> — SQLite FTS5
+              ranking for exact keyword matches in evidence records.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -1223,7 +977,7 @@ function StressTestSection() {
           Example
         </h2>
         <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`stress_test "We should migrate from PostgreSQL to MongoDB"`}</code>
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`stress_test "We should move the mobile onboarding flow to a native app"`}</code>
         </pre>
       </div>
 
@@ -2006,8 +1760,8 @@ NOTION_API_KEY=ntn_...`}</code>
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0 font-medium">2.</span>
             <span>
               <strong>notion-ingest.mjs</strong> — reads the JSON cache, chunks
-              at heading boundaries, generates embeddings, stores evidence
-              records in PostgreSQL, and optionally runs claim extraction.
+              at heading boundaries, generates embeddings, and stores evidence
+              records in the local SQLite corpus.
             </span>
           </li>
         </ul>
@@ -2109,14 +1863,14 @@ function TroubleshootingSection() {
           </thead>
           <tbody className="text-[hsl(220,15%,93%)]">
             <tr className="border-b border-[hsl(220,15%,18%)]">
-              <td className="px-4 py-3">Database connection refused</td>
-              <td className="px-4 py-3">PostgreSQL not running</td>
-              <td className="px-4 py-3">Start PostgreSQL: <code>brew services start postgresql@15</code> or equivalent</td>
+              <td className="px-4 py-3"><code>/assay-*</code> returns "MCP not connected"</td>
+              <td className="px-4 py-3">Claude Desktop doesn&#39;t see the server, or the MCP binary hasn&#39;t been built</td>
+              <td className="px-4 py-3">Settings → Developer → refresh the MCP entry, then restart Claude Desktop. Rebuild with <code>cd mcp-server &amp;&amp; npm run build</code>.</td>
             </tr>
             <tr className="border-b border-[hsl(220,15%,18%)]">
-              <td className="px-4 py-3">Embedding generation fails</td>
-              <td className="px-4 py-3">OpenAI API key expired or missing</td>
-              <td className="px-4 py-3">Check <code>OPENAI_API_KEY</code> in <code>.env.local</code>. Verify at platform.openai.com.</td>
+              <td className="px-4 py-3">Retrieval returns "embedding dim mismatch"</td>
+              <td className="px-4 py-3">Embedder provider changed after indexing</td>
+              <td className="px-4 py-3">Either unset <code>OPENAI_API_KEY</code> so the local embedder is used, or re-embed the corpus with <code>tsx scripts/reembed-sqlite-corpus.ts</code></td>
             </tr>
             <tr className="border-b border-[hsl(220,15%,18%)]">
               <td className="px-4 py-3">Notion crawl returns 0 pages</td>
@@ -2124,19 +1878,14 @@ function TroubleshootingSection() {
               <td className="px-4 py-3">Re-share pages with the integration at notion.so/my-integrations</td>
             </tr>
             <tr className="border-b border-[hsl(220,15%,18%)]">
-              <td className="px-4 py-3">Ollama extraction hangs</td>
-              <td className="px-4 py-3">Ollama server not started</td>
-              <td className="px-4 py-3">Run <code>ollama serve</code> in a separate terminal</td>
-            </tr>
-            <tr className="border-b border-[hsl(220,15%,18%)]">
-              <td className="px-4 py-3"><code>vector</code> extension not found</td>
-              <td className="px-4 py-3">pgvector not installed</td>
-              <td className="px-4 py-3">Install pgvector for your platform and run <code>CREATE EXTENSION vector;</code></td>
+              <td className="px-4 py-3">First-index stalls on model download</td>
+              <td className="px-4 py-3">Transformers.js cannot reach huggingface.co for the initial 420 MB model fetch</td>
+              <td className="px-4 py-3">Check network. After the first successful download, indexing is fully offline.</td>
             </tr>
             <tr>
-              <td className="px-4 py-3">Brief/stress_test returns empty results</td>
-              <td className="px-4 py-3">Cold start — no evidence in corpus</td>
-              <td className="px-4 py-3">Run <code>npm run seed-demo</code> or ingest your Notion pages first</td>
+              <td className="px-4 py-3">Retrieve returns empty results</td>
+              <td className="px-4 py-3">Cold start — no collection indexed yet</td>
+              <td className="px-4 py-3">Run <code>tsx bin/assay.ts add ~/your-docs</code> and <code>tsx bin/assay.ts index</code> first</td>
             </tr>
           </tbody>
         </table>
@@ -2168,10 +1917,12 @@ function GlossarySection() {
           </dd>
         </div>
         <div>
-          <dt className="font-semibold">pgvector</dt>
+          <dt className="font-semibold">sqlite-vec</dt>
           <dd className="text-[hsl(220,10%,65%)] mt-1">
-            PostgreSQL extension for vector similarity search. Stores
-            1536-dimensional embeddings alongside relational data.
+            SQLite extension that provides vector-similarity functions.
+            Stores dense embeddings (1024 or 1536 dimensions depending on
+            provider) as BLOB columns in the same file as the rest of the
+            corpus.
           </dd>
         </div>
         <div>
@@ -2185,8 +1936,8 @@ function GlossarySection() {
         <div>
           <dt className="font-semibold">Evidence records</dt>
           <dd className="text-[hsl(220,10%,65%)] mt-1">
-            Document sections (~3,200 chars) stored with embeddings in
-            PostgreSQL. The primary unit of storage and retrieval context.
+            Document sections stored with embeddings in the local SQLite
+            corpus. The primary unit of storage and retrieval context.
           </dd>
         </div>
         <div>
@@ -2212,11 +1963,11 @@ function GlossarySection() {
           </dd>
         </div>
         <div>
-          <dt className="font-semibold">HNSW index</dt>
+          <dt className="font-semibold">FTS5</dt>
           <dd className="text-[hsl(220,10%,65%)] mt-1">
-            Hierarchical Navigable Small World — a fast approximate nearest
-            neighbor search index used by pgvector for efficient vector
-            similarity queries.
+            SQLite&#39;s built-in full-text search module. Assay indexes
+            every evidence record&#39;s title, summary, and body content so
+            exact keyword matches complement vector similarity search.
           </dd>
         </div>
       </dl>
@@ -2262,8 +2013,6 @@ export default function DocsPage() {
       <HR />
 
       {/* Configuration */}
-      <ExtractionModesSection />
-      <HR />
       <FeatureTogglesSection />
       <HR />
       <PresetsSection />

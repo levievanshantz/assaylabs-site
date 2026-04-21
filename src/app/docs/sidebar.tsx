@@ -32,7 +32,6 @@ const NAV_SECTIONS: {
   {
     title: "Configuration",
     links: [
-      { label: "Extraction Modes", id: "extraction-modes" },
       { label: "Feature Toggles", id: "feature-toggles" },
       { label: "Presets", id: "presets" },
     ],
