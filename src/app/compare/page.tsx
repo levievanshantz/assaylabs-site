@@ -271,6 +271,31 @@ const COLUMNS: { key: keyof Feature; label: string; isAssay?: boolean; note?: st
 export default function ComparePage() {
   return (
     <main className="min-h-screen bg-[hsl(220,15%,6%)] text-[hsl(220,15%,93%)]">
+      {/* Top nav — consistent with landing page */}
+      <nav className="sticky top-0 z-50 border-b border-[hsl(220,15%,18%)] bg-[hsl(220,15%,6%)]/80 backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+          <Link href="/" className="text-lg font-semibold tracking-tight text-[hsl(220,15%,93%)]">
+            AssayLabs
+          </Link>
+          <div className="flex items-center gap-6 text-sm">
+            <Link href="/compare" className="text-[hsl(220,15%,93%)] transition-colors">
+              Compare
+            </Link>
+            <Link href="/docs" className="text-[hsl(220,10%,55%)] transition-colors hover:text-[hsl(220,15%,93%)]">
+              Docs
+            </Link>
+            <a
+              href="https://github.com/levievanshantz/assay"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-md bg-[hsl(234,100%,71%)] px-3.5 py-1.5 text-sm font-medium text-[hsl(220,15%,6%)] transition-opacity hover:opacity-90"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </nav>
+
       <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
         <div className="mb-12">
           <p className="text-sm text-[hsl(234,100%,71%)] font-medium mb-3 uppercase tracking-wider">

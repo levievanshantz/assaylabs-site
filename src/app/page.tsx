@@ -11,6 +11,12 @@ export default function Home() {
           </a>
           <div className="flex items-center gap-6 text-sm">
             <a
+              href="/compare"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Compare
+            </a>
+            <a
               href="/docs"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
