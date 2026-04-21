@@ -16,42 +16,57 @@ function OverviewSection() {
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         What is Assay?
       </h1>
-      <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        The intelligence ledger for product teams that ship.
+      <p className="text-[hsl(220,10%,55%)] mb-4 text-lg">
+        Institutional memory for product decisions. Install in one command.
       </p>
+
+      <div className="mb-8 rounded-lg bg-[hsl(220,15%,9%)] border-l-4 border-[hsl(234,100%,71%)] px-5 py-4">
+        <p className="text-sm text-[hsl(220,15%,93%)]">
+          <strong className="text-[hsl(234,100%,71%)]">Current state (Phase 1 closed beta):</strong>{" "}
+          Assay runs <strong>local-first</strong>. Single SQLite file at{" "}
+          <code>~/.assay/assay.db</code>. Local embeddings by default
+          (<code>bge-large-en-v1.5</code>, 1024-dim) with no API key required.
+          OpenAI (<code>text-embedding-3-small</code>, 1536-dim) is an
+          opt-in upgrade. No Postgres, no Docker, no cloud DB, no account.{" "}
+          <a href="/compare" className={linkCls}>
+            See the feature-map comparison
+          </a>.
+        </p>
+      </div>
 
       <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
           Assay turns your PRDs, strategy documents, research notes, and
-          recorded decisions into a structured corpus of cited claims that your
-          AI tools can query. Instead of relying on stale memory or keyword
-          search, every proposal and decision gets checked against what your
-          organization actually knows — with source links, confidence levels,
-          and contradiction detection built in.
+          recorded decisions into a structured corpus of <strong>cited evidence</strong>{" "}
+          and <strong>typed claims</strong> that your AI tools can query. Instead of relying on
+          stale memory or keyword search, every proposal and decision gets
+          checked against what your organization actually knows — with source
+          links, citation tokens, and explicit refusal when the evidence is
+          insufficient.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          It runs locally alongside <strong>Claude Code</strong> as an <strong>MCP server</strong>. Documents are
-          ingested from Notion (or Confluence), chunked at heading boundaries,
-          embedded with OpenAI, and optionally decomposed into atomic claims.
-          Retrieval uses <strong>reciprocal rank fusion</strong> across vector similarity, claim
-          matching, and full-text search. There is no cloud dependency beyond
-          your embedding provider — your data stays on your <strong>PostgreSQL</strong> instance
-          with <strong>pgvector</strong>.
+          It runs locally alongside <strong>Claude Code</strong> as an{" "}
+          <strong>MCP server</strong>. Documents are ingested from local markdown
+          folders (and optionally Notion), chunked with heading context,
+          embedded by a local model (<strong>bge-large-en-v1.5</strong>, 1024-dim)
+          or OpenAI (<strong>text-embedding-3-small</strong>, 1536-dim) when an
+          API key is configured, and stored in <strong>SQLite + sqlite-vec + FTS5</strong>.
+          Retrieval uses <strong>reciprocal rank fusion</strong> across vector
+          similarity, claim matching, and full-text search, then runs through an
+          optional <strong>cross-encoder reranker</strong>. Your data stays on your
+          machine in a single file you can <code>cp</code> between devices.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
           Standard RAG retrieves document chunks by vector similarity — but a
-          single embedding averages the semantics of ~3,200 characters, losing
-          the signal of individual sentences that point in a different direction.
-          The claims layer decomposes each section into atomic assertions —
-          constraints, commitments, deferrals, assumptions — each with its own
-          embedding. This lets retrieval surface long-tail evidence that
-          document-level search misses: a dissenting observation buried in a
-          supportive PRD, a scope deferral from six months ago that&#39;s suddenly
-          relevant, a constraint from a customer interview that contradicts a new
-          proposal. In a 2026 product environment where development cycles are
-          compressed and there&#39;s too much context to manually review, the ability
-          to stress-test expeditiously against comprehensive organizational
-          evidence is the advantage.
+          single embedding averages the semantics of hundreds of tokens, losing
+          the signal of individual sentences that point in a different
+          direction. Assay&#39;s claims layer decomposes each section into atomic
+          assertions — <em>findings</em>, <em>recommendations</em>,{" "}
+          <em>constraints</em>, <em>assumptions</em>, <em>commitments</em>,{" "}
+          <em>deferrals</em> — each with its own stance, confidence, and
+          embedding. Progressive disclosure (L1-L4) returns a headline first,
+          supporting evidence on demand, and contested alternates only when
+          explicitly requested.
         </p>
       </div>
 
@@ -61,38 +76,59 @@ function OverviewSection() {
         </h2>
         <pre className="font-[family-name:var(--font-jetbrains)]">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`
-  Notion / Confluence            Claude Code (MCP Client)
+  Markdown folder / Notion         Claude Code (MCP Client)
        │                                │
        ▼                                ▼
-  ┌──────────┐      ingest      ┌──────────────────┐
-  │  Source   │ ─────────────►  │   Assay MCP      │
-  │  Pages    │                 │   Server         │
-  └──────────┘                  │                  │
-                                │  ┌────────────┐  │
-                                │  │  Chunker   │  │
-                                │  └─────┬──────┘  │
-                                │        ▼         │
-                                │  ┌────────────┐  │
-                                │  │  Embedder  │  │   OpenAI
-                                │  │  (1536-d)  │◄─┼──► text-embedding-3-small
-                                │  └─────┬──────┘  │
-                                │        ▼         │
-                                │  ┌────────────┐  │
-                                │  │  Claim     │  │   Ollama / Anthropic
-                                │  │  Extractor │◄─┼──► or Claude Subagent
-                                │  └─────┬──────┘  │
-                                │        ▼         │
-                                │  ┌────────────┐  │
-                                │  │  Postgres  │  │
-                                │  │  + pgvector│  │
-                                │  └────────────┘  │
-                                └──────────────────┘
-                                        │
-                          ┌─────────┬───┴───┬─────────┐
-                          ▼         ▼       ▼         ▼
-                       retrieve   scan  stress_test  configure
+  ┌──────────────┐     ingest     ┌──────────────────┐
+  │   Source     │ ────────────►  │   Assay MCP      │
+  │   Docs       │                │   Server         │
+  └──────────────┘                │                  │
+                                  │  ┌────────────┐  │
+                                  │  │  Chunker   │  │  break-point
+                                  │  │  512-tok   │  │  aware (QMD pattern)
+                                  │  └─────┬──────┘  │
+                                  │        ▼         │
+                                  │  ┌────────────┐  │  LOCAL default:
+                                  │  │  Embedder  │  │  bge-large-en-v1.5
+                                  │  │            │  │  1024d (no API key)
+                                  │  └─────┬──────┘  │  opt-in: OpenAI 1536d
+                                  │        ▼         │
+                                  │  ┌────────────┐  │  Extraction (pg path):
+                                  │  │  Claim     │  │  Phi-4 via Ollama or
+                                  │  │  Extractor │  │  Anthropic (Haiku).
+                                  │  └─────┬──────┘  │  SQLite path: deferred
+                                  │        ▼         │  to Extraction V4.
+                                  │  ┌────────────┐  │
+                                  │  │  SQLite +  │  │  ~/.assay/assay.db
+                                  │  │ sqlite-vec │  │  + FTS5 virtual tables
+                                  │  │   + FTS5   │  │  single file, no daemon
+                                  │  └─────┬──────┘  │
+                                  │        ▼         │
+                                  │  ┌────────────┐  │  optional uplift,
+                                  │  │  Reranker  │  │  qwen3-0.6B, local
+                                  │  │ (cross-enc)│  │  via node-llama-cpp
+                                  │  └─────┬──────┘  │  feature-flagged
+                                  │        ▼         │
+                                  │  ┌────────────┐  │  L1 = headline
+                                  │  │ Progressive│  │  L2 = supporting (5)
+                                  │  │ Disclosure │  │  L3 = excerpts (10)
+                                  │  └─────┬──────┘  │  L4 = contested tail
+                                  └────────┼─────────┘
+                                           │
+               ┌─────────┬─────────┬───────┼───────┬──────────┬──────────┐
+               ▼         ▼         ▼       ▼       ▼          ▼          ▼
+            retrieve  scan  stress_test  configure  promote_  demote_
+                                                    claim     claim
 `}</code>
         </pre>
+        <p className="text-xs text-[hsl(220,10%,55%)] mt-3">
+          Ambient memory (Tier 1) via ECC-style lifecycle hooks → cheap local
+          semantic recall (Tier 2) at{" "}
+          <code>~/.assay/session-memory.db</code>{" "}
+          → citation-grade retrieval (Tier 3, the MCP tools above) → deliberate
+          stress-test (Tier 4). Escalation between tiers is automatic on low
+          confidence.
+        </p>
       </div>
 
       <div className="mb-10">
@@ -103,38 +139,32 @@ function OverviewSection() {
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>PostgreSQL 15+</strong> with the{" "}
-              <code>pgvector</code> extension enabled
+              <strong>Node.js 18+</strong> (LTS recommended)
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Node.js 20+</strong> (LTS recommended)
+              <strong>Claude Code</strong> — the MCP client that surfaces the
+              slash commands
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>OpenAI API key</strong> — used for generating text
-              embeddings
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>Claude Code</strong> — the MCP client that connects to
-              Assay
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span>
-              <strong>Notion API key</strong> (optional) — only needed if
-              ingesting from Notion
+              macOS or Linux (Windows untested)
             </span>
           </li>
         </ul>
+
+        <p className="text-sm text-[hsl(220,10%,60%)] mt-4">
+          Optional but not required: <code>OPENAI_API_KEY</code> (upgrades
+          embedder quality), <code>ANTHROPIC_API_KEY</code> (needed only for
+          claim extraction on the Postgres path), Ollama + Phi-4 (alternative
+          claim extractor for privacy-sensitive setups), Postgres + pgvector
+          (only needed if you prefer the cloud-ready stack over the local-first
+          SQLite path).
+        </p>
       </div>
     </section>
   );
@@ -705,18 +735,28 @@ function HowItWorksSection() {
           <div>
             <h3 className="text-lg font-medium mb-2">3. Embed</h3>
             <p>
-              Each evidence section is embedded into a 1536-dimensional vector
-              using OpenAI&#39;s <code>text-embedding-3-small</code> model. The
-              vector is stored in PostgreSQL via pgvector alongside the raw text.
+              Each evidence section is embedded into a dense vector. In the
+              default Phase-1 local-first mode that&#39;s{" "}
+              <code>bge-large-en-v1.5</code> (<strong>1024-dim</strong>, runs
+              in-process via <code>@xenova/transformers</code>, no API key).
+              When <code>OPENAI_API_KEY</code> is configured, Assay uses{" "}
+              <code>text-embedding-3-small</code> (<strong>1536-dim</strong>)
+              for higher quality. Vectors are stored as <code>BLOB</code>{" "}
+              columns in SQLite with <code>sqlite-vec</code> providing cosine
+              distance functions. The legacy Postgres path uses{" "}
+              <code>pgvector</code> with an HNSW index.
             </p>
           </div>
           <div>
             <h3 className="text-lg font-medium mb-2">4. Extract Claims</h3>
             <p>
               Optionally, each section is decomposed into atomic claims — individual
-              assertions with their own type, epistemic layer, confidence score,
-              and independently computed embedding. This is the step that enables
-              granular retrieval beyond what chunk-level search can achieve.
+              assertions with their own type, stance, confidence, and
+              independently computed embedding. The Phase-1 local SQLite path
+              currently performs retrieval on evidence records only; typed
+              claim extraction for SQLite is the Extraction V4 work item. The
+              Postgres path runs extraction via Phi-4 (Ollama) or Claude
+              Haiku (Anthropic API), selectable per ingestion run.
             </p>
           </div>
           <div>
@@ -757,16 +797,19 @@ function HowItWorksSection() {
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0 font-medium">3.</span>
             <span>
-              <strong>Evidence full-text search</strong> — PostgreSQL{" "}
-              <code>ts_rank</code> against evidence text. Catches exact
-              terminology and proper nouns that vector search may miss.
+              <strong>Evidence full-text search</strong> — SQLite{" "}
+              <code>FTS5</code> (porter + unicode61 tokenizer) in Phase-1
+              local mode, or Postgres <code>ts_rank</code> on the production
+              path. Catches exact terminology and proper nouns that vector
+              search may miss.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0 font-medium">4.</span>
             <span>
-              <strong>Claims full-text search</strong> — full-text search against
-              claim text. Catches specific terms used in individual assertions.
+              <strong>Claims full-text search</strong> — FTS5 (SQLite) or
+              tsvector (Postgres) against claim text. Catches specific terms
+              used in individual assertions.
             </span>
           </li>
         </ol>
@@ -800,11 +843,15 @@ function EvidenceAndClaimsSection() {
           Evidence Records
         </h2>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          An evidence record is a section of approximately 3,200 characters
-          extracted from a source document at heading boundaries. Each record
-          stores the raw text, a 1536-dimensional embedding vector, source
-          metadata (page URL, title, heading path), and a content hash for
-          drift detection.
+          An evidence record is a section produced by the two-pass
+          break-point chunker (target ~512 tokens per chunk, headings used as
+          natural breakpoints, oversized sections sub-split along sentence
+          boundaries with heading-context preservation). Each record stores
+          the raw text, a dense embedding vector (<strong>1024-dim</strong>{" "}
+          local bge-large by default, <strong>1536-dim</strong> OpenAI if an
+          API key is configured), source metadata (page URL, title, heading
+          path), and a content hash for drift detection and delete/rename
+          tombstone retirement.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
           Evidence records are the primary unit of retrieval. They provide the
@@ -1398,9 +1445,27 @@ function ExtractionModesSection() {
       <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
         Extraction Modes
       </h1>
-      <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
+      <p className="text-[hsl(220,10%,55%)] mb-6 text-lg">
         Choose how Assay decomposes document sections into atomic claims.
       </p>
+
+      {/* Scope disclaimer for Phase 1 local-first */}
+      <div className="mb-8 rounded-lg bg-[hsl(220,15%,9%)] border-l-4 border-[hsl(40,90%,60%)] px-5 py-4">
+        <p className="text-sm text-[hsl(220,15%,93%)]">
+          <strong className="text-[hsl(40,90%,70%)]">Scope:</strong> The
+          extraction modes below apply to the <strong>Postgres production
+          path</strong>. The Phase-1 <strong>local-first SQLite path</strong>{" "}
+          currently runs <em>evidence-only</em> retrieval — the typed-claim
+          extraction layer is the <strong>Extraction V4</strong> work item
+          (on-deck, targeting ≥90% source-excerpt faithfulness and a
+          rebalanced claim-type distribution). If you&#39;re on the SQLite
+          path,{" "}
+          <code>/assay-retrieve</code> returns evidence records with citation
+          tokens; promotion tools (<code>promote_claim</code> /{" "}
+          <code>demote_claim</code>) are live and will apply to claims once
+          V4 ships.
+        </p>
+      </div>
 
       {/* Intro */}
       <div className="mb-10">
@@ -1413,8 +1478,8 @@ function ExtractionModesSection() {
           <code>EXTRACTION_MODE</code> environment variable.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          Three modes are available. Each trades off cost, speed, quality,
-          and infrastructure requirements differently.
+          Three modes are available on the Postgres path. Each trades off
+          cost, speed, quality, and infrastructure requirements differently.
         </p>
       </div>
 
