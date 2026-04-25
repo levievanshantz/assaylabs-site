@@ -30,7 +30,10 @@ The intelligence-ledger-prototype repo has the actual product code.
 - Content changes are public — review before deploying
 
 ## Latest Commit
-- `9574673` — Demo video + landing page 4-tool update + docs retrieve section
+- `b552a89` — Decisions & Ambient Tagging docs section added (sidebar nav + DecisionsSection covering tag format, assay drain, and decision MCP tools)
+
+## Recent Changes (April 25, 2026)
+- Added `DecisionsSection` to /docs covering: decision primitive (atomic candidate rows, append-only `claim_evidence` audit trail), three capture paths (structural / ambient drain / T0 backfill), the `<decision>` tag format (impact + confidence attributes, required `<statement>` and `<reasoning>` children), `assay drain` CLI usage, `assay_decision_recall` + `assay_decision_expand` MCP tools, and `assay doctor` health check. Sidebar nav now includes "Decisions & Ambient Tagging" between Evidence & Claims and Retrieval Pipeline.
 
 ## Daily Export Protocol
 <!-- ORCHESTRATOR-MANAGED — Do not remove this section. Injected by the global orchestrator instance. -->
