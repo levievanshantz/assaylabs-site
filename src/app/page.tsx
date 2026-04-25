@@ -38,28 +38,104 @@ export default function Home() {
         {/* ──────────────────────────── HERO ──────────────────────────── */}
         <section className="mx-auto max-w-3xl px-6 pb-24 pt-28 text-center">
           <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            Give your product team a memory that doesn&rsquo;t forget.
+            The memory layer for product decisions.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Assay turns PRDs, strategy docs, research, and decisions into cited
-            claims your AI tools can actually check against. Local-first,
-            inspectable, built for PMs who ship.
+            Track every commitment, every reversal, every reason. Ask Claude
+            exactly what your team decided and why &mdash; with the full
+            predecessor chain, the cited evidence, and a record of which model
+            or human signed off at every step.
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
+            Local-first. No API key. Free for closed-beta testers.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <a
-              href="https://github.com/levievanshantz/assaylabs"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="mailto:levishantz@gmail.com?subject=Assay%20closed%20beta"
               className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
-              Get the repo
+              Join the closed beta
             </a>
             <a
-              href="#how-it-works"
+              href="/docs#decisions"
               className="rounded-md border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-card"
             >
-              See how it works
+              See the architecture
             </a>
+          </div>
+        </section>
+
+        {/* ──────────────────────── 3-PILLAR STORY ─────────────────────── */}
+        <section className="border-t border-border py-20">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              How decisions accumulate without anyone writing them down
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Three orthogonal capture paths feed the same decision graph. Recall
+              ranks them with semantic + recency + frequency, and expansion walks
+              the full provenance.
+            </p>
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              <div className="rounded-xl border border-border bg-card p-6">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+                  Pillar 1 &mdash; Capture
+                </p>
+                <h3 className="mt-2 text-lg font-semibold text-foreground">Three paths, all idempotent</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  <strong>Ambient.</strong> Claude tags decisions inline as it
+                  commits to them in conversation. <code>assay drain</code>{" "}
+                  pulls them into the ledger.
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <strong>Structural.</strong> Briefs deposit decisions as
+                  candidate rows via the analyzer JSON path.
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <strong>Historical.</strong> Phi-4 14B backfills your existing
+                  PRDs and research docs once.
+                </p>
+              </div>
+              <div className="rounded-xl border border-border bg-card p-6">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+                  Pillar 2 &mdash; Recall
+                </p>
+                <h3 className="mt-2 text-lg font-semibold text-foreground">Time-aware, provenance-aware</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Hybrid scoring blends 0.7 cosine + 0.2 recency (90-day
+                  half-life) + 0.1 citation frequency. Cosine stays the floor
+                  and tiebreaker.
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Filter by epistemic layer (observation / interpretation /
+                  decision). Opt into surfacing recently-superseded decisions
+                  with their replacement pointers.
+                </p>
+              </div>
+              <div className="rounded-xl border border-border bg-card p-6">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+                  Pillar 3 &mdash; Decision graph over time
+                </p>
+                <h3 className="mt-2 text-lg font-semibold text-foreground">Every state change recorded</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Every initial deposit, promotion, supersession, or rejection
+                  appends a row to <code>decision_transitions</code>. Captures
+                  the actor agent, the model id, the transition reason, and any
+                  evidence that triggered it.
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Expand any decision and walk its full predecessor chain
+                  (depth-N, cycle-guarded). See exactly how a call evolved
+                  across a quarter and which model touched it at every step.
+                </p>
+              </div>
+            </div>
+            <p className="mt-8 text-xs text-muted-foreground/60 text-center">
+              No other RAG tool ships this shape. Notion AI summarizes
+              documents. Glean searches them. Linear AI tracks tickets. None
+              treat decisions as first-class structured artifacts with audit
+              trails.
+            </p>
           </div>
         </section>
 
