@@ -22,6 +22,121 @@ interface Feature {
   ecc: Cell;
 }
 
+/** Market alternatives — the tools a buyer compares against.
+ *  Different question from the infra-shape comparison below: this is
+ *  "why not just use Notion AI / Glean / Linear AI / Mem0 / Zep?" */
+interface MarketFeature {
+  label: string;
+  why?: string;
+  assay: Cell;
+  notionAI: Cell;
+  glean: Cell;
+  linearAI: Cell;
+  mem0: Cell;
+  zep: Cell;
+}
+
+const MARKET_FEATURES: MarketFeature[] = [
+  {
+    label: "Decisions as a first-class artifact",
+    why: "Most tools treat decisions as just-another-document. Assay models them with a discriminator column, status lifecycle, and audit table — distinct from notes, claims, or messages.",
+    assay: "yes", notionAI: "no", glean: "no", linearAI: "no", mem0: "no", zep: "no",
+  },
+  {
+    label: "Full supersession chain (depth-N)",
+    why: "Walk A→B→C→D as a single artifact. Lets you answer 'how did this evolve?' instead of just 'what is true now?'",
+    assay: "yes", notionAI: "no", glean: "no", linearAI: "no", mem0: "no", zep: "partial",
+  },
+  {
+    label: "Per-state-change audit (who/what/when/why)",
+    why: "Every decision transition records the actor agent, model id, reason, and triggering evidence. Replay end-to-end how a call was made.",
+    assay: "yes", notionAI: "no", glean: "no", linearAI: "partial", mem0: "no", zep: "no",
+  },
+  {
+    label: "Time-aware recall (recency + frequency)",
+    why: "Hybrid score blends semantic + recency + citation frequency. Old strategy decisions still surface; stale tactical ones decay naturally.",
+    assay: "yes", notionAI: "no", glean: "partial", linearAI: "no", mem0: "partial", zep: "yes",
+  },
+  {
+    label: "Local-first / data never leaves the machine",
+    why: "PM data is sensitive: PRDs, salary discussions, due diligence, strategy. Single SQLite file. No cloud retention, no shadow IT review.",
+    assay: "yes", notionAI: "no", glean: "no", linearAI: "no", mem0: "partial", zep: "partial",
+  },
+  {
+    label: "AI assistant integration via MCP",
+    why: "Claude Desktop and Cursor pull decisions on demand via the Model Context Protocol. No proprietary SDK lock-in.",
+    assay: "yes", notionAI: "via", glean: "via", linearAI: "via", mem0: "no", zep: "no",
+  },
+  {
+    label: "Structured query: 'what did we decide AND why AND who signed off'",
+    why: "Returns the artifact, not just relevant text. Notion/Glean give you documents; Assay gives you the answer with full provenance.",
+    assay: "yes", notionAI: "no", glean: "no", linearAI: "no", mem0: "no", zep: "no",
+  },
+  {
+    label: "Free for design-partner cohort",
+    why: "No credit card, no API bill, no usage-based pricing surprises. Concierge install during beta.",
+    assay: "yes", notionAI: "no", glean: "no", linearAI: "no", mem0: "partial", zep: "partial",
+  },
+];
+
+const MARKET_COLUMNS: { key: keyof MarketFeature; label: string; isAssay?: boolean; note?: string }[] = [
+  { key: "assay", label: "Assay", isAssay: true },
+  { key: "notionAI", label: "Notion AI", note: "doc summarization" },
+  { key: "glean", label: "Glean", note: "enterprise search" },
+  { key: "linearAI", label: "Linear AI", note: "ticket workflow" },
+  { key: "mem0", label: "Mem0", note: "agent memory" },
+  { key: "zep", label: "Zep", note: "long-term memory" },
+];
+
+/** Methodology references — open-source projects that informed our
+ *  technical choices. Honest credit + where we diverged. */
+interface MethodologyReference {
+  name: string;
+  href?: string;
+  shape: string;
+  whatWeTook: string;
+  whereWeDiverged: string;
+}
+
+const METHODOLOGY_REFERENCES: MethodologyReference[] = [
+  {
+    name: "Memento",
+    shape: "SQLite + FTS5 + sqlite-vec + offline bge embeddings; entity/observation/relation graph",
+    whatWeTook: "Storage primitives — same SQLite + sqlite-vec + FTS5 + on-device bge embeddings stack.",
+    whereWeDiverged: "Memento's graph is entity-centric (people / products / projects as nodes). Assay's is decision-centric: each decision is a node, predecessor edges form the graph. Entity layer is post-beta.",
+  },
+  {
+    name: "Korety claude-memory",
+    shape: "Multi-factor scoring (semantic + recency + frequency + concept overlap), pinned memories, decay, retrieval logs, auto-injection budgets",
+    whatWeTook: "Multi-factor scoring inspiration. Hybrid recall is 0.7 cosine + 0.2 recency (90-day half-life) + 0.1 citation frequency, with cosine as floor + tiebreaker.",
+    whereWeDiverged: "We don't auto-inject decisions into prompts (write-only architecture); recall is opt-in via MCP tool. Pinned memories and stale markers deferred to post-beta.",
+  },
+  {
+    name: "Claude Memory Compiler",
+    shape: "Capture → flush → compile → lint → inject index",
+    whatWeTook: "Capture (drain) + lint (anti-template-leak filter) + inject-on-demand pattern.",
+    whereWeDiverged: "Skipped the compile phase deliberately. Eval v2 verdict: claim extraction (the natural compile step) underperformed chunk-only retrieval 0.158 vs 0.446 AspectCoverage@5. Auto-compile would actively hurt quality on a markdown corpus.",
+  },
+  {
+    name: "CocoIndex",
+    shape: "AST/tree-sitter chunking with incremental reindex",
+    whatWeTook: "Incremental reindex via content_hash drift detection.",
+    whereWeDiverged: "AST chunking is wasted on prose. Two-pass markdown chunker (`lib/chunker.ts`, 38 tests) follows Anthropic's contextual retrieval pattern — the right tool for PM docs. Revisit if Assay later ingests code repos.",
+  },
+  {
+    name: "Zilliz claude-context",
+    shape: "Provider abstraction for embeddings (local + hosted)",
+    whatWeTook: "Provider abstraction is the right shape — `lib/embeddings.ts` exposes `EmbeddingProvider` interface with OpenAI + local-bge implementations and env-var precedence.",
+    whereWeDiverged: "Same shape, different inventory. Adding more providers (Cohere / Voyage) is one-file work when needed.",
+  },
+  {
+    name: "GBrain",
+    shape: "Local-first to cloud migration, graph query, jobs, health checks",
+    whatWeTook: "Local-first health-check pattern (`assay doctor` + `assay-mcp.doctor`) and nightly sync via launchd.",
+    whereWeDiverged: "Cloud migration deferred (PRD 19) until retention is proven with the design-partner cohort. No in-app job queue — launchd cron is enough for beta.",
+  },
+];
+
 interface Section {
   title: string;
   blurb?: string;
@@ -326,6 +441,78 @@ export default function ComparePage() {
           </div>
         </div>
 
+        {/* ─── Market Alternatives — the buyer's "why not just use X?" set ─── */}
+        <section className="mb-14">
+          <h2 className="text-2xl font-semibold text-[hsl(220,15%,93%)] mb-2">
+            Market alternatives
+          </h2>
+          <p className="text-[hsl(220,10%,60%)] mb-5 max-w-3xl">
+            Tools a PM or founder might consider buying instead. None model
+            decisions as a first-class artifact with audit trail and
+            supersession history — that&apos;s the gap Assay fills.
+          </p>
+          <div className="overflow-x-auto rounded-lg border border-[hsl(220,15%,18%)]">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[hsl(220,15%,9%)] border-b border-[hsl(220,15%,18%)]">
+                  <th className="text-left px-4 py-3 text-[hsl(220,10%,55%)] font-medium">Capability</th>
+                  {MARKET_COLUMNS.map((c) => (
+                    <th
+                      key={c.key}
+                      className={`px-3 py-3 text-center font-semibold ${
+                        c.isAssay
+                          ? "bg-[hsl(234,100%,71%)]/15 text-[hsl(234,100%,85%)]"
+                          : "text-[hsl(220,10%,65%)]"
+                      }`}
+                    >
+                      <div>{c.label}</div>
+                      {c.note ? (
+                        <div className="text-[10px] font-normal text-[hsl(220,10%,45%)] mt-0.5">
+                          {c.note}
+                        </div>
+                      ) : null}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {MARKET_FEATURES.map((f, idx) => (
+                  <tr
+                    key={f.label}
+                    className={`border-t border-[hsl(220,15%,14%)] align-top ${
+                      idx % 2 === 0 ? "bg-[hsl(220,15%,7%)]" : "bg-[hsl(220,15%,8%)]"
+                    }`}
+                  >
+                    <td className="px-4 py-4 max-w-xl">
+                      <div className="text-[hsl(220,15%,93%)] font-medium leading-snug">{f.label}</div>
+                      {f.why ? (
+                        <div className="mt-1 text-[13px] text-[hsl(220,10%,70%)] leading-relaxed">
+                          <span className="text-[hsl(234,100%,71%)]">Why it matters: </span>
+                          {f.why}
+                        </div>
+                      ) : null}
+                    </td>
+                    {MARKET_COLUMNS.map((c) => (
+                      <Cell key={c.key} value={f[c.key] as Cell} />
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div className="mb-12 -mt-2">
+          <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-1">
+            Adjacent local-first tools (infrastructure shape)
+          </h2>
+          <p className="text-[hsl(220,10%,60%)] text-sm max-w-3xl">
+            For technical readers — how Assay sits relative to the local-first
+            tools that share its infrastructure shape (retrieval primitives,
+            session-memory hooks, output templates, lifecycle capture).
+          </p>
+        </div>
+
         {SECTIONS.map((section) => (
           <section key={section.title} className="mb-14">
             <h2 className="text-2xl font-semibold text-[hsl(220,15%,93%)] mb-2">{section.title}</h2>
@@ -440,6 +627,48 @@ export default function ComparePage() {
               </p>
             </div>
           </div>
+        </section>
+
+        {/* ─── Methodology references — open-source projects we credit ─── */}
+        <section className="mb-16 pt-10 border-t border-[hsl(220,15%,18%)]">
+          <h2 className="text-2xl font-semibold text-[hsl(220,15%,93%)] mb-2">
+            Methodology references
+          </h2>
+          <p className="text-[hsl(220,10%,60%)] mb-6 max-w-3xl">
+            Open-source projects whose ideas informed Assay&apos;s technical
+            choices. Honest credit + where we deliberately diverged.
+          </p>
+          <div className="space-y-4">
+            {METHODOLOGY_REFERENCES.map((ref) => (
+              <div
+                key={ref.name}
+                className="rounded-lg border border-[hsl(220,15%,18%)] bg-[hsl(220,15%,9%)] p-5"
+              >
+                <div className="flex items-start justify-between gap-4 mb-2">
+                  <h3 className="text-lg font-semibold text-[hsl(220,15%,93%)]">{ref.name}</h3>
+                  <span className="text-[11px] uppercase tracking-wider text-[hsl(220,10%,55%)] mt-1">
+                    {ref.shape}
+                  </span>
+                </div>
+                <p className="text-sm text-[hsl(220,15%,93%)] leading-relaxed mb-2">
+                  <span className="text-[hsl(152,60%,62%)] font-medium">What we took: </span>
+                  {ref.whatWeTook}
+                </p>
+                <p className="text-sm text-[hsl(220,10%,75%)] leading-relaxed">
+                  <span className="text-[hsl(40,90%,70%)] font-medium">Where we diverged: </span>
+                  {ref.whereWeDiverged}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 text-xs text-[hsl(220,10%,55%)] italic">
+            Each adoption was a deliberate technical decision, not a default.
+            The eval verdict on claim extraction (chunk-only beats claim-as-pointer
+            0.446 vs 0.158 AspectCoverage@5) is why we deliberately do not
+            auto-compile decisions into higher-order claims — Memory Compiler&apos;s
+            compile phase would actively hurt retrieval quality on a markdown
+            corpus.
+          </p>
         </section>
 
         <div className="mt-12 pt-10 border-t border-[hsl(220,15%,18%)] flex gap-4">
