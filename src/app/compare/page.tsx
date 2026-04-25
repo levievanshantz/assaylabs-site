@@ -98,6 +98,45 @@ interface MethodologyReference {
   whereWeDiverged: string;
 }
 
+/** Adjacent agent-memory frameworks — overlapping shape, different
+ *  positioning. These are NOT what Assay borrowed from; they're alternative
+ *  approaches a buyer might evaluate alongside us. Different jobs, different
+ *  artifacts, similar marketing language. */
+interface AgentMemoryFramework {
+  name: string;
+  href?: string;
+  shape: string;
+  overlap: string;
+  divergence: string;
+}
+
+const AGENT_MEMORY_FRAMEWORKS: AgentMemoryFramework[] = [
+  {
+    name: "Letta (formerly MemGPT)",
+    shape: "Agent-memory framework — hierarchical memory (core / archival / recall) for LLM agents. Open source, multi-language.",
+    overlap: "Semantic-pointer recall pattern: store summaries, fetch full record on demand. We use the same pattern between assay_decision_recall (summaries) and assay_decision_expand (full + provenance).",
+    divergence: "Letta is a generic agent-memory runtime. Assay is a specific system of record for product decisions — schema-modeled, transition-audited, supersession-aware. Letta gives you primitives; Assay gives you an artifact.",
+  },
+  {
+    name: "LangMem",
+    shape: "LangChain memory primitive — episodic / semantic / procedural memory APIs for agent workflows.",
+    overlap: "Three-layer memory framing (observation → interpretation → decision in our terms; episodic → semantic → procedural in theirs).",
+    divergence: "LangMem is a developer-facing API. Assay is a working system with capture, recall, audit, and MCP surface — no LangChain dependency, no orchestration framework lock-in.",
+  },
+  {
+    name: "Cognee",
+    shape: "Knowledge-graph memory layer — entity / relation extraction over a corpus, builds a queryable graph.",
+    overlap: "Graph-shaped memory. Both treat retrieval as graph walk rather than just vector search.",
+    divergence: "Cognee&rsquo;s nodes are entities (people, products, projects). Assay&rsquo;s nodes are decisions — supersession edges form the predecessor chain. Entity layer is post-beta. Different graph, same word.",
+  },
+  {
+    name: "Pieces for Developers",
+    shape: "Local-first context capture for devs — captures snippets, code, and IDE/browser context across tools.",
+    overlap: "Local-first stance, on-device storage, persistent cross-tool context.",
+    divergence: "Pieces captures developer workflow context (snippets, references). Assay captures product decisions with reasoning, evidence, and supersession. Different artifact, different audience.",
+  },
+];
+
 const METHODOLOGY_REFERENCES: MethodologyReference[] = [
   {
     name: "Memento",
@@ -626,6 +665,42 @@ export default function ComparePage() {
                 upgrade — not a requirement.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* ─── Adjacent agent-memory frameworks (overlapping shape, different jobs) ─── */}
+        <section className="mb-16 pt-10 border-t border-[hsl(220,15%,18%)]">
+          <h2 className="text-2xl font-semibold text-[hsl(220,15%,93%)] mb-2">
+            Adjacent agent-memory frameworks
+          </h2>
+          <p className="text-[hsl(220,10%,60%)] mb-6 max-w-3xl">
+            Frameworks with overlapping shape but different positioning. A
+            buyer might evaluate these alongside Assay; the artifact each one
+            produces is different even when the marketing language sounds
+            similar.
+          </p>
+          <div className="space-y-4">
+            {AGENT_MEMORY_FRAMEWORKS.map((f) => (
+              <div
+                key={f.name}
+                className="rounded-lg border border-[hsl(220,15%,18%)] bg-[hsl(220,15%,9%)] p-5"
+              >
+                <div className="flex items-start justify-between gap-4 mb-2">
+                  <h3 className="text-lg font-semibold text-[hsl(220,15%,93%)]">{f.name}</h3>
+                  <span className="text-[11px] uppercase tracking-wider text-[hsl(220,10%,55%)] mt-1">
+                    {f.shape}
+                  </span>
+                </div>
+                <p className="text-sm text-[hsl(220,15%,93%)] leading-relaxed mb-2">
+                  <span className="text-[hsl(152,60%,62%)] font-medium">Where we overlap: </span>
+                  <span dangerouslySetInnerHTML={{ __html: f.overlap }} />
+                </p>
+                <p className="text-sm text-[hsl(220,10%,75%)] leading-relaxed">
+                  <span className="text-[hsl(40,90%,70%)] font-medium">Where we differ: </span>
+                  <span dangerouslySetInnerHTML={{ __html: f.divergence }} />
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 

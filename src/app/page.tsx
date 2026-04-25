@@ -316,7 +316,7 @@ export default function Home() {
                 {
                   step: "1",
                   title: "Ingest your docs",
-                  desc: "Notion connector today, Confluence and more coming.",
+                  desc: "Notion connector + local markdown folders today. Two-pass smart chunking with heading context preserved into every embedding.",
                 },
                 {
                   step: "2",
@@ -402,42 +402,88 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ──────────────────────────── TOOLS ──────────────────────────── */}
+        {/* ──────────────────────────── AGENTS ──────────────────────────── */}
         <section id="tools" className="border-t border-border py-24">
           <div className="mx-auto max-w-5xl px-6">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              What you can do
+              The MCP surface — five named agents
             </h2>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+              Each MCP tool inside Claude Desktop or Cursor answers one
+              question. Same shape (one call, one structured response); the
+              question is what differs. Two of them speak to the decision
+              graph; one speaks to the corpus; two speak across both. Plus a
+              cascade tool that picks for you when you don&rsquo;t know which
+              tier holds the answer.
+            </p>
             <div className="mt-12 grid gap-4 sm:grid-cols-2">
               {[
                 {
-                  name: "retrieve",
-                  desc: "Query the corpus across four modes: raw (direct results), guided (eval instructions for the calling LLM), evaluate (server-side synthesis), and brief (structured organizational briefing).",
+                  agent: "Decision",
+                  tool: "assay_decision_recall",
+                  question: "What did we decide about X — and what&rsquo;s the current state?",
+                  layer: "Decision graph",
                 },
                 {
-                  name: "scan",
-                  desc: "Quick pre-flight check — validates the corpus is healthy, checks sync freshness, and surfaces any drift before you start working.",
+                  agent: "Provenance",
+                  tool: "assay_decision_expand",
+                  question: "Walk me through how decision Y evolved — predecessors, transitions, evidence, who signed off.",
+                  layer: "Decision graph",
                 },
                 {
-                  name: "stress_test",
-                  desc: "Pressure-test a proposal against everything the org has decided. Verdict, contradictions, assumption weaknesses, evidence gaps.",
+                  agent: "Evidence",
+                  tool: "retrieve (raw / guided / evaluate / brief)",
+                  question: "What does our corpus say about X — pull me the citable chunks.",
+                  layer: "Corpus",
                 },
                 {
-                  name: "configure",
-                  desc: "View and update extraction mode, retrieval depth, feature toggles, and presets.",
+                  agent: "Pre-flight",
+                  tool: "scan",
+                  question: "Is this proposal a green light, a caution, or a blocker?",
+                  layer: "Both tiers",
                 },
-              ].map(({ name, desc }) => (
+                {
+                  agent: "Adversary",
+                  tool: "stress_test",
+                  question: "Find every reason this proposal will fail. Surface dissent.",
+                  layer: "Both tiers",
+                },
+                {
+                  agent: "Cascade",
+                  tool: "assay_recall",
+                  question: "I don&rsquo;t know which tier holds this — try them in order and breadcrumb where the answer came from.",
+                  layer: "Decision → Corpus → insufficient",
+                },
+              ].map(({ agent, tool, question, layer }) => (
                 <div
-                  key={name}
+                  key={tool}
                   className="rounded-lg border border-border bg-card p-6"
                 >
-                  <code className="text-sm text-accent">{name}</code>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {desc}
-                  </p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+                        {agent}
+                      </p>
+                      <code className="mt-1 block text-sm text-accent">{tool}</code>
+                    </div>
+                    <span className="shrink-0 rounded-full border border-border/50 bg-background px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                      {layer}
+                    </span>
+                  </div>
+                  <p
+                    className="mt-3 text-sm leading-relaxed text-muted-foreground"
+                    dangerouslySetInnerHTML={{ __html: question }}
+                  />
                 </div>
               ))}
             </div>
+            <p className="mt-8 text-xs text-muted-foreground/60 text-center">
+              Same MCP surface today on a single-user SQLite file
+              (<code>~/.assay/assay.db</code>); the schema is portable to
+              Postgres + pgvector when a team wants a shared institutional
+              graph. Individual decision history stays local; team graphs are
+              hosted, post-beta.
+            </p>
           </div>
         </section>
 

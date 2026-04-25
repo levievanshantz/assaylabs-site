@@ -199,23 +199,36 @@ npm install`}</code>
           one-time). A 50-PRD folder finishes in under 60 seconds.
         </p>
 
-        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">3. Wire up Claude Code</h3>
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">3. Wire up Claude Desktop via the launcher</h3>
         <p className="text-sm text-[hsl(220,15%,93%)] mb-2">
-          Add this <code>assay</code> entry to the <code>mcpServers</code> block
-          in your <code>claude_desktop_config.json</code>:
+          The repo ships with a launcher script at{" "}
+          <code>~/.local/bin/assay-mcp</code> that auto-discovers the built
+          MCP server and decouples your Claude Desktop config from the repo
+          path. Recommended over hard-coding the dist path. Add this{" "}
+          <code>assay</code> entry to <code>mcpServers</code> in{" "}
+          <code>claude_desktop_config.json</code>:
         </p>
         <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`"assay": {
-  "command": "node",
-  "args": ["/absolute/path/to/assaylabs/mcp-server/dist/index.js"],
+  "command": "/Users/YOU/.local/bin/assay-mcp",
+  "args": [],
   "env": {
     "ASSAY_DB": "sqlite",
     "ASSAY_DB_PATH": "/Users/YOU/.assay/assay.db"
   }
 }`}</code>
         </pre>
-        <p className="text-sm text-[hsl(220,10%,55%)] mb-4">
+        <p className="text-sm text-[hsl(220,10%,55%)] mb-2">
           Restart Claude Desktop. Test with <code>/assay-retrieve</code>.
+          Verify with <code>~/.local/bin/assay-mcp.doctor</code> — it checks
+          the launcher, the config pointer, server boot, SQLite reachability,
+          and recent log cleanliness in one pass. Run it any time Claude
+          Desktop says &ldquo;assay disconnected.&rdquo;
+        </p>
+        <p className="text-sm text-[hsl(220,10%,55%)] mb-4">
+          Direct (no launcher) wiring still works too — point{" "}
+          <code>command</code> at <code>node</code> with{" "}
+          <code>args: [&quot;/abs/path/mcp-server/dist/index.js&quot;]</code>.
         </p>
 
         <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">4. Live-update (optional)</h3>
@@ -226,9 +239,11 @@ npm install`}</code>
         <div className="mt-6 rounded bg-[hsl(220,15%,5%)] border-l-4 border-[hsl(40,90%,60%)] px-4 py-3">
           <p className="text-sm text-[hsl(220,15%,93%)]">
             <strong className="text-[hsl(40,90%,60%)]">Known limitations:</strong>{" "}
-            Single-machine only; no team sharing. If a query gives an
-            obviously wrong top result, file it with the GitHub issue
-            template — ranking tuning is an open work item.
+            Single-machine only; no team sharing today. The schema is
+            portable — when retention is proven, the same tables move to a
+            hosted Postgres + pgvector tier for shared institutional graphs.
+            If a query gives an obviously wrong top result, file it with the
+            GitHub issue template; ranking tuning is an open work item.
           </p>
         </div>
       </div>
@@ -868,34 +883,101 @@ assay drain --dry-run`}
 
       <div className="mb-10">
         <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-          MCP recall surface
+          MCP recall surface — five named agents + cascade
         </h2>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          Two MCP tools give callers semantic access to the decision
-          ledger without auto-loading it into context:
+          The MCP tools registered by the Assay server are best understood
+          as five named agents (each one solves one job) plus a cascade
+          tool for when the caller doesn&rsquo;t know which tier holds the
+          answer:
         </p>
         <ul className="space-y-2 text-[hsl(220,15%,93%)]">
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <code>assay_decision_recall</code> &mdash; cosine search over
-              the statement embedding. Returns summaries (id, statement,
-              confidence, status, score) with optional filters for status,
-              kind, and confidence. The default confidence floor is
-              <code> medium</code>+ so low-signal candidates stay out of
-              the response.
+              <strong>Decision</strong> &mdash; <code>assay_decision_recall</code>{" "}
+              cosine + hybrid search over the statement embedding. Returns
+              summaries (id, statement, confidence, status, score) with
+              optional filters for status, kind, confidence, and layer.
+              Default confidence floor is <code>medium</code>+ so low-signal
+              candidates stay out of the response.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <code>assay_decision_expand</code> &mdash; given a decision
-              id, returns the full reasoning trail, the latest cited
-              evidence list, and a depth-1 predecessor walk so callers
-              can reconstruct what changed and why.
+              <strong>Provenance</strong> &mdash; <code>assay_decision_expand</code>{" "}
+              given a decision id, returns the full reasoning trail, the
+              latest cited evidence, the full <code>decision_transitions</code>{" "}
+              audit log, and a depth-N predecessor walk
+              (<code>supersedes_chain</code>) so callers can reconstruct
+              exactly what changed and why.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>Evidence</strong> &mdash; <code>retrieve</code> in modes{" "}
+              <code>raw</code> / <code>guided</code> / <code>evaluate</code> /{" "}
+              <code>brief</code>. Hybrid vector + FTS over evidence chunks,
+              merged via reciprocal rank fusion. The corpus tier of the
+              memory hierarchy.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>Pre-flight</strong> &mdash; <code>scan</code> fast 3-5
+              signal verdict (clear / caution / blocker). Spans both tiers.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>Adversary</strong> &mdash; <code>stress_test</code>{" "}
+              deliberate adversarial review of a proposal. Surfaces every
+              dissenting decision and conflicting chunk.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>Cascade</strong> &mdash; <code>assay_recall</code>{" "}
+              activation cascade: tries the Decision graph first (cosine
+              floor 0.65 by default), falls through to Corpus retrieval if
+              no semantic hit, returns <code>insufficient_evidence</code>{" "}
+              when both tiers come up empty. Every response carries a{" "}
+              <code>source_tier</code> breadcrumb so the caller knows
+              whether it&rsquo;s reading a structured decision, a raw
+              corpus chunk, or a verdict that nothing in the ledger
+              answers the question. Use this when the question is abstract
+              or you don&rsquo;t know which tier holds the answer; use the
+              direct tools above when you do.
             </span>
           </li>
         </ul>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Supersession semantics — audit-only by default
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          When a tag includes <code>supersedes=&quot;&lt;id-or-prefix&gt;&quot;</code>,
+          the drain resolves the predecessor with strict unique-match
+          enforcement. Prefixes must be at least 12 characters; shorter
+          prefixes or ambiguous matches fail the resolver and the new
+          decision lands without the link (failure reason recorded for
+          audit). On success the drain (a) sets{" "}
+          <code>superseded_by_claim_id</code> on the new row and (b) appends
+          a <code>supersession-edge-recorded</code> transition row on the
+          predecessor. Default mode is{" "}
+          <strong>audit-only</strong> &mdash; the predecessor&rsquo;s status
+          stays untouched so a wrong tag can&rsquo;t accidentally hide live
+          knowledge. Set <code>ASSAY_SUPERSEDE_FLIP=1</code> in the MCP env
+          to opt into the live-flip mode once you trust your tagging
+          discipline.
+        </p>
       </div>
 
       <div className="mb-10">
