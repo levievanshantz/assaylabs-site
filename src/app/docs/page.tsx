@@ -778,7 +778,8 @@ function DecisionsSection() {
         </p>
         <pre className="bg-[hsl(220,15%,9%)] border border-[hsl(220,15%,18%)] rounded-lg p-4 text-sm text-[hsl(220,15%,93%)] overflow-x-auto leading-relaxed">
 {`<decision impact="schema|tooling|policy|rollout|eval|scope"
-          confidence="moderate|low">
+          confidence="moderate|low"
+          layer="observation|interpretation|decision">
   <statement>{<=200 chars; specific real subject}</statement>
   <reasoning>{<=400 chars; why this was decided}</reasoning>
 </decision>`}
@@ -786,9 +787,52 @@ function DecisionsSection() {
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mt-4">
           Both child tags are required &mdash; missing or empty bodies are
           dropped at drain. The <code>impact</code> attribute drives
-          downstream filtering. Tags are emitted only for committed,
-          specific, material decisions; routine debate, status updates,
-          and acknowledgments stay out of the ledger.
+          downstream filtering. The optional <code>layer</code> attribute
+          (default <code>decision</code>) marks the epistemic level &mdash;{" "}
+          <code>observation</code> for direct factual reports,{" "}
+          <code>interpretation</code> for inference and synthesis,{" "}
+          <code>decision</code> for committed action. Recall can filter
+          by layer to surface only the committed decisions or trace the
+          observations and interpretations that led there.
+        </p>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Decision graph over time
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          Every state change on a decision &mdash; initial deposit,
+          promotion through the review lifecycle, supersession by a new
+          decision, rejection &mdash; appends a row to the
+          <code> decision_transitions</code> audit table. Each row records
+          the actor agent (which Claude instance, GPT call, or Levi
+          input), the model id when known, the transition reason, and any
+          evidence record that triggered the change.
+        </p>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          <code>assay_decision_expand</code> returns the full transition
+          history alongside a depth-N predecessor walk
+          (<code>supersedes_chain</code>) so callers can reconstruct
+          exactly how a decision evolved across a quarter and which model
+          touched it at every step. Cycle-guarded with a 10-hop ceiling
+          to keep the response bounded.
+        </p>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed">
+          Recall ranks with a hybrid score &mdash;
+          {" "}<strong>0.7 cosine + 0.2 recency + 0.1 frequency</strong>{" "}
+          (90-day half-life on recency, log-normalized citation count for
+          frequency). Cosine remains the floor and the tiebreaker, so
+          semantically weak matches never get resurrected by recency
+          alone. Pure cosine is one env flag away
+          (<code>ASSAY_RECALL_HYBRID=0</code>) for kill-switch revert.
+        </p>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mt-4">
+          Pass <code>includeSuperseded=true</code> to recall when you
+          want the &ldquo;what did we change our minds about&rdquo;
+          surface &mdash; the response then carries a sidecar of recently
+          deprecated decisions tagged with their replacement pointers,
+          capped so the active set still dominates.
         </p>
       </div>
 
