@@ -17,6 +17,7 @@ const NAV_SECTIONS: {
     links: [
       { label: "How It Works", id: "how-it-works" },
       { label: "Evidence & Claims", id: "evidence-and-claims" },
+      { label: "Decisions & Ambient Tagging", id: "decisions" },
       { label: "Retrieval Pipeline", id: "retrieval" },
     ],
   },

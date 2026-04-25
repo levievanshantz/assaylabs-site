@@ -692,6 +692,185 @@ function EvidenceAndClaimsSection() {
 }
 
 /* ════════════════════════════════════════════════════════
+   SECTION: Decisions & Ambient Tagging
+   ════════════════════════════════════════════════════════ */
+
+function DecisionsSection() {
+  return (
+    <section id="decisions" className="scroll-mt-8">
+      <h1 className="text-3xl font-bold text-[hsl(220,15%,93%)] mb-2">
+        Decisions &amp; Ambient Tagging
+      </h1>
+      <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
+        A first-class layer for material commitments. Capture, recall,
+        and walk the chain of why something got decided.
+      </p>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          What a decision is
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          A decision is an atomic, candidate-status row that names a real
+          choice the team has committed to, with a reasoning trail and
+          cited evidence. Decisions live in the same physical store as
+          claims (column <code>decision_kind IS NOT NULL</code>) but are
+          a distinct surface: they have their own status lifecycle
+          (<code>candidate</code> &rarr; <code>tentative</code> &rarr;
+          <code>confirmed</code>), their own provenance fields, and an
+          append-only <code>claim_evidence</code> audit trail so an
+          evidence-set change appends a new row instead of mutating the
+          decision.
+        </p>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed">
+          Recall returns lightweight summaries; expand pulls the full
+          reasoning trail, current evidence list, and the predecessor
+          chain on demand. This semantic-pointer pattern keeps Claude&apos;s
+          context lean while preserving the full record one tool call away.
+        </p>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Three capture paths
+        </h2>
+        <ul className="space-y-3 text-[hsl(220,15%,93%)]">
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>Structural</strong> — when <code>retrieve mode=brief</code>{" "}
+              runs with the analyzer enabled, the caller&apos;s LLM produces
+              strict JSON that <code>brief_decision_render</code> validates,
+              renders, and deposits as candidate decisions. Zero API key
+              required server-side; the caller&apos;s model does the synthesis.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>Ambient (session drain)</strong> — Claude emits
+              structured <code>&lt;decision&gt;</code> tags inline at
+              commit moments. The <code>assay drain</code> CLI extracts
+              them from the session JSONL via regex, dedupes by content
+              hash, embeds the statement, and writes the row. No LLM call
+              in the forward path.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <strong>T0 historical backfill</strong> — a one-time
+              Phi-4 14B pass over the existing corpus seeds the decision
+              graph from prior PRDs and research notes. Idempotent via
+              content hash, so re-running is safe.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Tag format
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          When Claude commits to a material decision in conversation, it
+          emits a structured tag that the drain parser picks up:
+        </p>
+        <pre className="bg-[hsl(220,15%,9%)] border border-[hsl(220,15%,18%)] rounded-lg p-4 text-sm text-[hsl(220,15%,93%)] overflow-x-auto leading-relaxed">
+{`<decision impact="schema|tooling|policy|rollout|eval|scope"
+          confidence="moderate|low">
+  <statement>{<=200 chars; specific real subject}</statement>
+  <reasoning>{<=400 chars; why this was decided}</reasoning>
+</decision>`}
+        </pre>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mt-4">
+          Both child tags are required &mdash; missing or empty bodies are
+          dropped at drain. The <code>impact</code> attribute drives
+          downstream filtering. Tags are emitted only for committed,
+          specific, material decisions; routine debate, status updates,
+          and acknowledgments stay out of the ledger.
+        </p>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Draining a session
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          Run <code>assay drain</code> at any time to ingest tags from the
+          most recent session JSONL into the local decision ledger.
+        </p>
+        <pre className="bg-[hsl(220,15%,9%)] border border-[hsl(220,15%,18%)] rounded-lg p-4 text-sm text-[hsl(220,15%,93%)] overflow-x-auto leading-relaxed">
+{`# Drain the latest session, last 24h
+assay drain
+
+# Specific session JSONL
+assay drain --session ~/.claude/projects/<slug>/<id>.jsonl
+
+# All sessions in your projects directory
+assay drain --all
+
+# Preview without writing
+assay drain --dry-run`}
+        </pre>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mt-4">
+          The drain is idempotent: re-running over the same session
+          produces zero new rows. Each session also gets a sentinel
+          evidence record (<code>source_kind=&apos;session&apos;</code>) that
+          anchors its decisions for clean provenance, kept out of normal
+          retrieval queries.
+        </p>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          MCP recall surface
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          Two MCP tools give callers semantic access to the decision
+          ledger without auto-loading it into context:
+        </p>
+        <ul className="space-y-2 text-[hsl(220,15%,93%)]">
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <code>assay_decision_recall</code> &mdash; cosine search over
+              the statement embedding. Returns summaries (id, statement,
+              confidence, status, score) with optional filters for status,
+              kind, and confidence. The default confidence floor is
+              <code> medium</code>+ so low-signal candidates stay out of
+              the response.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
+            <span>
+              <code>assay_decision_expand</code> &mdash; given a decision
+              id, returns the full reasoning trail, the latest cited
+              evidence list, and a depth-1 predecessor walk so callers
+              can reconstruct what changed and why.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="mb-10">
+        <h2 className="text-xl font-semibold text-[hsl(220,15%,93%)] mb-4">
+          Health check
+        </h2>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          <code>assay doctor</code> reports decision-layer state: total
+          decisions, embedding coverage, status breakdown, and a
+          per-source-agent breakdown so you can confirm the drain is
+          landing rows under <code>Claude Opus</code> (or the appropriate
+          model) and the corpus backfill is intact.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
    SECTION: Retrieval Pipeline
    ════════════════════════════════════════════════════════ */
 
@@ -1604,6 +1783,8 @@ export default function DocsPage() {
       <HowItWorksSection />
       <HR />
       <EvidenceAndClaimsSection />
+      <HR />
+      <DecisionsSection />
       <HR />
       <RetrievalSection />
       <HR />
