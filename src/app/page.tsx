@@ -38,23 +38,22 @@ export default function Home() {
         {/* ──────────────────────────── HERO ──────────────────────────── */}
         <section className="mx-auto max-w-3xl px-6 pb-24 pt-28 text-center">
           <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            The memory layer for product decisions.
+            Never lose the <em className="not-italic text-accent">why</em> behind product decisions.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Track every commitment, every reversal, every reason. Ask Claude
-            exactly what your team decided and why &mdash; with the full
-            predecessor chain, the cited evidence, and a record of which model
-            or human signed off at every step.
+            Ask your AI assistant exactly what your team decided, why it
+            changed, what evidence supported it, and who signed off &mdash;
+            with the full predecessor chain and a record of every reversal.
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
-            Local-first. No API key. Free for closed-beta testers.
+            Works great with Claude via MCP. Local-first. No API key required.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <a
-              href="mailto:levishantz@gmail.com?subject=Assay%20closed%20beta"
+              href="mailto:levishantz@gmail.com?subject=Assay%20design%20partner%20cohort"
               className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
-              Join the closed beta
+              Apply to the design-partner cohort
             </a>
             <a
               href="/docs#decisions"
@@ -62,6 +61,48 @@ export default function Home() {
             >
               See the architecture
             </a>
+          </div>
+        </section>
+
+        {/* ──────────────── CONCRETE EXAMPLE (lands the wedge) ──────────────── */}
+        <section className="border-t border-border py-16">
+          <div className="mx-auto max-w-3xl px-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60 text-center mb-4">
+              What a real decision lookup looks like
+            </p>
+            <div className="rounded-xl border border-border bg-card p-6">
+              <p className="text-sm leading-relaxed text-foreground">
+                <strong>You ask Claude:</strong> &ldquo;What did we decide about
+                pricing for the free tier?&rdquo;
+              </p>
+              <div className="mt-5 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                <p>
+                  <span className="text-foreground font-medium">Current
+                  decision (Apr 2026):</span> Free tier capped at 10 queries/day,
+                  upgrade prompt at 8.
+                </p>
+                <p>
+                  <span className="text-foreground font-medium">It superseded:</span>
+                  {" "}50/day cap (Feb) → 25/day (Mar) → 10/day (Apr).
+                </p>
+                <p>
+                  <span className="text-foreground font-medium">Why the March
+                  change:</span> 80th-percentile usage hit 23 queries/day; A/B
+                  test of a 10-cap with upgrade prompt converted 14% of heavy
+                  users [evidence: <em>analyst-report-2026-03-12.md</em>].
+                </p>
+                <p>
+                  <span className="text-foreground font-medium">Who signed off:</span>
+                  {" "}Sarah proposed (Mar 14), Levi confirmed after the call
+                  with the analyst (Mar 15).
+                </p>
+                <p className="text-xs text-muted-foreground/60 pt-2 border-t border-border/30">
+                  Notion AI returns documents that mention pricing. Glean
+                  ranks search results. Linear AI lists tickets. Assay
+                  reconstructs the actual decision graph.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
