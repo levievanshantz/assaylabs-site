@@ -38,6 +38,43 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+  /* Inter feature settings — contextual alternates, kerning, and the
+     ss01 stylistic set (single-story 'a' reads cleaner on screen). */
+  font-feature-settings: "cv11", "ss01", "calt", "kern";
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings — tighter tracking at large sizes. Apple-grade default. The
+   1.1 line-height keeps multi-line headlines compact without crowding. */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-feature-settings: "cv11", "ss01", "calt", "kern", "ss03";
+}
+h1 { letter-spacing: -0.03em; }
+
+/* Paragraph rhythm — long-form prose readability. */
+p { line-height: 1.6; }
+
+/* Branded selection — default browser selection on dark BG is jarring. */
+::selection {
+  background: hsl(234 100% 71% / 0.3);
+  color: hsl(220 15% 98%);
+}
+
+/* Keyboard-only focus ring — :focus-visible so mouse clicks don't show. */
+:focus-visible {
+  outline: 2px solid hsl(234 100% 71%);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Tabular figures for tables + stat blocks. */
+table, .tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 /* Scrollbar */
