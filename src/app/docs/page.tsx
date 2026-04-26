@@ -35,7 +35,11 @@ function OverviewSection() {
           Everything — the corpus, the embeddings, the full-text index, the
           retrieval engine — lives on your machine in a single SQLite file at{" "}
           <code>~/.assay/assay.db</code>. It plugs into Claude Code as an MCP
-          server and exposes four slash commands plus a CLI.
+          server and exposes ten MCP tools (<code>retrieve</code>,{" "}
+          <code>scan</code>, <code>stress_test</code>, <code>configure</code>,{" "}
+          <code>assay_decision_recall</code>, <code>assay_decision_expand</code>,{" "}
+          <code>assay_recall</code>, <code>brief_decision_render</code>,{" "}
+          <code>promote_claim</code>, <code>demote_claim</code>) plus a CLI.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
           Why local: your PRDs, research, and decisions are sensitive. Keeping
@@ -58,7 +62,10 @@ function OverviewSection() {
           <code className="text-sm text-[hsl(220,15%,93%)]">{`
       ┌────────────────────────────────────────────────────────┐
       │                    Claude Code                          │
-      │   /assay-retrieve   /assay-scan   /assay-stress-test    │
+      │   retrieve  scan  stress_test  configure                │
+      │   assay_decision_recall  assay_decision_expand          │
+      │   assay_recall  brief_decision_render                   │
+      │   promote_claim  demote_claim                           │
       └──────────────────────────┬─────────────────────────────┘
                                  │  MCP (stdio)
                                  ▼
