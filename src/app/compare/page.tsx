@@ -256,9 +256,9 @@ const SECTIONS: Section[] = [
     features: [
       {
         label: "T1 — ambient session capture",
-        what: "Lifecycle hooks (SessionStart, Stop, PreCompact, PreToolUse, PostToolUse) write session deltas and learned patterns to disk automatically.",
+        what: "Lifecycle hooks (SessionStart, Stop, PreCompact, PreToolUse, PostToolUse) write session deltas and learned patterns to disk automatically. Bundled with the Assay install via ECC hooks.",
         why: "You don't have to remember to save context. The hooks run during normal Claude Code use; the output becomes the raw material Tier 2 searches over.",
-        assay: "no", qmd: "no", claudeMem: "yes", cowork: "no", gstack: "no", ecc: "yes",
+        assay: "via", qmd: "no", claudeMem: "yes", cowork: "no", gstack: "no", ecc: "yes",
       },
       {
         label: "T2 — cheap semantic recall over session artifacts",
@@ -464,6 +464,20 @@ export default function ComparePage() {
             cited briefings — with refusal when the evidence is thin, and a
             four-tier memory architecture that pays for depth only when depth
             is warranted.
+          </p>
+        </div>
+
+        <div className="mb-6 rounded-lg border border-[hsl(234,40%,30%)] bg-[hsl(234,30%,12%)] p-5">
+          <p className="text-xs text-[hsl(234,100%,80%)] uppercase tracking-wider mb-2 font-semibold">
+            What&apos;s in the install
+          </p>
+          <p className="text-sm text-[hsl(220,15%,85%)] leading-relaxed">
+            The Assay install bundles two repos: <span className="font-medium text-[hsl(220,15%,95%)]">assaylabs</span>{" "}
+            (claims, decisions, retrieval, MCP server, CLI) and{" "}
+            <span className="font-medium text-[hsl(220,15%,95%)]">everything-claude-code</span>{" "}
+            (lifecycle hooks for ambient capture, session evaluation, cost tracking, quality gates).
+            A ↗ in the Assay column below means &ldquo;delivered via the bundled ECC integration&rdquo; —
+            from the tester&apos;s perspective, it ships with one install.
           </p>
         </div>
 
