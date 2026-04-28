@@ -395,11 +395,18 @@ export default function Home() {
               ))}
             </div>
             <p className="mt-8 text-xs text-muted-foreground/60 text-center">
-              Same MCP surface today on a single-user SQLite file
-              (<code>~/.assay/assay.db</code>); the schema is portable to
-              Postgres + pgvector when a team wants a shared institutional
-              graph. Individual decision history stays local; team graphs are
-              hosted, post-beta.
+              Phase 1 is local-first. Single-user SQLite file at{" "}
+              <code>~/.assay/assay.db</code>, no Postgres, no cloud, no API key
+              required. A shared institutional tier on Postgres + pgvector is
+              speculative future work, not Phase 1.{" "}
+              <span className="block mt-2 text-muted-foreground/50">
+                Three additional write-side MCP tools (
+                <code>brief_decision_render</code>,{" "}
+                <code>promote_claim</code>, <code>demote_claim</code>) handle
+                deposit and scope transitions. See{" "}
+                <a href="/docs" className="underline underline-offset-2">/docs</a>{" "}
+                for the full 10-tool surface.
+              </span>
             </p>
           </div>
         </section>

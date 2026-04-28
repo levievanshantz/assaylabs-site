@@ -53,6 +53,19 @@ export default function GraphPage() {
             consumed your thinking. Edges show where one decision replaced
             another.
           </p>
+          <p className="mt-4 max-w-2xl text-xs text-[hsl(220,10%,50%)] leading-relaxed">
+            <span className="font-mono text-[hsl(220,15%,75%)]">
+              source evidence → claim → briefing → proposal → stress-test →
+              decision → outcome → updated claim state
+            </span>
+            <br />
+            That&rsquo;s the chain a decision graph preserves. A flat note
+            store loses every arrow; a vector index loses every transition.
+            This page renders only the{" "}
+            <span className="text-[hsl(220,15%,75%)]">decision</span> nodes —
+            the rest of the chain is inspectable per-decision via{" "}
+            <code className="text-[hsl(220,15%,85%)]">assay_decision_expand</code>.
+          </p>
         </header>
 
         <DecisionGraphContainer />

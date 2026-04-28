@@ -171,6 +171,16 @@ function InstallationSection() {
           or OpenAI embeddings (<code>text-embedding-3-small</code>, 1536-dim)
           if <code>OPENAI_API_KEY</code> is present in the MCP env.
         </p>
+        <p className="text-[hsl(220,15%,93%)] mb-4 leading-relaxed text-sm">
+          <strong>Bundle install</strong> — Assay ships paired with{" "}
+          <strong>ECC</strong> (
+          <code>everything-claude-code</code>), a lifecycle-hook capture layer
+          for Claude Code. The bundle installer wires both: the MCP server
+          for cited recall, and the ECC hooks (SessionStart / Stop /
+          PreCompact / PreToolUse / PostToolUse) so decisions you tag inline
+          get drained into the corpus automatically. Run{" "}
+          <code>scripts/install-bundle.sh</code> after the clone step below.
+        </p>
 
         <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">Prerequisites</h3>
         <ul className="space-y-1 text-[hsl(220,15%,93%)] mb-4 text-sm">
@@ -246,11 +256,11 @@ npm install`}</code>
         <div className="mt-6 rounded bg-[hsl(220,15%,5%)] border-l-4 border-[hsl(40,90%,60%)] px-4 py-3">
           <p className="text-sm text-[hsl(220,15%,93%)]">
             <strong className="text-[hsl(40,90%,60%)]">Known limitations:</strong>{" "}
-            Single-machine only; no team sharing today. The schema is
-            portable — when retention is proven, the same tables move to a
-            hosted Postgres + pgvector tier for shared institutional graphs.
-            If a query gives an obviously wrong top result, file it with the
-            GitHub issue template; ranking tuning is an open work item.
+            Single-machine only; no team sharing today. A shared institutional
+            tier on Postgres + pgvector is speculative future work, not
+            committed for Phase 1. If a query gives an obviously wrong top
+            result, file it with the GitHub issue template; ranking tuning is
+            an open work item.
           </p>
         </div>
       </div>
@@ -571,6 +581,14 @@ function HowItWorksSection() {
           fusion</strong> (RRF). Claims resolve back to their parent evidence
           records via the <code>source_id</code> foreign key, so the final result
           set contains full-context sections rather than isolated sentences.
+        </p>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mt-4 text-sm">
+          <strong>Index integrity</strong> — the <code>claims_fts</code>
+          virtual table stays in lockstep with <code>claims</code> via three
+          AFTER triggers (insert / update of <code>claim_text</code> / delete)
+          shipped in <strong>migration 032</strong>. Without those triggers,
+          freshly drained decisions were invisible to BM25 retrieval until a
+          manual backfill. Now every write keeps both indexes synchronised.
         </p>
       </div>
     </section>
