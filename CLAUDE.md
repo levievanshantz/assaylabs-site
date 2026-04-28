@@ -10,9 +10,9 @@ Marketing and documentation site for Assay.
 - TypeScript
 - Deployed on Vercel
 
-## Relationship to ILP
+## Relationship to assaylabs
 This is the public-facing site. Content should reflect the current state of the product.
-The intelligence-ledger-prototype repo has the actual product code.
+The `/Users/levishantz/assaylabs` repo (formerly `intelligence-ledger-prototype`) has the actual product code.
 
 ## Current State (as of commit 9574673)
 
