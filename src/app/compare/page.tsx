@@ -39,7 +39,7 @@ interface MarketFeature {
 const MARKET_FEATURES: MarketFeature[] = [
   {
     label: "Decisions as a first-class artifact",
-    why: "Most tools treat decisions as just-another-document. Assay models them with a discriminator column, status lifecycle, and audit table — distinct from notes, claims, or messages.",
+    why: "Most tools treat decisions as just-another-document. Assay models them with a discriminator column, status lifecycle, and audit table — distinct from notes, evidence, or messages.",
     assay: "yes", notionAI: "no", glean: "no", linearAI: "no", mem0: "no", zep: "no",
   },
   {
@@ -213,26 +213,26 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    title: "Claims & typed output",
+    title: "Decisions & typed output",
     blurb:
-      "Where Assay diverges from every other tool in its bucket. No competitor extracts or cites typed claims.",
+      "Where Assay diverges from every other tool in its bucket. No competitor structures decisions as first-class artifacts with cited evidence.",
     features: [
       {
-        label: "Typed claim extraction (finding / recommendation / assumption / metric)",
-        what: "An LLM extracts atomic assertions from each source chunk and classifies each into one of four types.",
-        why: "A PM doesn't need a pile of relevant passages — they need to know what is asserted, recommended, assumed, or measured. Typed claims let retrieval return structure, not soup.",
+        label: "Decisions as first-class artifacts (with status, supersession, audit log)",
+        what: "Decisions land as polymorphic rows on a discriminator column with status lifecycle (candidate → tentative → confirmed → superseded → rejected) and an append-only transition audit table capturing every state change with actor and reason.",
+        why: "A PM doesn't need a pile of relevant passages — they need to know what was decided, by whom, and what it superseded. Decisions-as-data lets retrieval return structure, not soup.",
         assay: "yes", qmd: "no", claudeMem: "no", cowork: "no", gstack: "no", ecc: "no",
       },
       {
-        label: "Stance + confidence on every claim",
-        what: "Each claim carries a stance (support / oppose / neutral) and a confidence (high / medium / low).",
-        why: "Lets retrieval surface dissent. A 'support' and an 'oppose' on the same topic tells you it's contested; a vector-similarity system silently collapses them.",
+        label: "Status + reasoning on every decision",
+        what: "Each decision carries a status (candidate / tentative / confirmed / superseded / rejected) and a reasoning trail capturing the why.",
+        why: "Lets retrieval surface what's still live vs what's been replaced. A 'confirmed' and a later 'superseded' on the same topic tells you the position evolved; a vector-similarity system silently collapses them.",
         assay: "yes", qmd: "no", claudeMem: "no", cowork: "no", gstack: "no", ecc: "no",
       },
       {
         label: "Stable citation tokens [Assay: id | source | date]",
-        what: "Every surfaced claim gets a deterministic token the user can paste into a PRD, spec, or chat.",
-        why: "Makes adoption measurable. Grep your PRDs for [Assay: tokens and you know exactly which claims got cited downstream — no survey, no self-report.",
+        what: "Every surfaced decision and supporting evidence record gets a deterministic token the user can paste into a PRD, spec, or chat.",
+        why: "Makes adoption measurable. Grep your PRDs for [Assay: tokens and you know exactly which decisions got cited downstream — no survey, no self-report.",
         assay: "yes", qmd: "no", claudeMem: "no", cowork: "no", gstack: "no", ecc: "no",
       },
       {
@@ -268,7 +268,7 @@ const SECTIONS: Section[] = [
       },
       {
         label: "T3 — citation-grade organizational retrieval",
-        what: "Explicit slash commands run the full hybrid + reranker + typed-claim + citation-token pipeline against your PRD / Notion corpus.",
+        what: "Explicit slash commands run the full hybrid + reranker + decision-graph + citation-token pipeline against your PRD / Notion corpus.",
         why: "You pay the heavier retrieval + synthesis cost only when you're making a decision and need cited evidence. Not every turn.",
         assay: "yes", qmd: "partial", claudeMem: "no", cowork: "no", gstack: "no", ecc: "no",
       },
