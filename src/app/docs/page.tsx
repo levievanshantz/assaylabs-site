@@ -95,7 +95,7 @@ function OverviewSection() {
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Node.js 18+</strong> (LTS recommended). Required — the
+              <strong>Node.js ≥20</strong> (LTS recommended). Required — the
               MCP server and CLI are Node processes.
             </span>
           </li>
@@ -186,7 +186,7 @@ function InstallationSection() {
         <ul className="space-y-1 text-[hsl(220,15%,93%)] mb-4 text-sm">
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
-            <span><strong>Node.js 18+</strong></span>
+            <span><strong>Node.js ≥20</strong></span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
@@ -205,7 +205,18 @@ cd assaylabs
 npm install`}</code>
         </pre>
 
-        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">2. Index a folder of markdown</h3>
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">2. Bootstrap the SQLite schema</h3>
+        <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`node scripts/migrate.mjs`}</code>
+        </pre>
+        <p className="text-sm text-[hsl(220,10%,55%)] mb-4">
+          Idempotent. Creates <code>~/.assay/assay.db</code>, applies the base
+          schema, and walks every migration in order. Postgres-era migrations
+          (versions 000–022) are auto-skipped on SQLite. Re-run any time —
+          already-applied migrations stay quiet.
+        </p>
+
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">3. Index a folder of markdown</h3>
         <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`./node_modules/.bin/tsx bin/assay.ts add ~/my-prds --name prds
 ./node_modules/.bin/tsx bin/assay.ts index
@@ -216,7 +227,7 @@ npm install`}</code>
           one-time). A 50-PRD folder finishes in under 60 seconds.
         </p>
 
-        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">3. Wire up Claude Desktop via the launcher</h3>
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">4. Wire up Claude Desktop via the launcher</h3>
         <p className="text-sm text-[hsl(220,15%,93%)] mb-2">
           The repo ships with a launcher script at{" "}
           <code>~/.local/bin/assay-mcp</code> that auto-discovers the built
@@ -248,7 +259,7 @@ npm install`}</code>
           <code>args: [&quot;/abs/path/mcp-server/dist/index.js&quot;]</code>.
         </p>
 
-        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">4. Live-update (optional)</h3>
+        <h3 className="text-base font-semibold text-[hsl(220,15%,93%)] mb-2 mt-4">5. Live-update (optional)</h3>
         <pre className="font-[family-name:var(--font-jetbrains)] mb-3">
           <code className="text-sm text-[hsl(220,15%,93%)]">{`./node_modules/.bin/tsx bin/assay.ts watch`}</code>
         </pre>
@@ -385,9 +396,12 @@ function QuickStartSection() {
           What to Expect
         </h2>
         <p className="text-[hsl(220,15%,93%)] mb-4">
-          The <code>scan</code> tool returns a pre-flight status: sync
-          freshness, record counts, drift warnings, and corpus health. If
-          everything looks good, you are ready to work.
+          The <code>scan</code> tool returns a fast pre-flight signal check
+          (3&ndash;5 signals, classed as clear / caution / blocker) over a
+          fused candidate pool: decision-graph hits at cosine ≥0.65 plus
+          hybrid corpus retrieval. If you want corpus health instead (sync
+          freshness, record counts, drift), call{" "}
+          <code>configure subcommand=&quot;status&quot;</code>.
         </p>
         <p className="text-[hsl(220,15%,93%)] mb-4">
           The <code>retrieve</code> tool in <code>brief</code> mode returns a
@@ -1337,14 +1351,23 @@ function ScanSection() {
         scan
       </h1>
       <p className="text-[hsl(220,10%,55%)] mb-8 text-lg">
-        Quick pre-flight check for corpus health and freshness.
+        Fast pre-flight signal check over a fused candidate pool.
       </p>
 
       <div className="mb-10">
         <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
-          The <code>scan</code> tool validates corpus health, checks last sync
-          time, and surfaces drift before you start working. Use it at the
-          beginning of any session to know your evidence is current.
+          The <code>scan</code> tool runs cascade fusion in parallel: pulls
+          decision-graph hits at cosine ≥0.65 plus hybrid corpus retrieval,
+          then returns 3–5 signals classed as <strong>clear</strong>,{" "}
+          <strong>caution</strong>, or <strong>blocker</strong>. Use it
+          before committing to a proposal to surface anything the corpus or
+          decision graph already says against (or for) the idea.
+        </p>
+        <p className="text-[hsl(220,15%,93%)] leading-relaxed mb-4">
+          For corpus health (sync status, record counts, drift warnings)
+          call{" "}
+          <code>configure subcommand=&quot;status&quot;</code> instead. The
+          two were once one tool and split when scan absorbed cascade fusion.
         </p>
       </div>
 
@@ -1356,29 +1379,30 @@ function ScanSection() {
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Sync status</strong> — when the corpus was last synced
-              with source documents
+              <strong>Header line</strong> — `[SCAN MODE] N corpus + M
+              decisions in candidate pool` when fusion succeeds; falls back
+              to corpus-only header when no decisions clear the floor.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Record counts</strong> — evidence records, claims,
-              products tracked
+              <strong>3–5 signals</strong> — each classed clear / caution /
+              blocker, with citations to source records by id.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Freshness summary</strong> — how current the corpus is
-              relative to source documents
+              <strong>Decision-graph candidates block</strong> — the top
+              decisions matching the proposal, when fusion finds any.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-[hsl(234,100%,71%)] mt-1 shrink-0">&#x2022;</span>
             <span>
-              <strong>Drift warnings</strong> — pages that have changed in the
-              source but not yet been re-ingested
+              <strong>Tier errors</strong> — surfaces inline if either tier
+              fails (embedding outage, corpus query throw, etc).
             </span>
           </li>
         </ul>
@@ -1389,10 +1413,11 @@ function ScanSection() {
           Example
         </h2>
         <pre className="font-[family-name:var(--font-jetbrains)]">
-          <code className="text-sm text-[hsl(220,15%,93%)]">{`scan`}</code>
+          <code className="text-sm text-[hsl(220,15%,93%)]">{`scan intent="ship the new pricing tier this quarter"`}</code>
         </pre>
         <p className="text-[hsl(220,10%,55%)] mt-3 text-sm">
-          No arguments needed. Returns a complete health report in one call.
+          One required arg: <code>intent</code>. Returns a fused signal
+          report in one call.
         </p>
       </div>
 
@@ -1614,7 +1639,7 @@ function PresetsSection() {
               </tr>
               <tr>
                 <td className="px-4 py-3 font-medium">full</td>
-                <td className="px-4 py-3 text-[hsl(152,60%,52%)]">On (Sonnet)</td>
+                <td className="px-4 py-3 text-[hsl(152,60%,52%)]">On (Claude API)</td>
                 <td className="px-4 py-3 text-[hsl(152,60%,52%)]">Hourly</td>
                 <td className="px-4 py-3 text-[hsl(152,60%,52%)]">On</td>
                 <td className="px-4 py-3 text-[hsl(152,60%,52%)]">On</td>
@@ -1636,9 +1661,11 @@ function PresetsSection() {
           configuration after installation. Covers the needs of most teams.
         </p>
         <p className="text-[hsl(220,15%,93%)] leading-relaxed">
-          <strong>full</strong> — evidence plus Sonnet-quality extraction with
-          hourly sync, accumulation, and background hygiene all enabled. Best
-          for teams with large, actively changing corpora.
+          <strong>full</strong> — evidence plus high-tier Claude extraction
+          (default Haiku 4.5; switch to Sonnet via{" "}
+          <code>configure subcommand=&quot;extraction&quot;</code> if a corpus
+          warrants it) with hourly sync, accumulation, and background hygiene
+          all enabled. Best for teams with large, actively changing corpora.
         </p>
       </div>
     </section>

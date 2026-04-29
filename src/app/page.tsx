@@ -21,12 +21,6 @@ export default function Home() {
               Docs
             </a>
             <a
-              href="/graph"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Graph
-            </a>
-            <a
               href="https://github.com/levievanshantz/assaylabs"
               target="_blank"
               rel="noopener noreferrer"
@@ -45,12 +39,12 @@ export default function Home() {
             Never lose the <em className="not-italic text-accent">why</em> behind product decisions.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Ask your AI assistant exactly what your team decided, why it
-            changed, what evidence supported it, and who signed off &mdash;
-            with the full predecessor chain and a record of every reversal.
+            Ask Claude exactly what your team decided, why it changed, what
+            evidence supported it, and who signed off &mdash; with the full
+            predecessor chain and every reversal on record.
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground/80">
-            Works great with Claude via MCP. Local-first. No API key required.
+            Local-first. Runs on SQLite. No API key required.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <a
@@ -159,7 +153,7 @@ export default function Home() {
               </div>
               <div className="rounded-xl border border-border bg-card p-6">
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
-                  Pillar 3 &mdash; Decision graph over time
+                  Pillar 3 &mdash; Audit
                 </p>
                 <h3 className="mt-2 text-lg font-semibold text-foreground">Every state change recorded</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -323,15 +317,14 @@ export default function Home() {
         <section id="tools" className="border-t border-border py-24">
           <div className="mx-auto max-w-5xl px-6">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              The MCP surface — five named agents
+              The MCP surface &mdash; six named agents
             </h2>
             <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              Each MCP tool inside Claude Desktop or Cursor answers one
+              Each MCP tool inside Claude Desktop or Claude Code answers one
               question. Same shape (one call, one structured response); the
-              question is what differs. Two of them speak to the decision
-              graph; one speaks to the corpus; two speak across both. Plus a
-              cascade tool that picks for you when you don&rsquo;t know which
-              tier holds the answer.
+              question is what differs. Two speak to the decision graph, one
+              to the corpus, two fuse across both, and one cascades when you
+              don&rsquo;t know which tier holds the answer.
             </p>
             <div className="mt-12 grid gap-4 sm:grid-cols-2">
               {[
@@ -395,17 +388,16 @@ export default function Home() {
               ))}
             </div>
             <p className="mt-8 text-xs text-muted-foreground/60 text-center">
-              Phase 1 is local-first. Single-user SQLite file at{" "}
-              <code>~/.assay/assay.db</code>, no Postgres, no cloud, no API key
-              required. A shared institutional tier on Postgres + pgvector is
-              speculative future work, not Phase 1.{" "}
+              Phase 1 is local-first: single-user SQLite at{" "}
+              <code>~/.assay/assay.db</code>. No Postgres, no cloud, no API
+              key. A shared institutional tier on Postgres + pgvector is
+              post-beta &mdash; not Phase 1.{" "}
               <span className="block mt-2 text-muted-foreground/50">
-                Three additional write-side MCP tools (
+                Plus three write-side tools (
                 <code>brief_decision_render</code>,{" "}
-                <code>promote_claim</code>, <code>demote_claim</code>) handle
-                deposit and scope transitions. See{" "}
-                <a href="/docs" className="underline underline-offset-2">/docs</a>{" "}
-                for the full 10-tool surface.
+                <code>promote_claim</code>, <code>demote_claim</code>) for
+                deposit and scope transitions. Full 10-tool surface in{" "}
+                <a href="/docs" className="underline underline-offset-2">/docs</a>.
               </span>
             </p>
           </div>
@@ -441,14 +433,14 @@ export default function Home() {
                   </tr>
                   <tr>
                     <td className="py-3.5 pr-6 font-medium text-foreground">
-                      Claude Sonnet
+                      Claude Haiku 4.5
                       <span className="block text-xs text-muted-foreground mt-0.5">
-                        API key or Claude Code subagent
+                        Default for MCP path; Claude Code subagent
                       </span>
                     </td>
                     <td className="py-3.5 pr-6">93.8%</td>
                     <td className="py-3.5 pr-6">
-                      ~$0.003 / section
+                      ~$0.001 / section
                       <span className="block text-xs text-muted-foreground">
                         or included in Claude Code plan
                       </span>
@@ -460,7 +452,12 @@ export default function Home() {
               </table>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
-              Coverage measured via LLM-as-judge with human-in-the-loop validation on control group test sessions. A section is approximately 3,200 characters of source content.
+              Coverage measured via LLM-as-judge with human-in-the-loop
+              validation on control group test sessions during the original
+              eval pass (Sonnet 3.5 era). The current MCP default (Haiku 4.5)
+              has not been re-measured against the same eval suite; the 93.8%
+              figure is a Sonnet-tier baseline. A section is approximately
+              3,200 characters of source content.
             </p>
           </div>
         </section>
