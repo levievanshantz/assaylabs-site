@@ -112,10 +112,16 @@ interface AgentMemoryFramework {
 
 const AGENT_MEMORY_FRAMEWORKS: AgentMemoryFramework[] = [
   {
+    name: "Membria Reasoning Graph",
+    shape: "Persistent reasoning layer for teams. Stable decision_id, supersession + cancellation, retained-expired decisions, conflict recording, append-only anchoring, MCP server in stack. The closest direct prior art to Assay&rsquo;s primitives.",
+    overlap: "Same architectural shape on the decision side: typed decision artifact, audit-grade lineage, supersession edges, MCP-native surface. Membria owns the broad &ldquo;persistent reasoning layer&rdquo; story.",
+    divergence: "Membria runs as a federated graph backend. Assay&rsquo;s wedge is the narrower implementation envelope: single-file SQLite, sqlite-vec + FTS5 in one process, deterministic local-only operation, ECC-bundled session capture (T3), zero API key required. Membria for teams with federation; Assay for solo + local-first.",
+  },
+  {
     name: "Letta (formerly MemGPT)",
     shape: "Agent-memory framework — hierarchical memory (core / archival / recall) for LLM agents. Open source, multi-language.",
-    overlap: "Semantic-pointer recall pattern: store summaries, fetch full record on demand. We use the same pattern between assay_decision_recall (summaries) and assay_decision_expand (full + provenance).",
-    divergence: "Letta is a generic agent-memory runtime. Assay is a specific system of record for product decisions — schema-modeled, transition-audited, supersession-aware. Letta gives you primitives; Assay gives you an artifact.",
+    overlap: "Letta&rsquo;s LLM-driven paging via tool calls (the MemGPT model) is the substrate Assay sits on top of. assay_decision_recall (summaries) and assay_decision_expand (full + provenance) are paging-shaped, but with a typed decision atom on top.",
+    divergence: "Assay extends the MemGPT paging model with a typed decision layer — atomic decisions, reasoning trails, cited evidence, supersession edges — that Letta leaves to agent discretion. Letta gives you primitives; Assay gives you an artifact with audit-grade lineage.",
   },
   {
     name: "LangMem",
@@ -634,8 +640,17 @@ export default function ComparePage() {
 
         <section className="mb-16">
           <h2 className="text-2xl font-semibold text-[hsl(220,15%,93%)] mb-4">
-            Where Assay uniquely sits
+            The narrower wedge
           </h2>
+          <p className="text-[hsl(220,15%,72%)] text-sm leading-relaxed mb-4 max-w-3xl">
+            Decision-graph memory has prior art — Membria above is direct
+            architectural overlap. Assay&rsquo;s wedge is the narrower
+            implementation envelope: single SQLite file, sqlite-vec + FTS5 in
+            one process, no federated graph backend, deterministic local-only,
+            ECC-bundled session capture, MCP-native, zero API key required.
+            Not first to think of decisions-as-primitive. First to ship it in
+            this implementation envelope.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-lg border border-[hsl(220,15%,18%)] bg-[hsl(220,15%,9%)] p-6">
               <p className="text-[hsl(234,100%,71%)] text-xs uppercase tracking-wider font-medium mb-2">
@@ -644,8 +659,8 @@ export default function ComparePage() {
               <p className="text-[hsl(220,15%,93%)] text-sm leading-relaxed">
                 Every claim has a <code>[Assay: id | source | date]</code> token
                 that you can paste into a PRD. Later, grep across your PRDs
-                tells you which claims were actually adopted. No other tool in
-                this space makes adoption measurable.
+                tells you which claims were actually adopted — adoption becomes
+                measurable instead of vibes.
               </p>
             </div>
             <div className="rounded-lg border border-[hsl(220,15%,18%)] bg-[hsl(220,15%,9%)] p-6">
