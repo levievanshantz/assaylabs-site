@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { NAV_SECTIONS } from "./sidebar";
 
 export function MobileSidebarToggle() {
@@ -9,11 +8,27 @@ export function MobileSidebarToggle() {
 
   return (
     <>
-      {/* Hamburger button */}
+      {/* Hamburger button — visible only on small screens (<= 1024px) */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed top-4 left-4 z-50 md:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-[hsl(220,15%,9%)] border border-[hsl(220,15%,18%)] text-[hsl(220,15%,93%)]"
         aria-label="Toggle docs navigation"
+        style={{
+          position: "fixed",
+          top: 72,
+          left: 16,
+          zIndex: 60,
+          width: 40,
+          height: 40,
+          display: "none",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "var(--paper)",
+          border: "1px solid var(--rule)",
+          borderRadius: 2,
+          color: "var(--ink)",
+          cursor: "pointer",
+        }}
+        className="docs-mobile-toggle"
       >
         <svg
           width="20"
@@ -42,56 +57,86 @@ export function MobileSidebarToggle() {
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-30 bg-black/60 md:hidden"
           onClick={() => setOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 55,
+            background: "color-mix(in oklch, var(--ink) 60%, transparent)",
+          }}
+          className="docs-mobile-backdrop"
         />
       )}
 
       {/* Slide-out sidebar */}
       <aside
-        className={`
-          fixed top-0 left-0 z-40 h-screen w-60 overflow-y-auto
-          bg-[hsl(220,15%,9%)] border-r border-[hsl(220,15%,18%)]
-          transition-transform duration-200 md:hidden
-          ${open ? "translate-x-0" : "-translate-x-full"}
-        `}
+        className="docs-mobile-panel"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: 56,
+          height: "100vh",
+          width: 260,
+          overflowY: "auto",
+          background: "var(--paper)",
+          borderRight: "1px solid var(--rule)",
+          padding: "24px 20px",
+          transform: open ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.2s ease",
+        }}
       >
-        <div className="px-5 pt-6 pb-4">
-          <Link
-            href="/"
-            className="text-[hsl(220,15%,93%)] font-semibold text-sm tracking-wide"
-          >
-            AssayLabs
-          </Link>
-          <span className="ml-2 text-xs text-[hsl(220,10%,55%)]">Docs</span>
+        <div className="mono" style={{ marginBottom: 20 }}>
+          ASSAY · DOCS
         </div>
 
-        <nav className="px-3 pb-8">
-          {NAV_SECTIONS.map((section) => (
-            <div key={section.title} className="mb-6">
-              <h4 className="px-2 mb-1.5 text-xs font-semibold uppercase tracking-wider text-[hsl(220,10%,55%)]">
-                {section.title}
-              </h4>
-              <ul className="space-y-0.5">
-                {section.links.map((link) => (
-                  <li key={link.id}>
-                    <a
-                      href={`#${link.id}`}
-                      onClick={() => setOpen(false)}
-                      className="
-                        block w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors
-                        text-[hsl(220,10%,55%)] hover:text-[hsl(220,15%,93%)] hover:bg-[hsl(220,15%,12%)]
-                      "
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.title} className="grp" style={{ marginBottom: 20 }}>
+            <h6
+              style={{
+                margin: "0 0 8px",
+                fontFamily: "var(--mono)",
+                fontSize: 11,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "var(--ink-3)",
+                fontWeight: 500,
+              }}
+            >
+              {section.title}
+            </h6>
+            <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+              {section.links.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href={`#${link.id}`}
+                    onClick={() => setOpen(false)}
+                    style={{
+                      display: "block",
+                      padding: "6px 0",
+                      fontSize: 14,
+                      color: "var(--ink-2)",
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </aside>
+
+      {/* Toggle visibility via media query in inline style tag */}
+      <style>{`
+        @media (max-width: 1024px) {
+          .docs-mobile-toggle { display: flex !important; }
+        }
+        @media (min-width: 1025px) {
+          .docs-mobile-panel,
+          .docs-mobile-backdrop { display: none !important; }
+        }
+      `}</style>
     </>
   );
 }

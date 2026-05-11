@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { DocsSidebar, MobileSidebarToggle } from "./sidebar";
+import { Topbar } from "@/components/Topbar";
+import { Footer } from "@/components/Footer";
+import { DocsSidebar, MobileSidebarToggle, DocsToc } from "./sidebar";
 
 export const metadata: Metadata = {
   title: "Documentation — AssayLabs",
@@ -13,10 +15,27 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[hsl(220,15%,6%)] flex">
-      <DocsSidebar />
-      <MobileSidebarToggle />
-      {children}
-    </div>
+    <>
+      <Topbar active="docs" />
+
+      <main className="route" id="docs">
+        <div className="route-tag">
+          <div className="route-tag-inner">
+            <span className="mono">/docs&nbsp;&nbsp;·&nbsp;&nbsp;PRODUCT REFERENCE</span>
+            <span className="mono-meta">PHASE 1 · 2026-04-20</span>
+          </div>
+        </div>
+
+        <MobileSidebarToggle />
+
+        <div className="page docs-shell">
+          <DocsSidebar />
+          <article className="docs-content">{children}</article>
+          <DocsToc />
+        </div>
+
+        <Footer />
+      </main>
+    </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Wordmark } from "@/components/Wordmark";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
@@ -29,37 +30,68 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[hsl(220,15%,6%)]">
-      <div className="w-full max-w-sm px-6">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-white tracking-tight">
-            Assay
-          </h1>
-          <p className="text-sm text-neutral-400 mt-2">
-            Closed beta. Enter your access code.
-          </p>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "var(--paper)",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: 360, padding: "0 24px" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
+          <Wordmark />
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="mono" style={{ textAlign: "center", marginBottom: 24 }}>
+          CLOSED BETA · ACCESS CODE REQUIRED
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: 12 }}
+        >
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Access code"
             autoFocus
-            className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm"
+            style={{
+              width: "100%",
+              padding: "12px 14px",
+              borderRadius: 2,
+              background: "var(--paper-2)",
+              border: "1px solid var(--rule-soft)",
+              color: "var(--ink)",
+              fontFamily: "var(--mono)",
+              fontSize: 14,
+              letterSpacing: "0.04em",
+              outline: "none",
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "var(--ink)")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "var(--rule-soft)")}
           />
           {error && (
-            <p className="text-red-400 text-sm">Invalid access code.</p>
+            <p
+              className="mono"
+              style={{ color: "var(--ignition-ink)", margin: 0 }}
+            >
+              Invalid access code.
+            </p>
           )}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-500 disabled:opacity-50 transition-colors"
+            className="btn btn--lg"
+            style={{ justifyContent: "center", width: "100%", opacity: loading ? 0.6 : 1 }}
           >
-            {loading ? "Verifying..." : "Enter"}
+            {loading ? "Verifying…" : "Enter"}
           </button>
         </form>
-        <p className="text-center text-neutral-600 text-xs mt-8">
+        <p
+          className="mono-meta"
+          style={{ textAlign: "center", marginTop: 32, color: "var(--ink-3)" }}
+        >
           Request access at assaylabs.com
         </p>
       </div>

@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 const NAV_SECTIONS: {
   title: string;
   links: { label: string; id: string }[];
@@ -47,9 +45,7 @@ const NAV_SECTIONS: {
   },
   {
     title: "Reference",
-    links: [
-      { label: "Glossary", id: "glossary" },
-    ],
+    links: [{ label: "Glossary", id: "glossary" }],
   },
 ];
 
@@ -58,46 +54,56 @@ export { NAV_SECTIONS };
 /* ── Sidebar nav (server component) ── */
 export function DocsSidebar() {
   return (
-    <aside
-      className="
-        hidden md:block sticky top-0 h-screen w-60 overflow-y-auto shrink-0
-        bg-[hsl(220,15%,9%)] border-r border-[hsl(220,15%,18%)]
-      "
-    >
-      <div className="px-5 pt-6 pb-4 border-b border-[hsl(220,15%,15%)]">
-        <Link
-          href="/"
-          className="text-[hsl(220,15%,93%)] font-semibold text-sm tracking-wide"
-        >
-          AssayLabs
-        </Link>
-        <span className="ml-2 text-xs text-[hsl(220,10%,55%)]">Docs</span>
-      </div>
+    <aside className="docs-side">
+      {NAV_SECTIONS.map((section, i) => (
+        <div key={section.title} className="grp">
+          <h6>{section.title}</h6>
+          <ul>
+            {section.links.map((link, j) => (
+              <li key={link.id} className={i === 0 && j === 0 ? "active" : undefined}>
+                <a href={`#${link.id}`}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </aside>
+  );
+}
 
-      <nav className="px-3 pt-4 pb-8">
-        {NAV_SECTIONS.map((section) => (
-          <div key={section.title} className="mb-8">
-            <h4 className="px-2 mb-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[hsl(220,10%,45%)] border-b border-[hsl(220,15%,15%)]">
-              {section.title}
-            </h4>
-            <ul className="space-y-0.5">
-              {section.links.map((link) => (
-                <li key={link.id}>
-                  <a
-                    href={`#${link.id}`}
-                    className="
-                      block w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors
-                      text-[hsl(220,10%,55%)] hover:text-[hsl(220,15%,93%)] hover:bg-[hsl(220,15%,12%)]
-                    "
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+/* ── Right-rail TOC (server component) ── */
+export function DocsToc() {
+  // Flat list of top-level docs anchors
+  const items: { label: string; id: string }[] = [
+    { label: "Overview", id: "overview" },
+    { label: "Installation", id: "installation" },
+    { label: "Quick Start", id: "quickstart" },
+    { label: "How It Works", id: "how-it-works" },
+    { label: "Evidence & Claims", id: "evidence-and-claims" },
+    { label: "Decisions", id: "decisions" },
+    { label: "Retrieval", id: "retrieval" },
+    { label: "retrieve", id: "tools-retrieve" },
+    { label: "scan", id: "tools-scan" },
+    { label: "stress_test", id: "tools-stress-test" },
+    { label: "configure", id: "tools-configure" },
+    { label: "Toggles", id: "feature-toggles" },
+    { label: "Presets", id: "presets" },
+    { label: "Notion", id: "guides-notion" },
+    { label: "Hygiene", id: "guides-hygiene" },
+    { label: "Troubleshooting", id: "guides-troubleshooting" },
+    { label: "Glossary", id: "glossary" },
+  ];
+
+  return (
+    <aside className="docs-toc">
+      <h6 style={{ fontFamily: "var(--mono)", fontSize: 11 }}>ON THIS PAGE</h6>
+      <ul>
+        {items.map((item) => (
+          <li key={item.id}>
+            <a href={`#${item.id}`}>{item.label}</a>
+          </li>
         ))}
-      </nav>
+      </ul>
     </aside>
   );
 }
