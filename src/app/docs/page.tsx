@@ -44,7 +44,7 @@ function OverviewSection() {
         </span>
         <span className="badge">
           <span className="dot" />
-          2026-04-20
+          2026-05-14
         </span>
       </div>
 
@@ -73,15 +73,25 @@ function OverviewSection() {
         dependency at query time, and your data never leaves your laptop.
         Backup is <code>cp</code>. Moving machines is <code>cp</code>.
       </p>
-      <p>
-        A networked, multi-machine deployment is available as a separate
-        build — see the{" "}
-        <a href="/production" style={linkStyle}>
-          expanded deployment page
-        </a>
-        .
-      </p>
-
+      <div
+        style={{
+          margin: "16px 0 24px",
+          borderLeft: "3px solid var(--ignition)",
+          background: "var(--paper-2)",
+          padding: "12px 16px",
+        }}
+      >
+        <p style={{ fontSize: 14, margin: 0 }}>
+          <strong style={{ color: "var(--ignition-ink)" }}>
+            Silo doctrine.
+          </strong>{" "}
+          Hook activation is project-scoped — Assay only fires when your cwd is
+          the silo&rsquo;d repo. Data at <code>~/.assay/assay.db</code> is
+          user-scoped — one memory across all your silos. This split is
+          intentional: silos isolate <em>when</em> Assay listens, not{" "}
+          <em>what</em> it remembers.
+        </p>
+      </div>
       <h2>Architecture</h2>
       <pre>
         <code>{`      ┌────────────────────────────────────────────────────────┐
@@ -133,12 +143,8 @@ function OverviewSection() {
       </ul>
 
       <p style={{ fontSize: 14, color: "var(--ink-3)", marginTop: 16 }}>
-        <strong style={{ color: "var(--ink)" }}>Optional upgrade:</strong> an{" "}
-        <code>OPENAI_API_KEY</code> in the MCP env switches embeddings to{" "}
-        <code>text-embedding-3-small</code> (1536-dim) for a modest
-        retrieval-quality bump. Not required — the local{" "}
-        <code>bge-large-en-v1.5</code> embedder (1024-dim) is the default and
-        needs no network at query time.
+        <strong style={{ color: "var(--ink)" }}>Embedding:</strong>{" "}
+        <code>bge-large-en-v1.5</code> (1024-dim, local). No API key required.
       </p>
     </section>
   );
@@ -182,19 +188,16 @@ function InstallationSection() {
         <p>
           Runs entirely on your machine as a single SQLite file at{" "}
           <code>~/.assay/assay.db</code>. No Docker, no account. Uses local
-          embeddings (<code>bge-large-en-v1.5</code>, 1024-dim) by default — or
-          OpenAI embeddings (<code>text-embedding-3-small</code>, 1536-dim) if{" "}
-          <code>OPENAI_API_KEY</code> is present in the MCP env.
+          embeddings: <code>bge-large-en-v1.5</code> (1024-dim). No API key
+          required.
         </p>
         <p style={{ fontSize: 14 }}>
-          <strong>Bundle install</strong> — Assay ships paired with{" "}
-          <strong>ECC</strong> (<code>everything-claude-code</code>), a
-          lifecycle-hook capture layer for Claude Code. The bundle installer
-          wires both: the MCP server for cited recall, and the ECC hooks
-          (SessionStart / Stop / PreCompact / PreToolUse / PostToolUse) so
-          decisions you tag inline get drained into the corpus automatically.
-          Run <code>scripts/install-bundle.sh</code> after the clone step
-          below.
+          <strong>Install:</strong>{" "}
+          <code>bash scripts/install-tester.sh</code> — project-scoped, never
+          modifies <code>~/.claude/settings.json</code>, never installs ECC,
+          never clones <code>everything-claude-code</code>. ECC is a separate
+          global tool you install independently; Assay does not bundle or wire
+          it.
         </p>
 
         <h3>Prerequisites</h3>
@@ -295,23 +298,6 @@ npm install`}</code>
         </div>
       </div>
 
-      <div
-        style={{
-          marginTop: 32,
-          border: "1px solid var(--rule)",
-          background: "var(--paper-2)",
-          padding: 24,
-          borderRadius: 2,
-        }}
-      >
-        <p style={{ margin: 0, fontSize: 14 }}>
-          <strong>Need multi-machine or team-shared setup?</strong> The
-          networked build lives on its own page.{" "}
-          <a href="/production" style={linkStyle}>
-            See the expanded deployment docs →
-          </a>
-        </p>
-      </div>
     </section>
   );
 }
@@ -337,8 +323,8 @@ function QuickStartSection() {
         <code>{`npm run seed-demo`}</code>
       </pre>
       <p style={{ fontSize: 14, color: "var(--ink-3)" }}>
-        This inserts roughly 40 evidence records and 120 extracted claims into
-        your local database. It takes about 30 seconds while embeddings are
+        This inserts roughly 40 evidence records and 120 extracted decisions
+        into your local database. It takes about 30 seconds while embeddings are
         generated.
       </p>
 
@@ -494,12 +480,9 @@ function HowItWorksSection() {
       <p>
         Each evidence section is embedded into a dense vector using{" "}
         <code>bge-large-en-v1.5</code> (<strong>1024-dim</strong>, runs
-        in-process via <code>@xenova/transformers</code>, no API key). If{" "}
-        <code>OPENAI_API_KEY</code> is configured, Assay uses{" "}
-        <code>text-embedding-3-small</code> (<strong>1536-dim</strong>) instead
-        for a retrieval-quality uplift. Vectors are stored as <code>BLOB</code>{" "}
-        columns in SQLite with <code>sqlite-vec</code> providing cosine-distance
-        functions.
+        in-process via <code>@huggingface/transformers</code>, no API key
+        required). Vectors are stored as <code>BLOB</code> columns in SQLite
+        with <code>sqlite-vec</code> providing cosine-distance functions.
       </p>
       <h3>4. Index for full-text</h3>
       <p>
@@ -510,7 +493,7 @@ function HowItWorksSection() {
       <h3>5. Retrieve</h3>
       <p>
         At query time, four parallel search lanes fire and their results merge
-        via reciprocal rank fusion (RRF) into a single ranked list. Claims
+        via reciprocal rank fusion (RRF) into a single ranked list. Decisions
         resolve back to their parent evidence records via a{" "}
         <code>source_id</code> foreign key, so you always get full context.
       </p>
@@ -523,9 +506,9 @@ function HowItWorksSection() {
           evidence record embeddings. Catches semantically related sections.
         </li>
         <li>
-          <strong>Claims vector search</strong> — cosine similarity against
-          individual claim embeddings. Catches atomic assertions that point in
-          a different semantic direction than their parent section.
+          <strong>Decision vector search</strong> — cosine similarity against
+          individual decision embeddings. Catches atomic assertions that point
+          in a different semantic direction than their parent section.
         </li>
         <li>
           <strong>Evidence full-text search</strong> — SQLite <code>FTS5</code>{" "}
@@ -533,14 +516,14 @@ function HowItWorksSection() {
           proper nouns that vector search may miss.
         </li>
         <li>
-          <strong>Claims full-text search</strong> — FTS5 against claim text.
-          Catches specific terms used in individual assertions.
+          <strong>Decision full-text search</strong> — FTS5 against decision
+          text. Catches specific terms used in individual assertions.
         </li>
       </ol>
       <p>
         Results from all four lanes are merged via{" "}
-        <strong>reciprocal rank fusion</strong> (RRF). Claims resolve back to
-        their parent evidence records via the <code>source_id</code> foreign
+        <strong>reciprocal rank fusion</strong> (RRF). Decisions resolve back
+        to their parent evidence records via the <code>source_id</code> foreign
         key, so the final result set contains full-context sections rather
         than isolated sentences.
       </p>
@@ -562,10 +545,12 @@ function HowItWorksSection() {
 
 function EvidenceAndClaimsSection() {
   return (
-    <section id="evidence-and-claims" style={{ scrollMarginTop: 96 }}>
-      <h1>Evidence &amp; Claims</h1>
+    <section id="evidence-and-decisions" style={{ scrollMarginTop: 96 }}>
+      <h1>Evidence &amp; Decisions</h1>
       <p className="docs-lede">
-        The two-layer data model that powers granular retrieval.
+        The two-layer data model that powers granular retrieval. (The decision
+        layer is internally still the <code>claims</code> table for code
+        continuity.)
       </p>
 
       <h2>Evidence Records</h2>
@@ -574,34 +559,35 @@ function EvidenceAndClaimsSection() {
         chunker (target ~512 tokens per chunk, headings used as natural
         breakpoints, oversized sections sub-split along sentence boundaries
         with heading-context preservation). Each record stores the raw text, a
-        dense embedding vector (<strong>1024-dim</strong> local bge-large by
-        default, <strong>1536-dim</strong> OpenAI if an API key is configured),
-        source metadata (page URL, title, heading path), and a content hash
-        for drift detection and delete/rename tombstone retirement.
+        dense embedding vector (<strong>1024-dim</strong>, local{" "}
+        <code>bge-large-en-v1.5</code>; no API key required), source metadata
+        (page URL, title, heading path), and a content hash for drift detection
+        and delete/rename tombstone retirement.
       </p>
       <p>
         Evidence records are the primary unit of retrieval. They provide the
         full context window that tools like <code>retrieve</code> (in brief
-        mode) and <code>stress_test</code> synthesize from. Every claim links
-        back to exactly one evidence record.
+        mode) and <code>stress_test</code> synthesize from. Every decision
+        links back to exactly one evidence record.
       </p>
 
-      <h2>Claims</h2>
+      <h2>Decisions</h2>
       <p>
-        A claim is an atomic assertion extracted from an evidence record — a
-        single statement that can be independently verified, contradicted, or
-        cited. Each claim gets its own embedding vector, which may point in a
-        semantically different direction than its parent section. This is what
-        enables retrieval of individual assertions that chunk-level averaging
-        would lose.
+        A decision is an atomic assertion extracted from an evidence record or
+        a Claude session &mdash; a single statement that can be independently
+        verified, contradicted, or cited. Each decision gets its own embedding
+        vector, which may point in a semantically different direction than its
+        parent section. This is what enables retrieval of individual
+        assertions that chunk-level averaging would lose.
       </p>
       <p>
-        On average, claim extraction adds 10.7 additional unique records per
-        query, surfacing evidence that document-level search alone would miss.
+        On average, decision extraction adds 10.7 additional unique records
+        per query, surfacing evidence that document-level search alone would
+        miss.
       </p>
 
-      <h2>Claim Types</h2>
-      <p>Every claim is classified into one of seven types:</p>
+      <h2>Decision Types</h2>
+      <p>Every decision is classified into one of seven types:</p>
       <table className="t">
         <thead>
           <tr>
@@ -656,7 +642,7 @@ function EvidenceAndClaimsSection() {
       </table>
 
       <h2>Epistemic Layers</h2>
-      <p>Each claim also carries an epistemic layer classification:</p>
+      <p>Each decision also carries an epistemic layer classification:</p>
       <ul>
         <li>
           <strong>Observation</strong> — a factual report of what was seen or
@@ -736,6 +722,10 @@ function DecisionsSection() {
         When Claude commits to a material decision in conversation, it emits a
         structured tag that the drain parser picks up:
       </p>
+      <p style={{ fontSize: 14, color: "var(--ink-3)", margin: "12px 0 4px" }}>
+        <strong>Eng shape</strong> — schema / tooling / policy / rollout / eval
+        / scope commitments:
+      </p>
       <pre>
         <code>{`<decision impact="schema|tooling|policy|rollout|eval|scope"
           confidence="moderate|low"
@@ -744,13 +734,30 @@ function DecisionsSection() {
   <reasoning>{<=400 chars; why this was decided}</reasoning>
 </decision>`}</code>
       </pre>
+      <p style={{ fontSize: 14, color: "var(--ink-3)", margin: "16px 0 4px" }}>
+        <strong>PM shape</strong> &mdash; product hypotheses with explicit
+        problem / hypothesis / metric / outcome attributes:
+      </p>
+      <pre>
+        <code>{`<decision kind="pm"
+          problem="testers abandon install at step 3 (Claude Desktop wiring)"
+          hypothesis="auto-generating the mcpServers JSON block cuts step-3 drop-off in half"
+          metric="install-completion rate among new testers, week-over-week"
+          outcome="ship the auto-config writer behind --auto-wire before next tester cohort">
+  <statement>Auto-write the Claude Desktop MCP block during install-tester.sh.</statement>
+  <reasoning>Step-3 (manual JSON edit) is the highest-friction step in the install flow; a generated block removes a class of typo errors and makes the 5-minute promise real.</reasoning>
+</decision>`}</code>
+      </pre>
       <p>
-        Both child tags are required &mdash; missing or empty bodies are
-        dropped at drain. The <code>impact</code> attribute drives downstream
-        filtering. The optional <code>layer</code> attribute (default{" "}
-        <code>decision</code>) marks the epistemic level &mdash;{" "}
-        <code>observation</code> for direct factual reports,{" "}
-        <code>interpretation</code> for inference and synthesis,{" "}
+        Both child tags (<code>&lt;statement&gt;</code> and{" "}
+        <code>&lt;reasoning&gt;</code>) are required &mdash; missing or empty
+        bodies are dropped at drain. For the eng shape, the{" "}
+        <code>impact</code> attribute drives downstream filtering. For the PM
+        shape, <code>kind=&quot;pm&quot;</code> swaps the attribute set to
+        problem / hypothesis / metric / outcome. The optional{" "}
+        <code>layer</code> attribute (default <code>decision</code>) marks the
+        epistemic level &mdash; <code>observation</code> for direct factual
+        reports, <code>interpretation</code> for inference and synthesis,{" "}
         <code>decision</code> for committed action. Recall can filter by layer
         to surface only the committed decisions or trace the observations and
         interpretations that led there.
@@ -814,11 +821,12 @@ assay drain --dry-run`}</code>
         decisions for clean provenance, kept out of normal retrieval queries.
       </p>
 
-      <h2>MCP recall surface — five named agents + cascade</h2>
+      <h2>MCP recall surface — the recall tools</h2>
       <p>
-        The MCP tools registered by the Assay server are best understood as
-        five named agents (each one solves one job) plus a cascade tool for
-        when the caller doesn&rsquo;t know which tier holds the answer:
+        The MCP tools registered by the Assay server are best understood as a
+        set of named recall surfaces (each one solves one job) plus a cascade
+        tool for when the caller doesn&rsquo;t know which tier holds the
+        answer:
       </p>
       <ul>
         <li>
@@ -913,7 +921,7 @@ function RetrievalSection() {
           document sections via cosine distance against evidence embeddings.
         </li>
         <li>
-          <strong>Claims vector search</strong> — finds individual assertions
+          <strong>Decision vector search</strong> — finds individual assertions
           whose embeddings are close to the query, even when the parent
           section&#39;s overall embedding diverges.
         </li>
@@ -922,8 +930,8 @@ function RetrievalSection() {
           exact keyword matches in evidence records.
         </li>
         <li>
-          <strong>Claims full-text search</strong> — keyword matches against
-          the text of individual claims.
+          <strong>Decision full-text search</strong> — keyword matches against
+          the text of individual decisions.
         </li>
       </ol>
 
@@ -1214,9 +1222,8 @@ function ConfigureSection() {
           full)
         </li>
         <li>
-          <strong>Embedding provider</strong> — switch between local (
-          <code>bge-large-en-v1.5</code>, 1024-dim) and OpenAI (
-          <code>text-embedding-3-small</code>, 1536-dim)
+          <strong>Embedding</strong> — <code>bge-large-en-v1.5</code> (1024-dim,
+          local). No API key required; no remote provider switch.
         </li>
       </ul>
 
@@ -1541,15 +1548,6 @@ function TroubleshootingSection() {
             </td>
           </tr>
           <tr>
-            <td>Retrieval returns &quot;embedding dim mismatch&quot;</td>
-            <td>Embedder provider changed after indexing</td>
-            <td>
-              Either unset <code>OPENAI_API_KEY</code> so the local embedder is
-              used, or re-embed the corpus with{" "}
-              <code>tsx scripts/reembed-sqlite-corpus.ts</code>
-            </td>
-          </tr>
-          <tr>
             <td>Notion crawl returns 0 pages</td>
             <td>Integration disconnected or pages not shared</td>
             <td>
@@ -1618,12 +1616,18 @@ function GlossarySection() {
             }}
           >
             SQLite extension that provides vector-similarity functions. Stores
-            dense embeddings (1024 or 1536 dimensions depending on provider) as
-            BLOB columns in the same file as the rest of the corpus.
+            dense 1024-dim <code>bge-large-en-v1.5</code> embeddings as BLOB
+            columns in the same file as the rest of the corpus.
           </dd>
         </div>
         <div>
-          <dt style={{ fontWeight: 500 }}>Claims</dt>
+          <dt style={{ fontWeight: 500 }}>
+            Decisions{" "}
+            <span style={{ fontWeight: 400, color: "var(--ink-3)" }}>
+              (internally still the <code>claims</code> table for code
+              continuity)
+            </span>
+          </dt>
           <dd
             style={{
               margin: "4px 0 0",
@@ -1631,9 +1635,9 @@ function GlossarySection() {
               lineHeight: 1.6,
             }}
           >
-            Atomic assertions extracted from documents, each independently
-            embedded for granular retrieval. A single evidence section may
-            yield 5-15 claims.
+            Atomic assertions and committed choices extracted from documents
+            and conversations, each independently embedded for granular
+            retrieval. A single evidence section may yield 5&ndash;15 decisions.
           </dd>
         </div>
         <div>
@@ -1658,7 +1662,7 @@ function GlossarySection() {
               lineHeight: 1.6,
             }}
           >
-            A 0.0-1.0 score indicating how strongly a claim carries
+            A 0.0-1.0 score indicating how strongly a decision carries
             organizational dissent or constraint.
           </dd>
         </div>
@@ -1685,7 +1689,7 @@ function GlossarySection() {
             }}
           >
             Minimum embedding distance threshold (0.10) used to filter
-            redundant claims during extraction. Ensures each claim is
+            redundant decisions during extraction. Ensures each decision is
             semantically distinct.
           </dd>
         </div>
@@ -1707,7 +1711,7 @@ function GlossarySection() {
 
       <hr className="hair-soft" style={{ margin: "48px 0 24px" }} />
       <div className="mono-meta">
-        VERSION · PHASE 1 CLOSED BETA · 2026-04-20 · 31/31 INTEGRATION TESTS
+        VERSION · PHASE 1 CLOSED BETA · 2026-05-14 · 31/31 INTEGRATION TESTS
         PASS
       </div>
     </section>

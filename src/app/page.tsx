@@ -28,8 +28,13 @@ export default function Home() {
           </h1>
 
           <p className="lede">
-            Assay turns PRDs, strategy docs, research, and decisions into cited claims your AI tools
+            Assay turns PRDs, strategy docs, research, and decisions into cited decisions your AI tools
             can check against. Local-first, inspectable, built for PMs who ship.
+          </p>
+
+          <p className="lede" style={{ marginTop: 12 }}>
+            Claude tags decisions inline as you work, and Assay catches them automatically &mdash; no
+            manual logging, no cloud, no API key.
           </p>
 
           <div className="hero-actions">
@@ -116,7 +121,7 @@ export default function Home() {
                 <p>
                   Hybrid scoring blends 0.7 cosine + 0.2 recency (90-day half-life) + 0.1 source
                   weight. Four retrieval paths merged via reciprocal rank fusion: evidence
-                  vector, claims vector, evidence FTS, claims FTS.
+                  vector, decision vector, evidence FTS, decision FTS.
                 </p>
                 <ul>
                   <li>
@@ -143,7 +148,7 @@ export default function Home() {
                 </h3>
                 <p>
                   Initial deposit, promotion, supersession, rejection &mdash; every transition is
-                  a row. A claim that was true on Tuesday and superseded on Thursday tells you
+                  a row. A decision that was true on Tuesday and superseded on Thursday tells you
                   both. Decisions never lose their footnotes.
                 </p>
                 <ul>
@@ -153,7 +158,7 @@ export default function Home() {
                   </li>
                   <li>
                     <span className="lbl">DRIFT</span>
-                    <span className="desc">Source-edit alerts on dependent claims</span>
+                    <span className="desc">Source-edit alerts on dependent decisions</span>
                   </li>
                   <li>
                     <span className="lbl">EXPORT</span>
@@ -185,12 +190,12 @@ export default function Home() {
                 <h4>Index a folder</h4>
                 <p>
                   Point Assay at a path. Files are chunked at 512 tokens, hashed, embedded with
-                  bge-large or OpenAI 3-small.
+                  bge-large-en-v1.5 (1024-dim, local).
                 </p>
               </div>
               <div className="step">
                 <span className="step-num">02</span>
-                <h4>Extract atomic claims</h4>
+                <h4>Extract atomic decisions</h4>
                 <p>
                   Constraints, commitments, deferrals, assumptions, findings, recommendations,
                   metrics &mdash; typed and cited.
@@ -200,7 +205,7 @@ export default function Home() {
                 <span className="step-num">03</span>
                 <h4>Retrieve through 4 layers</h4>
                 <p>
-                  Evidence vector + claims vector + evidence FTS + claims FTS, merged via
+                  Evidence vector + decision vector + evidence FTS + decision FTS, merged via
                   reciprocal rank fusion.
                 </p>
               </div>
@@ -247,20 +252,20 @@ export default function Home() {
                 <span className="ok">✓ on-device · 11.4s</span>
                 {"\n"}
                 <span className="dim">[3/3]</span>
-                {" extracting claims            "}
+                {" extracting decisions         "}
                 <span className="ok">✓ 1,184 found · 914 cited</span>
                 {"\n\n"}
                 <span className="dim">
-                  ─── claims ──────────────────────────────────────────────────────────────────
+                  ─── decisions ───────────────────────────────────────────────────────────────
                 </span>
                 {"\n"}
-                <span className="key">CLM-0421</span>
+                <span className="key">DEC-0421</span>
                 {"  Onboarding within 24h yields "}
                 <span className="ok">2.4×</span>
                 {" retention.\n          "}
                 <span className="dim">→ PRD-184 §2.3 · sha:8f1e..</span>
                 {"\n"}
-                <span className="key">CLM-0422</span>
+                <span className="key">DEC-0422</span>
                 {'  "Local-first" recurred in 9/12 customer interviews.\n          '}
                 <span className="dim">→ interviews/2026-Q1 · sha:c2a4..</span>
                 {"\n\n"}
@@ -280,7 +285,7 @@ export default function Home() {
                 <h2 className="s-title">Why not just RAG?</h2>
                 <p className="s-deck">
                   Standard tools embed documents whole and return chunks by proximity. Assay
-                  treats the <span className="serif-it">claim</span> as the unit of value,
+                  treats the <span className="serif-it">decision</span> as the unit of value,
                   indexes both, and merges results across four retrievers.
                 </p>
               </div>
@@ -314,12 +319,12 @@ export default function Home() {
                 <div className="lbl">Notion AI / built-in search</div>
                 <div className="nature">
                   Tied to one tool. Cited results are paragraph-level, no provenance graph, no
-                  claim layer.
+                  decision layer.
                 </div>
                 <div className="assay-lbl">Assay</div>
                 <div className="assay">
                   Source-agnostic. Markdown, Notion, more coming. Provenance graph, typed
-                  claims, contradiction detection on top.
+                  decisions, contradiction detection on top.
                 </div>
               </div>
             </div>
@@ -332,62 +337,45 @@ export default function Home() {
             <div className="s-head">
               <div className="s-num">§ 04</div>
               <div>
-                <h2 className="s-title">The MCP surface.</h2>
+                <h2 className="s-title">Core tools.</h2>
                 <p className="s-deck">
-                  Six named agents inside Claude Desktop or Claude Code. Each MCP tool answers
-                  one question &mdash; same shape, one call, one structured response. Two speak
-                  to the decision graph, one to evidence, three to retrieval.
+                  Four MCP tools you&rsquo;ll use first inside Claude Desktop or Claude Code. Each
+                  answers one question &mdash; same shape, one call, one structured response.
+                  See the full surface in <Link href="/docs">/docs</Link>.
                 </p>
               </div>
             </div>
 
             <div className="agents">
               <div className="agent">
-                <div className="grp">DECISIONS</div>
-                <div className="nm">/assay-decide</div>
-                <div className="blurb">
-                  Returns the cited briefing for an open decision: claims for, against, and
-                  adjacent context.
-                </div>
-              </div>
-              <div className="agent">
-                <div className="grp">DECISIONS</div>
-                <div className="nm">/assay-trace</div>
-                <div className="blurb">
-                  Walks a decision back to its sources. Surfaces every claim and source-edit
-                  that led here.
-                </div>
-              </div>
-              <div className="agent">
-                <div className="grp">EVIDENCE</div>
-                <div className="nm">/assay-cite</div>
-                <div className="blurb">
-                  Inline-cite a sentence against the corpus. Paragraph + sha + range, returned
-                  as text.
-                </div>
-              </div>
-              <div className="agent">
                 <div className="grp">RETRIEVAL</div>
-                <div className="nm">/assay-retrieve</div>
+                <div className="nm">retrieve</div>
                 <div className="blurb">
-                  Hybrid retrieval over evidence and claims. Returns ranked records with
+                  Raw evidence search across the corpus. Returns ranked paragraphs with
                   provenance.
                 </div>
               </div>
               <div className="agent">
-                <div className="grp">RETRIEVAL</div>
-                <div className="nm">/assay-scan</div>
+                <div className="grp">PRE-FLIGHT</div>
+                <div className="nm">scan</div>
                 <div className="blurb">
-                  Fast pass over the corpus for a topic. Returns counts and top sources, not
-                  full claims.
+                  Fast pre-flight signal check on a topic. Returns clear, caution, or blocker.
                 </div>
               </div>
               <div className="agent">
-                <div className="grp">RETRIEVAL</div>
-                <div className="nm">/assay-stress</div>
+                <div className="grp">DECISIONS</div>
+                <div className="nm">assay_decision_recall</div>
                 <div className="blurb">
-                  Stress-test a draft against the corpus. Returns contradictions and weak
-                  claims.
+                  Pull prior decisions by query. Surfaces the decision row plus its cited
+                  reasoning.
+                </div>
+              </div>
+              <div className="agent">
+                <div className="grp">SYSTEM</div>
+                <div className="nm">configure</div>
+                <div className="blurb">
+                  Backend status, settings, and sync triggers. Inspect and tune Assay from
+                  inside the chat.
                 </div>
               </div>
             </div>
@@ -421,8 +409,8 @@ export default function Home() {
                   of receipts.
                 </h2>
                 <p className="s-deck">
-                  Every claim points to its evidence. Every decision points to the claims that
-                  justified it. The graph is the audit trail.
+                  Every decision points to its evidence. Every validated decision points to the
+                  reasoning that justified it. The graph is the audit trail.
                 </p>
               </div>
             </div>
@@ -434,7 +422,7 @@ export default function Home() {
                   <span className="dot" style={{ background: "var(--ignition)" }} /> Decision
                 </div>
                 <div className="row">
-                  <span className="dot" style={{ background: "var(--reagent)" }} /> Claim
+                  <span className="dot" style={{ background: "var(--reagent)" }} /> Decision
                 </div>
                 <div className="row">
                   <span className="dot" style={{ background: "var(--bone-3)" }} /> Evidence
@@ -446,7 +434,7 @@ export default function Home() {
               <div className="meta">
                 CORPUS · 64 DOCS
                 <br />
-                1,184 CLAIMS · 42 DECISIONS
+                1,184 DECISIONS · 42 VALIDATED
               </div>
               <svg viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid meet">
                 {/* edges */}
@@ -486,7 +474,7 @@ export default function Home() {
                   <circle cx="1140" cy="160" r="2.5" />
                   <circle cx="1140" cy="380" r="2.5" />
                 </g>
-                {/* claim nodes (reagent) */}
+                {/* decision nodes (reagent) */}
                 <g fill="oklch(0.66 0.10 220)">
                   <circle cx="320" cy="120" r="6" />
                   <circle cx="380" cy="380" r="6" />
@@ -495,7 +483,7 @@ export default function Home() {
                   <circle cx="220" cy="260" r="5" />
                   <circle cx="980" cy="260" r="5" />
                 </g>
-                {/* validated claim (signal) */}
+                {/* validated decision (signal) */}
                 <g fill="oklch(0.72 0.14 145)">
                   <circle cx="380" cy="380" r="6" />
                 </g>
@@ -524,10 +512,10 @@ export default function Home() {
                 {/* annotations */}
                 <g fontFamily="Geist Mono" fontSize="10" fill="#BDB8AC" letterSpacing="1">
                   <text x="616" y="244">DEC-007</text>
-                  <text x="336" y="116">CLM-0421</text>
-                  <text x="396" y="384">CLM-0422</text>
-                  <text x="916" y="116">CLM-0425</text>
-                  <text x="876" y="384">CLM-0426</text>
+                  <text x="336" y="116">DEC-0421</text>
+                  <text x="396" y="384">DEC-0422</text>
+                  <text x="916" y="116">DEC-0425</text>
+                  <text x="876" y="384">DEC-0426</text>
                 </g>
               </svg>
             </div>
@@ -540,13 +528,13 @@ export default function Home() {
                 </div>
               </div>
               <div style={{ padding: "16px 0" }}>
-                <div className="mono">CLAIMS</div>
+                <div className="mono">DECISIONS</div>
                 <div className="num" style={{ fontSize: 32, letterSpacing: "-0.02em" }}>
                   1,184
                 </div>
               </div>
               <div style={{ padding: "16px 0" }}>
-                <div className="mono">DECISIONS</div>
+                <div className="mono">VALIDATED</div>
                 <div className="num" style={{ fontSize: 32, letterSpacing: "-0.02em" }}>
                   42
                 </div>

@@ -14,7 +14,7 @@ const NAV_SECTIONS: {
     title: "Core Concepts",
     links: [
       { label: "How It Works", id: "how-it-works" },
-      { label: "Evidence & Claims", id: "evidence-and-claims" },
+      { label: "Evidence & Decisions", id: "evidence-and-decisions" },
       { label: "Decisions & Ambient Tagging", id: "decisions" },
       { label: "Retrieval Pipeline", id: "retrieval" },
     ],
@@ -79,7 +79,7 @@ export function DocsToc() {
     { label: "Installation", id: "installation" },
     { label: "Quick Start", id: "quickstart" },
     { label: "How It Works", id: "how-it-works" },
-    { label: "Evidence & Claims", id: "evidence-and-claims" },
+    { label: "Evidence & Decisions", id: "evidence-and-decisions" },
     { label: "Decisions", id: "decisions" },
     { label: "Retrieval", id: "retrieval" },
     { label: "retrieve", id: "tools-retrieve" },

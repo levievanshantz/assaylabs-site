@@ -26,23 +26,23 @@ const GROUPS: Group[] = [
   {
     heading: "Search & RAG tools",
     blurb:
-      "Vector search and chat-over-docs apps. Strong on retrieval, weak on the claim layer.",
+      "Vector search and chat-over-docs apps. Strong on retrieval, weak on the decision layer.",
     items: [
       {
         name: "Glean / Notion AI",
         shape: "In-tool search",
         nature:
-          "Tied to one workspace. Cited results are paragraph-level. No provenance graph, no claim layer.",
+          "Tied to one workspace. Cited results are paragraph-level. No provenance graph, no decision layer.",
         assay:
-          "Source-agnostic. Markdown, Notion, more coming. Provenance graph + typed claims + contradiction detection.",
+          "Source-agnostic. Markdown, Notion, more coming. Provenance graph + typed decisions + contradiction detection.",
       },
       {
         name: "LangChain / LlamaIndex apps",
         shape: "DIY RAG",
         nature:
-          "Generic vector store + LLM. No opinion about what a 'claim' is. Every team rebuilds the same retrieval logic.",
+          "Generic vector store + LLM. No opinion about what a 'decision' is. Every team rebuilds the same retrieval logic.",
         assay:
-          "Opinionated about evidence and claims. RRF over four retrievers. Citations are a first-class object, not a prompt.",
+          "Opinionated about evidence and decisions. RRF over four retrievers. Citations are a first-class object, not a prompt.",
       },
     ],
   },
@@ -52,7 +52,7 @@ const GROUPS: Group[] = [
       "Tools that record agent sessions or scratchpads. Adjacent to memory; different unit of value.",
     items: [
       {
-        name: "Mem0 / Letta",
+        name: "Mem0",
         shape: "Session memory",
         nature:
           "Remembers the conversation. Evicts old turns. Optimizes for 'what did the user say last week.'",
@@ -60,10 +60,18 @@ const GROUPS: Group[] = [
           "Indexes the artifact, not the conversation. Optimizes for 'what did the doc say, and is it still true.'",
       },
       {
+        name: "Letta",
+        shape: "Agent memory (MemGPT lineage)",
+        nature:
+          "MemGPT-style paged memory for long-running agents. Decision structure is left to agent discretion — no typed decision layer or contradiction model.",
+        assay:
+          "Assay extends MemGPT paging with a typed decision layer Letta leaves to agent discretion. Decisions, evidence, and contradictions are first-class artifacts with an append-only audit trail.",
+      },
+      {
         name: "Cursor / Claude Code memory",
         shape: "In-IDE scratch",
         nature:
-          "Per-project notes, often editor-scoped. No multi-source, no claim type system, no audit log.",
+          "Per-project notes, often editor-scoped. No multi-source, no decision type system, no audit log.",
         assay:
           "Stand-alone corpus. Reachable from any tool via MCP. Append-only state-change ledger preserved.",
       },
@@ -88,16 +96,16 @@ const GROUPS: Group[] = [
           "The substrate. Hybrid vector + BM25 in a single file. Used directly under the hood.",
         assayLbl: "Assay layers",
         assay:
-          "Reciprocal rank fusion over four retrievers, recency-weighted scoring, claim extraction on top.",
+          "Reciprocal rank fusion over four retrievers, recency-weighted scoring, decision extraction on top.",
       },
       {
         name: "pgvector + Postgres",
-        shape: "Future cloud tier",
+        shape: "Speculative / not on roadmap",
         nature:
-          "Phase 3 multi-user shared corpus. Same data model, different substrate.",
+          "Sometimes asked about as a shared-team substrate. Archived Phase 0 internally; not on the current committed roadmap.",
         assayLbl: "Assay path",
         assay:
-          "SQLite first; Postgres only when teams demand shared writes. Schema is identical so the migration is mechanical.",
+          "Local-first is the product today. A shared-team tier is unscoped and not committed — we'll revisit when usage demands it.",
       },
     ],
   },
@@ -112,7 +120,7 @@ export default function ComparePage() {
         <div className="route-tag">
           <div className="route-tag-inner">
             <span className="mono">/compare&nbsp;&nbsp;·&nbsp;&nbsp;ASSAY VS THE FIELD</span>
-            <span className="mono-meta">UPDATED 2026-05-10</span>
+            <span className="mono-meta">UPDATED 2026-05-14</span>
           </div>
         </div>
 
