@@ -25,8 +25,11 @@ function OverviewSection() {
       <div className="breadcrumb">DOCS · PRODUCT REFERENCE · PHASE 1</div>
       <h1>What is Assay?</h1>
       <p className="docs-lede">
-        Institutional memory for product decisions. Local version — runs on your
-        machine, no account, no cloud database, no API key required.
+        Local-first decision memory for PMs. Every call you commit to with
+        Claude gets captured as a typed, queryable decision with reasoning
+        attached, stored on your laptop. No account, no cloud database, no API
+        key required. Your PRDs, research, and decisions stay on your laptop
+        &mdash; backed up with <code>cp</code>, moved with <code>cp</code>.
       </p>
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
@@ -48,30 +51,76 @@ function OverviewSection() {
         </span>
       </div>
 
+      <div style={{ margin: "0 0 16px" }}>
+        <div
+          className="mono"
+          style={{
+            fontSize: 12,
+            letterSpacing: "0.12em",
+            opacity: 0.7,
+            marginBottom: 8,
+          }}
+        >
+          EXAMPLE &mdash; what /assay-decision returns
+        </div>
+        <pre>
+          <code>{`You (in Claude):
+  /assay-decision why did we kill the bulk-edit feature
+
+Assay:
+  DECISION (2026-04-12, confirmed)
+  We killed bulk-edit before launch because the cross-tenant data risk
+  outweighed the cycle-time gain. 3 of 4 design reviewers (Sasha, Min,
+  R.) blocked on the audit-log gap. Superseded the "ship bulk-edit Q3"
+  plan from 2026-02-09.
+
+  EVIDENCE
+  • Security review notes — 2026-04-10
+  • Customer interviews #14, #17 — Jan 2026
+  • PRD v2.3 §6.2 — 2026-03-22
+
+  See more: /assay-decision <id> --expand`}</code>
+        </pre>
+      </div>
+
+      <div
+        style={{
+          margin: "0 0 24px",
+          borderLeft: "3px solid var(--ignition)",
+          background: "var(--paper-2)",
+          padding: "12px 16px",
+        }}
+      >
+        <p style={{ fontSize: 14, margin: 0 }}>
+          <strong style={{ color: "var(--ignition-ink)" }}>
+            Reference, not pitch.
+          </strong>{" "}
+          That example is what you came to see. Everything below is the
+          engineering reference. For high-level questions about why Assay
+          exists and who it&apos;s for, see the{" "}
+          <a href="/#faq" style={linkStyle}>landing-page FAQ</a>.
+        </p>
+      </div>
+
       <p>
         Assay turns your PRDs, strategy documents, research notes, and recorded
-        decisions into a structured corpus of cited evidence that your AI tools
+        decisions into a structured set of cited evidence that your AI tools
         can query. Instead of relying on stale memory or keyword search, every
         question and proposal gets checked against what your organization
-        actually knows — with source links, citation tokens, and explicit
+        actually knows &mdash; with source links, citation tokens, and explicit
         refusal when the evidence is insufficient.
       </p>
       <p>
         This page describes the <strong>local version</strong> of Assay.
-        Everything — the corpus, the embeddings, the full-text index, the
-        retrieval engine — lives on your machine in a single SQLite file at{" "}
-        <code>~/.assay/assay.db</code>. It plugs into Claude Code as an MCP
-        server and exposes ten MCP tools (<code>retrieve</code>,{" "}
-        <code>scan</code>, <code>stress_test</code>, <code>configure</code>,{" "}
-        <code>assay_decision_recall</code>, <code>assay_decision_expand</code>,{" "}
-        <code>assay_recall</code>, <code>brief_decision_render</code>,{" "}
-        <code>promote_claim</code>, <code>demote_claim</code>) plus a CLI.
-      </p>
-      <p>
-        Why local: your PRDs, research, and decisions are sensitive. Keeping
-        them on-device means no tenant setup, no cloud bills, no network
-        dependency at query time, and your data never leaves your laptop.
-        Backup is <code>cp</code>. Moving machines is <code>cp</code>.
+        Everything &mdash; the indexed documents, the embeddings, the full-text
+        index, the retrieval engine &mdash; lives on your machine in a single
+        SQLite file at <code>~/.assay/assay.db</code>. It plugs into Claude
+        Code as an MCP server and exposes a set of slash commands
+        (<code>/assay-scan</code>, <code>/assay-decision</code>,{" "}
+        <code>/assay-retrieve</code>, <code>/assay-stress-test</code>,{" "}
+        <code>/assay-config</code>, <code>/assay-sync-status</code>) plus a
+        CLI. The full underlying MCP tool surface is documented in{" "}
+        <a href="#under-the-hood" style={linkStyle}>Under the hood</a>.
       </p>
       <div
         style={{
@@ -92,32 +141,6 @@ function OverviewSection() {
           <em>what</em> it remembers.
         </p>
       </div>
-      <h2>Architecture</h2>
-      <pre>
-        <code>{`      ┌────────────────────────────────────────────────────────┐
-      │                    Claude Code                          │
-      │   retrieve  scan  stress_test  configure                │
-      │   assay_decision_recall  assay_decision_expand          │
-      │   assay_recall  brief_decision_render                   │
-      │   promote_claim  demote_claim                           │
-      └──────────────────────────┬─────────────────────────────┘
-                                 │  MCP (stdio)
-                                 ▼
-      ┌────────────────────────────────────────────────────────┐
-      │                   Assay MCP server                      │
-      │                                                         │
-      │    Ingest ──► Chunk ──► Embed ──► Store ──► Retrieve    │
-      │      │           │         │         │          │       │
-      │      ▼           ▼         ▼         ▼          ▼       │
-      │   Markdown     512-tok   bge-large  SQLite   hybrid     │
-      │   (Notion      heading-  1024d      + FTS5   vector     │
-      │   optional)    aware     local      single   + text     │
-      │                                     file     fusion     │
-      └────────────────────────────┬───────────────────────────┘
-                                   │
-                                   ▼
-                        ~/.assay/assay.db  (single file)`}</code>
-      </pre>
 
       <h2>Prerequisites</h2>
       <ul>
@@ -143,9 +166,106 @@ function OverviewSection() {
       </ul>
 
       <p style={{ fontSize: 14, color: "var(--ink-3)", marginTop: 16 }}>
-        <strong style={{ color: "var(--ink)" }}>Embedding:</strong>{" "}
-        <code>bge-large-en-v1.5</code> (1024-dim, local). No API key required.
+        <strong style={{ color: "var(--ink)" }}>Embedding:</strong> local
+        embedding model. No API key required.
       </p>
+
+      <h2 id="under-the-hood" style={{ scrollMarginTop: 96, marginTop: 48 }}>
+        Under the hood
+      </h2>
+      <p style={{ fontSize: 14, color: "var(--ink-3)" }}>
+        Technical detail below. PMs can skip to{" "}
+        <a href="#installation" style={linkStyle}>Installation</a>.
+      </p>
+
+      <p>
+        Internally, Assay plugs into Claude Code as an MCP server and exposes
+        ten MCP tools plus a CLI. The slash commands above are thin wrappers
+        over those tools. Architecture diagram:
+      </p>
+      <pre>
+        <code>{`      ┌────────────────────────────────────────────────────────┐
+      │                    Claude Code                          │
+      │   retrieve  scan  stress_test  configure                │
+      │   assay_decision_recall  assay_decision_expand          │
+      │   assay_recall  brief_decision_render                   │
+      │   promote_claim  demote_claim                           │
+      └──────────────────────────┬─────────────────────────────┘
+                                 │  MCP (stdio)
+                                 ▼
+      ┌────────────────────────────────────────────────────────┐
+      │                   Assay MCP server                      │
+      │                                                         │
+      │    Ingest ──► Chunk ──► Embed ──► Store ──► Retrieve    │
+      │      │           │         │         │          │       │
+      │      ▼           ▼         ▼         ▼          ▼       │
+      │   Markdown     512-tok   local      SQLite   hybrid     │
+      │   (Notion      heading-  embedding  single   keyword    │
+      │   optional)    aware     model      file     + semantic │
+      │                                              search     │
+      └────────────────────────────┬───────────────────────────┘
+                                   │
+                                   ▼
+                        ~/.assay/assay.db  (single file)`}</code>
+      </pre>
+
+      <h3>MCP server tool names</h3>
+      <p style={{ fontSize: 14 }}>
+        The slash command is what a PM types in Claude. The MCP server tool
+        name is the underlying tool the MCP client invokes. They map 1:1 for
+        the user-facing surface; the rest are internal recall and capture
+        primitives.
+      </p>
+      <table className="t">
+        <thead>
+          <tr>
+            <th>Slash command</th>
+            <th>MCP server tool</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/assay-scan</code></td>
+            <td><code>scan</code></td>
+          </tr>
+          <tr>
+            <td><code>/assay-decision</code></td>
+            <td><code>assay_decision_recall</code></td>
+          </tr>
+          <tr>
+            <td><code>/assay-decision &lt;id&gt; --expand</code></td>
+            <td><code>assay_decision_expand</code></td>
+          </tr>
+          <tr>
+            <td><code>/assay-retrieve</code></td>
+            <td><code>retrieve</code></td>
+          </tr>
+          <tr>
+            <td><code>/assay-stress-test</code></td>
+            <td><code>stress_test</code></td>
+          </tr>
+          <tr>
+            <td><code>/assay-config</code></td>
+            <td><code>configure</code></td>
+          </tr>
+          <tr>
+            <td><code>/assay-sync-status</code></td>
+            <td><code>configure subcommand=&quot;status&quot;</code></td>
+          </tr>
+          <tr>
+            <td>(internal &mdash; cascade recall)</td>
+            <td><code>assay_recall</code></td>
+          </tr>
+          <tr>
+            <td>(internal &mdash; brief synthesis deposit)</td>
+            <td><code>brief_decision_render</code></td>
+          </tr>
+          <tr>
+            <td>(internal &mdash; decision lifecycle)</td>
+            <td><code>promote_claim</code> / <code>demote_claim</code></td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   );
 }
@@ -187,9 +307,8 @@ function InstallationSection() {
         </div>
         <p>
           Runs entirely on your machine as a single SQLite file at{" "}
-          <code>~/.assay/assay.db</code>. No Docker, no account. Uses local
-          embeddings: <code>bge-large-en-v1.5</code> (1024-dim). No API key
-          required.
+          <code>~/.assay/assay.db</code>. No Docker, no account. Uses a local
+          embedding model. No API key required.
         </p>
         <p style={{ fontSize: 14 }}>
           <strong>Install:</strong>{" "}
@@ -198,6 +317,11 @@ function InstallationSection() {
           never clones <code>everything-claude-code</code>. ECC is a separate
           global tool you install independently; Assay does not bundle or wire
           it.
+        </p>
+        <p style={{ fontSize: 14 }}>
+          <strong>First command to try after install:</strong>{" "}
+          <code>/assay-scan</code> — fast pre-flight signal check against
+          whatever&apos;s already in your decision graph and corpus.
         </p>
 
         <h3>Prerequisites</h3>
@@ -478,62 +602,61 @@ function HowItWorksSection() {
       </p>
       <h3>3. Embed</h3>
       <p>
-        Each evidence section is embedded into a dense vector using{" "}
-        <code>bge-large-en-v1.5</code> (<strong>1024-dim</strong>, runs
-        in-process via <code>@huggingface/transformers</code>, no API key
-        required). Vectors are stored as <code>BLOB</code> columns in SQLite
-        with <code>sqlite-vec</code> providing cosine-distance functions.
+        Each evidence section is embedded into a dense vector using a local
+        embedding model that runs in-process via{" "}
+        <code>@huggingface/transformers</code> (no API key required). Vectors
+        are stored alongside the rest of the corpus in the same SQLite file.
       </p>
       <h3>4. Index for full-text</h3>
       <p>
-        Each section is also indexed by SQLite <code>FTS5</code> (porter +
-        unicode61 tokenizer) so retrieval can combine semantic vector
-        similarity with exact lexical matching.
+        Each section is also indexed for keyword search so retrieval can
+        combine semantic similarity with exact lexical matching.
       </p>
       <h3>5. Retrieve</h3>
       <p>
-        At query time, four parallel search lanes fire and their results merge
-        via reciprocal rank fusion (RRF) into a single ranked list. Decisions
-        resolve back to their parent evidence records via a{" "}
-        <code>source_id</code> foreign key, so you always get full context.
+        At query time, four parallel search lanes fire (keyword + semantic
+        across both evidence sections and individual decisions) and their
+        results merge into a single ranked list. Decisions resolve back to
+        their parent evidence records via a <code>source_id</code> foreign key,
+        so you always get full context.
       </p>
 
       <h2>4-Layer Hybrid Retrieval</h2>
       <p>Each query runs four search lanes in parallel:</p>
       <ol>
         <li>
-          <strong>Evidence vector search</strong> — cosine similarity against
+          <strong>Evidence semantic search</strong> — cosine similarity against
           evidence record embeddings. Catches semantically related sections.
         </li>
         <li>
-          <strong>Decision vector search</strong> — cosine similarity against
+          <strong>Decision semantic search</strong> — cosine similarity against
           individual decision embeddings. Catches atomic assertions that point
           in a different semantic direction than their parent section.
         </li>
         <li>
-          <strong>Evidence full-text search</strong> — SQLite <code>FTS5</code>{" "}
-          with a porter + unicode61 tokenizer. Catches exact terminology and
-          proper nouns that vector search may miss.
+          <strong>Evidence keyword search</strong> — built-in SQLite full-text
+          search. Catches exact terminology and proper nouns that semantic
+          search may miss.
         </li>
         <li>
-          <strong>Decision full-text search</strong> — FTS5 against decision
-          text. Catches specific terms used in individual assertions.
+          <strong>Decision keyword search</strong> — keyword search against
+          decision text. Catches specific terms used in individual assertions.
         </li>
       </ol>
       <p>
-        Results from all four lanes are merged via{" "}
-        <strong>reciprocal rank fusion</strong> (RRF). Decisions resolve back
-        to their parent evidence records via the <code>source_id</code> foreign
-        key, so the final result set contains full-context sections rather
-        than isolated sentences.
+        Results from all four lanes are merged into a single ranked list using
+        hybrid (keyword + semantic) fusion. Decisions resolve back to their
+        parent evidence records via the <code>source_id</code> foreign key, so
+        the final result set contains full-context sections rather than
+        isolated sentences.
       </p>
       <p style={{ fontSize: 14 }}>
-        <strong>Index integrity</strong> — the <code>claims_fts</code> virtual
-        table stays in lockstep with <code>claims</code> via three AFTER
-        triggers (insert / update of <code>claim_text</code> / delete) shipped
-        in <strong>migration 032</strong>. Without those triggers, freshly
-        drained decisions were invisible to BM25 retrieval until a manual
-        backfill. Now every write keeps both indexes synchronised.
+        <strong>Index integrity</strong> — the decision keyword index stays in
+        lockstep with the decision table via AFTER triggers (insert / update /
+        delete) shipped in <strong>migration 032</strong>. Without those
+        triggers, freshly drained decisions were invisible to keyword retrieval
+        until a manual backfill. Now every write keeps both indexes
+        synchronised.
       </p>
     </section>
   );
@@ -559,10 +682,9 @@ function EvidenceAndClaimsSection() {
         chunker (target ~512 tokens per chunk, headings used as natural
         breakpoints, oversized sections sub-split along sentence boundaries
         with heading-context preservation). Each record stores the raw text, a
-        dense embedding vector (<strong>1024-dim</strong>, local{" "}
-        <code>bge-large-en-v1.5</code>; no API key required), source metadata
-        (page URL, title, heading path), and a content hash for drift detection
-        and delete/rename tombstone retirement.
+        dense embedding vector (local embedding model; no API key required),
+        source metadata (page URL, title, heading path), and a content hash
+        for drift detection and delete/rename tombstone retirement.
       </p>
       <p>
         Evidence records are the primary unit of retrieval. They provide the
@@ -697,10 +819,10 @@ function DecisionsSection() {
       <ul>
         <li>
           <strong>Structural</strong> — when <code>retrieve mode=brief</code>{" "}
-          runs with the analyzer enabled, the caller&apos;s LLM produces strict
-          JSON that <code>brief_decision_render</code> validates, renders, and
-          deposits as candidate decisions. Zero API key required server-side;
-          the caller&apos;s model does the synthesis.
+          runs, the caller&apos;s LLM produces strict JSON that{" "}
+          <code>brief_decision_render</code> validates, renders, and deposits
+          as candidate decisions. Zero API key required server-side; the
+          caller&apos;s model does the synthesis.
         </li>
         <li>
           <strong>Ambient (session drain)</strong> — Claude emits structured{" "}
@@ -821,55 +943,97 @@ assay drain --dry-run`}</code>
         decisions for clean provenance, kept out of normal retrieval queries.
       </p>
 
-      <h2>MCP recall surface — the recall tools</h2>
+      <h2>The two commands you&rsquo;ll use first</h2>
       <p>
-        The MCP tools registered by the Assay server are best understood as a
-        set of named recall surfaces (each one solves one job) plus a cascade
-        tool for when the caller doesn&rsquo;t know which tier holds the
-        answer:
+        Most of the value comes from two slash commands. Start here; the full
+        tool surface is documented below for engineering reference.
       </p>
       <ul>
         <li>
-          <strong>Decision</strong> &mdash; <code>assay_decision_recall</code>{" "}
-          cosine + hybrid search over the statement embedding. Returns
-          summaries (id, statement, confidence, status, score) with optional
-          filters for status, kind, confidence, and layer. Default confidence
-          floor is <code>medium</code>+ so low-signal candidates stay out of
-          the response.
+          <strong>
+            <code>/assay-scan</code>
+          </strong>{" "}
+          &mdash; before you commit to a call, ask Assay what it already knows.
+          You describe the proposal in plain English; Assay returns 3&ndash;5
+          signals classed <em>clear</em>, <em>caution</em>, or{" "}
+          <em>blocker</em>, drawing from both prior decisions and the evidence
+          corpus. Use it when you&rsquo;re about to greenlight, kill, or
+          reverse something and want a sanity check first.
         </li>
         <li>
-          <strong>Provenance</strong> &mdash; <code>assay_decision_expand</code>{" "}
-          given a decision id, returns the full reasoning trail, the latest
-          cited evidence, the full <code>decision_transitions</code> audit
-          log, and a depth-N predecessor walk (<code>supersedes_chain</code>)
-          so callers can reconstruct exactly what changed and why.
+          <strong>
+            <code>/assay-decision</code>
+          </strong>{" "}
+          &mdash; ask &ldquo;what did we decide about X, and why?&rdquo;
+          Returns the matching decision summary first; expand any hit to see
+          the full reasoning trail, the evidence cited at the time, and the
+          predecessor chain (what this decision superseded, and what
+          superseded it). This is the &ldquo;why did we kill that?&rdquo;
+          answer that previously required an archeology dig across Slack and
+          docs.
+        </li>
+      </ul>
+
+      <h2>Full tool surface</h2>
+      <p>
+        The remaining MCP tools are named recall surfaces (each solves one
+        job) plus a cascade tool for when the caller doesn&rsquo;t know which
+        layer holds the answer. Engineering reference:
+      </p>
+      <ul>
+        <li>
+          <strong>
+            <code>/assay-retrieve</code>
+          </strong>{" "}
+          (server tool: <code>retrieve</code>) &mdash; hybrid keyword +
+          semantic search over evidence chunks, in modes <code>raw</code> /{" "}
+          <code>guided</code> / <code>evaluate</code> / <code>brief</code>. The
+          corpus layer of the memory hierarchy. Use when you want raw evidence
+          rather than a committed decision.
         </li>
         <li>
-          <strong>Evidence</strong> &mdash; <code>retrieve</code> in modes{" "}
-          <code>raw</code> / <code>guided</code> / <code>evaluate</code> /{" "}
-          <code>brief</code>. Hybrid vector + FTS over evidence chunks, merged
-          via reciprocal rank fusion. The corpus tier of the memory hierarchy.
+          <strong>
+            <code>/assay-stress-test</code>
+          </strong>{" "}
+          (server tool: <code>stress_test</code>) &mdash; deliberate
+          adversarial review of a proposal. Surfaces every dissenting decision
+          and conflicting chunk. Use when you&rsquo;ve already decided and
+          want the strongest argument against.
         </li>
         <li>
-          <strong>Pre-flight</strong> &mdash; <code>scan</code> fast 3-5 signal
-          verdict (clear / caution / blocker). Spans both tiers.
+          <strong>
+            <code>/assay-config</code>
+          </strong>{" "}
+          (server tool: <code>configure</code>) &mdash; view and update
+          extraction mode, retrieval depth, feature toggles, presets.
         </li>
         <li>
-          <strong>Adversary</strong> &mdash; <code>stress_test</code>{" "}
-          deliberate adversarial review of a proposal. Surfaces every
-          dissenting decision and conflicting chunk.
+          <strong>
+            <code>/assay-sync-status</code>
+          </strong>{" "}
+          (server tool: <code>configure subcommand=&quot;status&quot;</code>)
+          &mdash; read-only corpus health: sync freshness, record counts,
+          drift warnings.
         </li>
         <li>
-          <strong>Cascade</strong> &mdash; <code>assay_recall</code> activation
-          cascade: tries the Decision graph first (cosine floor 0.65 by
-          default), falls through to Corpus retrieval if no semantic hit,
-          returns <code>insufficient_evidence</code> when both tiers come up
-          empty. Every response carries a <code>source_tier</code> breadcrumb
-          so the caller knows whether it&rsquo;s reading a structured decision,
-          a raw corpus chunk, or a verdict that nothing in the ledger answers
-          the question. Use this when the question is abstract or you
-          don&rsquo;t know which tier holds the answer; use the direct tools
-          above when you do.
+          <strong>Provenance</strong> (server tool:{" "}
+          <code>assay_decision_expand</code>) &mdash; given a decision id,
+          returns the full reasoning trail, the latest cited evidence, the
+          full <code>decision_transitions</code> audit log, and a depth-N
+          predecessor walk (<code>supersedes_chain</code>). Invoked
+          automatically by <code>/assay-decision</code> when you ask it to
+          expand a hit.
+        </li>
+        <li>
+          <strong>Cascade</strong> (server tool: <code>assay_recall</code>)
+          &mdash; tries the decision graph first, falls through to the
+          evidence corpus if no semantic hit, returns{" "}
+          <code>insufficient_evidence</code> when both layers come up empty.
+          Every response carries a <code>source_tier</code> breadcrumb so the
+          caller knows whether it&rsquo;s reading a structured decision, a raw
+          corpus chunk, or a verdict that nothing in the ledger answers the
+          question. Use when the question is abstract or you don&rsquo;t know
+          which layer holds the answer.
         </li>
       </ul>
 
@@ -926,24 +1090,24 @@ function RetrievalSection() {
           section&#39;s overall embedding diverges.
         </li>
         <li>
-          <strong>Evidence full-text search</strong> — SQLite FTS5 ranking for
-          exact keyword matches in evidence records.
+          <strong>Evidence keyword search</strong> — built-in SQLite full-text
+          search for exact keyword matches in evidence records.
         </li>
         <li>
-          <strong>Decision full-text search</strong> — keyword matches against
+          <strong>Decision keyword search</strong> — keyword matches against
           the text of individual decisions.
         </li>
       </ol>
 
-      <h2>Why RRF</h2>
+      <h2>Why hybrid search</h2>
       <p>
-        Different search methods catch different things. Vector search finds
-        semantic similarity but can miss exact terminology. Full-text search
-        catches precise keywords but misses paraphrased content. Claims search
+        Different search methods catch different things. Semantic search finds
+        meaning-based similarity but can miss exact terminology. Keyword search
+        catches precise terms but misses paraphrased content. Decision search
         catches individual assertions lost in chunk-level embedding averaging.
-        Reciprocal rank fusion merges ranked results from all four lanes into
-        a single list, weighting results that appear across multiple lanes
-        more heavily.
+        Hybrid fusion merges ranked results from all four lanes into a single
+        list, weighting results that appear across multiple lanes more
+        heavily.
       </p>
 
       <h2>Configurable K Values</h2>
@@ -978,8 +1142,8 @@ function RetrieveSection2() {
       <h2>Four Modes</h2>
       <ul>
         <li>
-          <strong>raw</strong> — returns top-K evidence records with RRF
-          scores. No LLM call. Fastest and cheapest.
+          <strong>raw</strong> — returns top-K evidence records with hybrid
+          ranking scores. No LLM call. Fastest and cheapest.
         </li>
         <li>
           <strong>guided</strong> — returns evidence plus an{" "}
@@ -1133,7 +1297,7 @@ function ScanSection() {
       </p>
 
       <p>
-        The <code>scan</code> tool runs cascade fusion in parallel: pulls
+        The <code>scan</code> tool runs both layers in parallel: pulls
         decision-graph hits at cosine ≥0.65 plus hybrid corpus retrieval, then
         returns 3–5 signals classed as <strong>clear</strong>,{" "}
         <strong>caution</strong>, or <strong>blocker</strong>. Use it before
@@ -1143,7 +1307,7 @@ function ScanSection() {
       <p>
         For corpus health (sync status, record counts, drift warnings) call{" "}
         <code>configure subcommand=&quot;status&quot;</code> instead. The two
-        were once one tool and split when scan absorbed cascade fusion.
+        were once one tool and split when scan absorbed the two-layer fan-out.
       </p>
 
       <h2>What It Returns</h2>
@@ -1210,8 +1374,10 @@ function ConfigureSection() {
           stress_test=80, retrieve=20)
         </li>
         <li>
-          <strong>Max disclosure depth</strong> — cap retrieval at L1
-          (headline), L2 (+supporting), L3 (+excerpts), or L4 (full)
+          <strong>Max disclosure depth</strong> — cap retrieval at summary,
+          full reasoning, or excerpts. (A future tier returns the original
+          source snapshot at the time the decision was recorded; that
+          snapshot tier isn&apos;t built today.)
         </li>
         <li>
           <strong>Feature toggles</strong> — enable/disable sync, reranker,
@@ -1222,8 +1388,8 @@ function ConfigureSection() {
           full)
         </li>
         <li>
-          <strong>Embedding</strong> — <code>bge-large-en-v1.5</code> (1024-dim,
-          local). No API key required; no remote provider switch.
+          <strong>Embedding</strong> — local embedding model. No API key
+          required; no remote provider switch.
         </li>
       </ul>
 
@@ -1593,7 +1759,7 @@ function GlossarySection() {
 
       <dl style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div>
-          <dt style={{ fontWeight: 500 }}>RRF (Reciprocal Rank Fusion)</dt>
+          <dt style={{ fontWeight: 500 }}>Hybrid search</dt>
           <dd
             style={{
               margin: "4px 0 0",
@@ -1601,13 +1767,13 @@ function GlossarySection() {
               lineHeight: 1.6,
             }}
           >
-            Merges ranked results from multiple search methods into a single
+            Combines keyword and semantic search lanes into a single ranked
             list. Results that appear in multiple lanes are weighted more
             heavily.
           </dd>
         </div>
         <div>
-          <dt style={{ fontWeight: 500 }}>sqlite-vec</dt>
+          <dt style={{ fontWeight: 500 }}>Local embedding model</dt>
           <dd
             style={{
               margin: "4px 0 0",
@@ -1615,9 +1781,10 @@ function GlossarySection() {
               lineHeight: 1.6,
             }}
           >
-            SQLite extension that provides vector-similarity functions. Stores
-            dense 1024-dim <code>bge-large-en-v1.5</code> embeddings as BLOB
-            columns in the same file as the rest of the corpus.
+            The embedding model that runs in-process on your machine to turn
+            text into dense vectors. Embeddings live in the same SQLite file
+            as the rest of the corpus. No API key, no network call at query
+            time.
           </dd>
         </div>
         <div>
@@ -1694,7 +1861,7 @@ function GlossarySection() {
           </dd>
         </div>
         <div>
-          <dt style={{ fontWeight: 500 }}>FTS5</dt>
+          <dt style={{ fontWeight: 500 }}>Keyword search</dt>
           <dd
             style={{
               margin: "4px 0 0",
@@ -1702,9 +1869,26 @@ function GlossarySection() {
               lineHeight: 1.6,
             }}
           >
-            SQLite&#39;s built-in full-text search module. Assay indexes every
-            evidence record&#39;s title, summary, and body content so exact
-            keyword matches complement vector similarity search.
+            Built on SQLite&apos;s full-text search module. Assay indexes every
+            evidence record&apos;s title, summary, and body content so exact
+            keyword matches complement semantic similarity search.
+          </dd>
+        </div>
+        <div>
+          <dt style={{ fontWeight: 500 }}>Disclosure depth</dt>
+          <dd
+            style={{
+              margin: "4px 0 0",
+              color: "var(--ink-3)",
+              lineHeight: 1.6,
+            }}
+          >
+            How much of a decision a retrieval call returns: summary (id,
+            statement, status), full reasoning (the trail the decision was
+            recorded with), or excerpts (citations + supporting evidence). A
+            future tier returns the original source snapshot taken at the time
+            the decision was recorded; that snapshot tier isn&apos;t built
+            today.
           </dd>
         </div>
       </dl>

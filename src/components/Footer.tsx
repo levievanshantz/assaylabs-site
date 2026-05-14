@@ -14,7 +14,6 @@ export function Footer() {
         <div className="col">
           <h5>Product</h5>
           <Link href="/">Overview</Link>
-          <Link href="/compare">Compare</Link>
           <Link href="/production">Production</Link>
           <Link href="/docs">Docs</Link>
         </div>

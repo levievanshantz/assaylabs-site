@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { Wordmark } from "./Wordmark";
 
-type Route = "home" | "docs" | "compare" | "production";
+type Route = "home" | "docs" | "production";
 
 const NAV: { key: Route; href: string; label: string }[] = [
   { key: "home", href: "/", label: "Home" },
   { key: "docs", href: "/docs", label: "Docs" },
-  { key: "compare", href: "/compare", label: "Compare" },
   { key: "production", href: "/production", label: "Production" },
 ];
 
