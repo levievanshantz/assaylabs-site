@@ -14,13 +14,13 @@ export function Footer() {
         <div className="col">
           <h5>Product</h5>
           <Link href="/">Overview</Link>
-          <Link href="/production">Production</Link>
+          <Link href="/#what">What it does</Link>
           <Link href="/docs">Docs</Link>
         </div>
         <div className="col">
           <h5>Resources</h5>
           <a href="https://github.com/levievanshantz/assaylabs">GitHub</a>
-          <Link href="/#install">Install</Link>
+          <Link href="/#try">Try it</Link>
           <Link href="/docs">Changelog</Link>
         </div>
         <div className="col">
@@ -39,7 +39,7 @@ export function Footer() {
         }}
       >
         <span className="mono">© 2026 ASSAY LABS · ALL CLAIMS CITED</span>
-        <span className="mono">REV 2026.05.10</span>
+        <span className="mono">REV 2026.06.09</span>
       </div>
     </footer>
   );

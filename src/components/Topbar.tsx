@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { Wordmark } from "./Wordmark";
 
-type Route = "home" | "docs" | "production";
+type Route = "home" | "docs";
 
 const NAV: { key: Route; href: string; label: string }[] = [
   { key: "home", href: "/", label: "Home" },
   { key: "docs", href: "/docs", label: "Docs" },
-  { key: "production", href: "/production", label: "Production" },
 ];
 
 export function Topbar({ active }: { active?: Route }) {
@@ -26,8 +25,8 @@ export function Topbar({ active }: { active?: Route }) {
             <span className="dot" />
             Phase 1 · Closed beta
           </span>
-          <Link className="btn btn--sm" href="/#install">
-            Install
+          <Link className="btn btn--sm" href="/#try">
+            Try it
           </Link>
         </div>
       </div>

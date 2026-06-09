@@ -11,7 +11,7 @@ export default function Home() {
         <div className="route-tag">
           <div className="route-tag-inner">
             <span className="mono">/&nbsp;&nbsp;·&nbsp;&nbsp;HOME</span>
-            <span className="mono-meta">REV 2026.05.14</span>
+            <span className="mono-meta">REV 2026.06.09</span>
           </div>
         </div>
 
@@ -19,18 +19,19 @@ export default function Home() {
         <div className="page hero">
           <div className="eyebrow">
             <span className="dot" />
-            <span>ASSAY LABS · DECISION MEMORY FOR PRODUCT TEAMS</span>
+            <span>ASSAY LABS · DECISION CONTEXT FOR AI-ACCELERATED TEAMS</span>
             <span style={{ marginLeft: "auto" }}>EST. 2026 · LOCAL-FIRST</span>
           </div>
 
           <h1>
-            A memory for product decisions &mdash;{" "}
-            <em>including the ones you reversed.</em>
+            AI lets teams move faster than their{" "}
+            <em>decision context</em> can keep up.
           </h1>
 
           <p className="lede">
-            Save each decision with what changed, why it changed, and what replaced it. Call it
-            from Claude. Keep it local. Stop re-deciding settled work.
+            Assay is a decision-context layer for product teams working with AI. It keeps track of
+            what was decided, why, what changed, and what still holds, so work that ships at AI
+            speed stays coherent.
           </p>
 
           <p className="lede" style={{ marginTop: 18, fontWeight: 600 }}>
@@ -38,15 +39,12 @@ export default function Home() {
           </p>
 
           <div className="hero-actions">
-            <Link className="btn btn--lg" href="#install">
-              Install now <span className="arrow">→</span>
+            <Link className="btn btn--lg" href="#why">
+              See how it works <span className="arrow">→</span>
             </Link>
-            <a
-              className="btn btn--ghost btn--lg"
-              href="mailto:levishantz@gmail.com?subject=Assay%20concierge%20install"
-            >
-              Request concierge install
-            </a>
+            <Link className="btn btn--ghost btn--lg" href="/docs">
+              Read the docs
+            </Link>
           </div>
 
           <dl className="hero-meta">
@@ -63,22 +61,80 @@ export default function Home() {
               <dd>None. No API key.</dd>
             </div>
             <div>
-              <dt>Phase</dt>
-              <dd>1 · Closed beta</dd>
+              <dt>Stage</dt>
+              <dd>Early · single-user</dd>
             </div>
           </dl>
         </div>
 
-        {/* §01 Pillars */}
-        <section className="s">
+        {/* §01 Why now */}
+        <section className="s" id="why">
           <div className="page">
             <div className="s-head">
               <div className="s-num">§ 01</div>
               <div>
-                <h2 className="s-title">What Assay actually does.</h2>
+                <h2 className="s-title">Why this exists now.</h2>
                 <p className="s-deck">
-                  Three problems PMs have every week. Three things Assay fixes &mdash; not by
-                  storing more text, but by tracking decision state.
+                  AI did not just make teams faster. It changed where the bottleneck is.
+                </p>
+              </div>
+            </div>
+
+            <div className="pillars">
+              <div className="pillar">
+                <span className="num">01</span>
+                <h3>
+                  AI output compounds.
+                  <br />
+                  Human context does not.
+                </h3>
+                <p>
+                  Agents produce specs, code, analysis, and options faster every cycle, and that
+                  output is durable. The reasoning behind your decisions still lives in memory,
+                  meetings, and docs that go stale.
+                </p>
+              </div>
+
+              <div className="pillar">
+                <span className="num">02</span>
+                <h3>
+                  When output outruns context,
+                  <br />
+                  teams drift.
+                </h3>
+                <p>
+                  You can build more than you can keep coherent. Settled questions get reopened,
+                  work ships against assumptions that already changed, and nobody is sure which
+                  decision is the current one.
+                </p>
+              </div>
+
+              <div className="pillar">
+                <span className="num">03</span>
+                <h3>
+                  The new bottleneck is
+                  <br />
+                  keeping decisions current.
+                </h3>
+                <p>
+                  The hard part stops being &ldquo;can we build it&rdquo; and becomes &ldquo;does
+                  this still match what we decided.&rdquo; That gap is what Assay is built to close.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* §02 What it does */}
+        <section className="s" id="what">
+          <div className="page">
+            <div className="s-head">
+              <div className="s-num">§ 02</div>
+              <div>
+                <h2 className="s-title">What Assay does.</h2>
+                <p className="s-deck">
+                  It sits on top of the memory you already use and adds the layer none of it has:
+                  decision state. Not more stored text. A record of what holds.
                 </p>
               </div>
             </div>
@@ -92,8 +148,8 @@ export default function Home() {
                   You still don&rsquo;t know if the decision stands.
                 </h3>
                 <p>
-                  Assay records the current answer, the reasoning behind it, and the decision
-                  that replaced it.
+                  Assay records the current answer, the reasoning behind it, and the decision that
+                  replaced it.
                 </p>
               </div>
 
@@ -105,8 +161,8 @@ export default function Home() {
                   the argument, not the outcome.
                 </h3>
                 <p>
-                  Capture decisions in a typed record with rationale, owners, and context &mdash;
-                  not scattered Slack archaeology.
+                  Decisions are captured as typed records with rationale, owners, and context, not
+                  reconstructed from Slack archaeology.
                 </p>
               </div>
 
@@ -126,17 +182,17 @@ export default function Home() {
           </div>
         </section>
 
-        {/* §02 Tool list */}
-        <section className="s">
+        {/* §03 Commands */}
+        <section className="s" id="commands">
           <div className="page">
             <div className="s-head">
-              <div className="s-num">§ 02</div>
+              <div className="s-num">§ 03</div>
               <div>
-                <h2 className="s-title">Two commands you&rsquo;ll use first.</h2>
+                <h2 className="s-title">How you use it.</h2>
                 <p className="s-deck">
                   Assay lives inside Claude Code as a small set of commands. Two carry most of the
-                  day-to-day weight. The rest are there when you need them. See the full surface
-                  in <Link href="/docs">/docs</Link>.
+                  day-to-day weight. The rest are there when you need them. Full surface in{" "}
+                  <Link href="/docs">/docs</Link>.
                 </p>
               </div>
             </div>
@@ -190,7 +246,7 @@ export default function Home() {
                 <div className="grp">SYSTEM</div>
                 <div className="nm">/assay-config</div>
                 <div className="blurb">
-                  Set sources, modes, and capture behavior for your team.
+                  Set sources, modes, and capture behavior.
                 </div>
               </div>
               <div className="agent">
@@ -209,16 +265,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* §03 FAQ */}
+        {/* §04 FAQ */}
         <section className="s" id="faq">
           <div className="page">
             <div className="s-head">
-              <div className="s-num">§ 03</div>
+              <div className="s-num">§ 04</div>
               <div>
-                <h2 className="s-title">Questions PMs ask first.</h2>
+                <h2 className="s-title">The questions worth answering first.</h2>
                 <p className="s-deck">
-                  If you&rsquo;re reading this cold, these are the four questions worth answering
-                  before you install.
+                  If you&rsquo;re reading this cold, start here.
                 </p>
               </div>
             </div>
@@ -227,18 +282,19 @@ export default function Home() {
               <div className="faq-item">
                 <h3>How is this different from Notion, search, or ChatGPT memory?</h3>
                 <p>
-                  Those tools store text. Assay stores decisions: what was decided, why, and what
-                  superseded it. You don&rsquo;t just retrieve notes; you resolve the current
-                  state.
+                  Those tools store and retrieve text. Assay tracks decisions: what was decided,
+                  why, and what superseded it. It sits on top of whatever memory you already use and
+                  adds the decision layer none of them have. You don&rsquo;t just find notes; you
+                  resolve the current state.
                 </p>
               </div>
 
               <div className="faq-item">
-                <h3>Why not just write better docs?</h3>
+                <h3>Why does AI make this matter more?</h3>
                 <p>
-                  Because the problem isn&rsquo;t only missing documentation. It&rsquo;s missing
-                  decision state. Docs sprawl. Assay gives each decision a structured record and a
-                  visible history of reversals.
+                  Because AI raises the volume of specs, code, and options a team produces, but the
+                  context behind your decisions still decays at human speed. The faster you ship,
+                  the faster settled decisions go stale without anyone noticing.
                 </p>
               </div>
 
@@ -247,9 +303,9 @@ export default function Home() {
                 <p>
                   Start with two commands. <strong>/assay-scan</strong> tells you, before you
                   commit, whether prior decisions support, caution, or block a direction.{" "}
-                  <strong>/assay-decision</strong> tells you what was decided about a topic, when,
-                  by whom, and what has been superseded since. If you need source evidence, use{" "}
-                  <strong>/assay-retrieve</strong>. If you want to pressure-test a proposal, use{" "}
+                  <strong>/assay-decision</strong> tells you what was decided about a topic, when, by
+                  whom, and what has been superseded since. If you need source evidence, use{" "}
+                  <strong>/assay-retrieve</strong>. To pressure-test a proposal, use{" "}
                   <strong>/assay-stress-test</strong>.{" "}
                   <strong>
                     Decisions get captured as you work &mdash; you don&rsquo;t run a save command.
@@ -258,62 +314,33 @@ export default function Home() {
               </div>
 
               <div className="faq-item">
-                <h3>Why should I trust it with product decisions?</h3>
+                <h3>What stage is this at?</h3>
                 <p>
-                  Because your decision history doesn&rsquo;t depend on a cloud account or chat
-                  scrollback. Everything lives in a single file on your laptop &mdash; your PRDs
-                  never leave your machine.
+                  Early and honest about it. Assay is a working local-first prototype inside Claude
+                  Code, single-user, in closed beta. Everything lives in one file on your laptop, so
+                  your decisions never leave your machine. We&rsquo;re explaining it openly while we
+                  learn where it&rsquo;s most useful.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* §04 Install / CTA */}
-        <section className="s" id="install">
+        {/* §05 Try it */}
+        <section className="s" id="try">
           <div className="page">
             <div className="s-head">
-              <div className="s-num">§ 04</div>
+              <div className="s-num">§ 05</div>
               <div>
-                <h2 className="s-title">Get Assay running.</h2>
-                <p className="s-deck" style={{ fontWeight: 600 }}>
-                  Closed beta for teams that want decision recall inside Claude, not another
-                  workspace.
+                <h2 className="s-title">Try the prototype.</h2>
+                <p className="s-deck">
+                  For people who want to run it inside Claude Code today. Local-first, single-user,
+                  closed beta.
                 </p>
               </div>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 32,
-                marginBottom: 40,
-              }}
-            >
-              <div>
-                <Link className="btn btn--lg" href="#install-snippet" style={{ width: "100%" }}>
-                  Install now <span className="arrow">→</span>
-                </Link>
-                <p className="mono-meta" style={{ marginTop: 12 }}>
-                  Run Assay locally and start with <code>/assay-scan</code>.
-                </p>
-              </div>
-              <div>
-                <a
-                  className="btn btn--ghost btn--lg"
-                  href="mailto:levishantz@gmail.com?subject=Assay%20concierge%20install"
-                  style={{ width: "100%" }}
-                >
-                  Request concierge install
-                </a>
-                <p className="mono-meta" style={{ marginTop: 12 }}>
-                  We&rsquo;ll help you get Assay running on your stack.
-                </p>
-              </div>
-            </div>
-
-            <div id="install-snippet">
+            <div id="install">
               <div className="mono" style={{ marginBottom: 12 }}>
                 CLI · TESTER INSTALL
               </div>
@@ -334,6 +361,13 @@ export default function Home() {
                 {"\n\n"}
                 <span className="ok">✓</span> local decision memory, ready inside Claude
               </pre>
+              <p className="mono-meta" style={{ marginTop: 16 }}>
+                Want help getting it running? Email{" "}
+                <a href="mailto:levishantz@gmail.com?subject=Assay%20install">
+                  levishantz@gmail.com
+                </a>
+                .
+              </p>
             </div>
           </div>
         </section>

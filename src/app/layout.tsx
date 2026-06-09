@@ -25,12 +25,13 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "AssayLabs — Give your product team a memory that doesn't forget",
+  title: "AssayLabs — Decision context for AI-accelerated teams",
   description:
-    "Assay turns PRDs, strategy docs, research, and meetings into cited decisions your AI tools can check against. Local-first, inspectable, built for PMs who ship.",
+    "Assay keeps track of what your team decided, why, what changed, and what still holds, so work that ships at AI speed stays coherent. Local-first, inside Claude Code. Early prototype.",
   openGraph: {
     title: "AssayLabs",
-    description: "Give your product team a memory that doesn't forget.",
+    description:
+      "Decision context for AI-accelerated teams. Search retrieves artifacts; Assay resolves decision state.",
     url: "https://assaylabs.com",
     siteName: "AssayLabs",
     type: "website",
