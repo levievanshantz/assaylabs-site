@@ -22,7 +22,7 @@ export default function DocsLayout({
         <div className="route-tag">
           <div className="route-tag-inner">
             <span className="mono">/docs&nbsp;&nbsp;·&nbsp;&nbsp;PRODUCT REFERENCE</span>
-            <span className="mono-meta">PHASE 1 · 2026-04-20</span>
+            <span className="mono-meta">2026-04-20</span>
           </div>
         </div>
 

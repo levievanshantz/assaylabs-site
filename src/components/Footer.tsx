@@ -8,7 +8,7 @@ export function Footer() {
         <div className="col" style={{ maxWidth: 280 }}>
           <Wordmark />
           <p style={{ margin: "8px 0 0", fontSize: 13, color: "var(--ink-3)", lineHeight: 1.6 }}>
-            A precision instrument for product decisions. Local-first. Open beta soon.
+            A precision instrument for product decisions. Local-first.
           </p>
         </div>
         <div className="col">
@@ -25,7 +25,7 @@ export function Footer() {
         </div>
         <div className="col">
           <h5>Contact</h5>
-          <a href="mailto:levishantz@gmail.com">levishantz@gmail.com</a>
+          <a href="https://github.com/levievanshantz/assaylabs">GitHub</a>
           <a href="https://assaylabs.com">assaylabs.com</a>
         </div>
       </div>

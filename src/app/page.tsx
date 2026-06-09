@@ -317,8 +317,8 @@ export default function Home() {
                 <h3>What stage is this at?</h3>
                 <p>
                   Early and honest about it. Assay is a working local-first prototype inside Claude
-                  Code, single-user, in closed beta. Everything lives in one file on your laptop, so
-                  your decisions never leave your machine. We&rsquo;re explaining it openly while we
+                  Code, single-user. Everything lives in one file on your laptop, so your decisions
+                  never leave your machine. We&rsquo;re explaining it openly while we
                   learn where it&rsquo;s most useful.
                 </p>
               </div>
@@ -334,8 +334,8 @@ export default function Home() {
               <div>
                 <h2 className="s-title">Try the prototype.</h2>
                 <p className="s-deck">
-                  For people who want to run it inside Claude Code today. Local-first, single-user,
-                  closed beta.
+                  For people who want to run it inside Claude Code today. Local-first and
+                  single-user.
                 </p>
               </div>
             </div>
@@ -362,11 +362,8 @@ export default function Home() {
                 <span className="ok">✓</span> local decision memory, ready inside Claude
               </pre>
               <p className="mono-meta" style={{ marginTop: 16 }}>
-                Want help getting it running? Email{" "}
-                <a href="mailto:levishantz@gmail.com?subject=Assay%20install">
-                  levishantz@gmail.com
-                </a>
-                .
+                Issues and setup notes live on{" "}
+                <a href="https://github.com/levievanshantz/assaylabs">GitHub</a>.
               </p>
             </div>
           </div>

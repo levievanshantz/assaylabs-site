@@ -22,7 +22,7 @@ const accentBullet: React.CSSProperties = {
 function OverviewSection() {
   return (
     <section id="overview" style={{ scrollMarginTop: 96 }}>
-      <div className="breadcrumb">DOCS · PRODUCT REFERENCE · PHASE 1</div>
+      <div className="breadcrumb">DOCS · PRODUCT REFERENCE</div>
       <h1>What is Assay?</h1>
       <p className="docs-lede">
         Local-first decision memory for PMs. Every call you commit to with
@@ -33,14 +33,6 @@ function OverviewSection() {
       </p>
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
-        <span className="badge">
-          <span className="dot" />
-          Phase 1
-        </span>
-        <span className="badge badge--ignition">
-          <span className="dot" />
-          Closed beta
-        </span>
         <span className="badge">
           <span className="dot" />
           Local-first
@@ -415,7 +407,7 @@ npm install`}</code>
             </strong>{" "}
             Single-machine only; no team sharing today. A shared institutional
             tier on Postgres + pgvector is speculative future work, not
-            committed for Phase 1. If a query gives an obviously wrong top
+            committed yet. If a query gives an obviously wrong top
             result, file it with the GitHub issue template; ranking tuning is
             an open work item.
           </p>
@@ -1895,7 +1887,7 @@ function GlossarySection() {
 
       <hr className="hair-soft" style={{ margin: "48px 0 24px" }} />
       <div className="mono-meta">
-        VERSION · PHASE 1 CLOSED BETA · 2026-05-14 · 31/31 INTEGRATION TESTS
+        VERSION · 2026-05-14 · 31/31 INTEGRATION TESTS
         PASS
       </div>
     </section>

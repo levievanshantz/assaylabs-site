@@ -44,7 +44,7 @@ export default function LoginPage() {
           <Wordmark />
         </div>
         <div className="mono" style={{ textAlign: "center", marginBottom: 24 }}>
-          CLOSED BETA · ACCESS CODE REQUIRED
+          ACCESS CODE REQUIRED
         </div>
         <form
           onSubmit={handleSubmit}

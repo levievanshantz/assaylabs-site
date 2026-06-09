@@ -23,7 +23,7 @@ export function Topbar({ active }: { active?: Route }) {
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <span className="badge">
             <span className="dot" />
-            Phase 1 · Closed beta
+            Local-first
           </span>
           <Link className="btn btn--sm" href="/#try">
             Try it
